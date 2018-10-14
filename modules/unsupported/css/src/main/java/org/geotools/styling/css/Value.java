@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import org.geotools.coverage.grid.GridCoverage2D;
 import org.geotools.coverage.grid.io.GridCoverage2DReader;
 import org.geotools.data.Parameter;
@@ -34,16 +33,19 @@ import org.geotools.feature.NameImpl;
 import org.opengis.feature.type.Name;
 import org.opengis.filter.FilterFactory2;
 import org.opengis.filter.capability.FunctionName;
+import org.opengis.filter.expression.Expression;
 
 /**
- * A value for a CSS property. Values can be several things, including from literals, expressions, composition of multiple values.
- * 
- * @author Andrea Aime - GeoSolutions
+ * A value for a CSS property. Values can be several things, including from literals, expressions,
+ * composition of multiple values.
  *
+ * @author Andrea Aime - GeoSolutions
  */
 abstract class Value {
 
     static final FilterFactory2 FF = CommonFactoryFinder.getFilterFactory2();
+
+    public static final Value NONE = new None();
 
     public static final Map<String, String> COLORS_TO_HEX;
 
@@ -199,25 +201,23 @@ abstract class Value {
     }
 
     /**
-     * Turns this value into a OGC expression. Only literals and expressions can be converted to a OGC expression
+     * Turns this value into a OGC expression. Only literals and expressions can be converted to a
+     * OGC expression
      */
     public org.opengis.filter.expression.Expression toExpression() {
         throw new UnsupportedOperationException(
                 "Cannot turn this value into a OGC expression: " + this);
     }
 
-    /**
-     * Turns this value into a literal. Only true literals support this operation
-     */
+    /** Turns this value into a literal. Only true literals support this operation */
     public String toLiteral() {
         throw new UnsupportedOperationException("Cannot turn this value into a literal: " + this);
     }
 
     /**
      * A literal, that is, a static value, represented as a string
-     * 
-     * @author Andrea Aime - GeoSolutions
      *
+     * @author Andrea Aime - GeoSolutions
      */
     static class Literal extends Value {
 
@@ -244,18 +244,13 @@ abstract class Value {
 
         @Override
         public boolean equals(Object obj) {
-            if (this == obj)
-                return true;
-            if (obj == null)
-                return false;
-            if (getClass() != obj.getClass())
-                return false;
+            if (this == obj) return true;
+            if (obj == null) return false;
+            if (getClass() != obj.getClass()) return false;
             Literal other = (Literal) obj;
             if (body == null) {
-                if (other.body != null)
-                    return false;
-            } else if (!body.equals(other.body))
-                return false;
+                if (other.body != null) return false;
+            } else if (!body.equals(other.body)) return false;
             return true;
         }
 
@@ -272,14 +267,12 @@ abstract class Value {
         public String toLiteral() {
             return body;
         }
-
     }
 
     /**
      * A function, with a name and parameters
-     * 
-     * @author Andrea Aime - GeoSolutions
      *
+     * @author Andrea Aime - GeoSolutions
      */
     static class Function extends Value {
         static final String URL = "url";
@@ -301,7 +294,7 @@ abstract class Value {
 
         /**
          * Builds a function
-         * 
+         *
          * @param name
          * @param parameters
          */
@@ -317,7 +310,7 @@ abstract class Value {
 
         /**
          * Builds a function
-         * 
+         *
          * @param name
          * @param parameters
          */
@@ -342,41 +335,34 @@ abstract class Value {
         @Override
         public org.opengis.filter.expression.Expression toExpression() {
             // turn function call if possible
-            org.opengis.filter.expression.Expression[] params = this.parameters.stream()
-                    .map(v -> v.toExpression())
-                    .toArray(s -> new org.opengis.filter.expression.Expression[s]);
+            org.opengis.filter.expression.Expression[] params =
+                    this.parameters
+                            .stream()
+                            .map(v -> v.toExpression())
+                            .toArray(s -> new org.opengis.filter.expression.Expression[s]);
             return FF.function(this.name, params);
         }
 
         @Override
         public boolean equals(Object obj) {
-            if (this == obj)
-                return true;
-            if (obj == null)
-                return false;
-            if (getClass() != obj.getClass())
-                return false;
+            if (this == obj) return true;
+            if (obj == null) return false;
+            if (getClass() != obj.getClass()) return false;
             Function other = (Function) obj;
             if (name == null) {
-                if (other.name != null)
-                    return false;
-            } else if (!name.equals(other.name))
-                return false;
+                if (other.name != null) return false;
+            } else if (!name.equals(other.name)) return false;
             if (parameters == null) {
-                if (other.parameters != null)
-                    return false;
-            } else if (!parameters.equals(other.parameters))
-                return false;
+                if (other.parameters != null) return false;
+            } else if (!parameters.equals(other.parameters)) return false;
             return true;
         }
-
     }
 
     /**
      * A function, with a name and named parameters
-     * 
-     * @author Andrea Aime - GeoSolutions
      *
+     * @author Andrea Aime - GeoSolutions
      */
     static class TransformFunction extends Value {
         static final String URL = "url";
@@ -389,7 +375,7 @@ abstract class Value {
 
         /**
          * Builds a function
-         * 
+         *
          * @param name
          * @param parameters
          */
@@ -419,23 +405,16 @@ abstract class Value {
 
         @Override
         public boolean equals(Object obj) {
-            if (this == obj)
-                return true;
-            if (obj == null)
-                return false;
-            if (getClass() != obj.getClass())
-                return false;
+            if (this == obj) return true;
+            if (obj == null) return false;
+            if (getClass() != obj.getClass()) return false;
             TransformFunction other = (TransformFunction) obj;
             if (name == null) {
-                if (other.name != null)
-                    return false;
-            } else if (!name.equals(other.name))
-                return false;
+                if (other.name != null) return false;
+            } else if (!name.equals(other.name)) return false;
             if (parameters == null) {
-                if (other.parameters != null)
-                    return false;
-            } else if (!parameters.equals(other.parameters))
-                return false;
+                if (other.parameters != null) return false;
+            } else if (!parameters.equals(other.parameters)) return false;
             return true;
         }
 
@@ -495,17 +474,19 @@ abstract class Value {
                 final org.opengis.filter.expression.Expression ex = v.toExpression();
                 paramArgs.add(ex);
             }
-            org.opengis.filter.expression.Expression[] paramArgsArray = toExpressionArray(
-                    paramArgs);
-            org.opengis.filter.expression.Function function = FF.function("parameter",
-                    paramArgsArray);
+            org.opengis.filter.expression.Expression[] paramArgsArray =
+                    toExpressionArray(paramArgs);
+            org.opengis.filter.expression.Function function =
+                    FF.function("parameter", paramArgsArray);
             return function;
         }
 
         private org.opengis.filter.expression.Expression[] toExpressionArray(
                 List<org.opengis.filter.expression.Expression> arguments) {
-            org.opengis.filter.expression.Expression[] argsArray = (org.opengis.filter.expression.Expression[]) arguments
-                    .toArray(new org.opengis.filter.expression.Expression[arguments.size()]);
+            org.opengis.filter.expression.Expression[] argsArray =
+                    (org.opengis.filter.expression.Expression[])
+                            arguments.toArray(
+                                    new org.opengis.filter.expression.Expression[arguments.size()]);
             return argsArray;
         }
 
@@ -522,8 +503,11 @@ abstract class Value {
         public static Map<String, Parameter<?>> loadProcessInfo(Name name) {
             Class<?> processorsClass = null;
             try {
-                processorsClass = Class.forName("org.geotools.process.Processors", false,
-                        Value.class.getClassLoader());
+                processorsClass =
+                        Class.forName(
+                                "org.geotools.process.Processors",
+                                false,
+                                Value.class.getClassLoader());
                 Method getParameterInfo = processorsClass.getMethod("getParameterInfo", Name.class);
                 return (Map<String, Parameter<?>>) getParameterInfo.invoke(null, name);
             } catch (Exception e) {
@@ -535,14 +519,12 @@ abstract class Value {
             // TODO Auto-generated method stub
             return false;
         }
-
     }
 
     /**
      * An expression, backed by an OGC {@link org.opengis.filter.expression.Expression}
-     * 
-     * @author Andrea Aime - GeoSolutions
      *
+     * @author Andrea Aime - GeoSolutions
      */
     static class Expression extends Value {
         public org.opengis.filter.expression.Expression expression;
@@ -562,18 +544,13 @@ abstract class Value {
 
         @Override
         public boolean equals(Object obj) {
-            if (this == obj)
-                return true;
-            if (obj == null)
-                return false;
-            if (getClass() != obj.getClass())
-                return false;
+            if (this == obj) return true;
+            if (obj == null) return false;
+            if (getClass() != obj.getClass()) return false;
             Expression other = (Expression) obj;
             if (expression == null) {
-                if (other.expression != null)
-                    return false;
-            } else if (!expression.equals(other.expression))
-                return false;
+                if (other.expression != null) return false;
+            } else if (!expression.equals(other.expression)) return false;
             return true;
         }
 
@@ -590,14 +567,12 @@ abstract class Value {
             throw new UnsupportedOperationException(
                     "Cannot turn this value into a literal: " + this);
         }
-
     }
 
     /**
      * A list of values
-     * 
-     * @author Andrea Aime - GeoSolutions
      *
+     * @author Andrea Aime - GeoSolutions
      */
     public static class MultiValue extends Value {
         List<Value> values;
@@ -620,18 +595,13 @@ abstract class Value {
 
         @Override
         public boolean equals(Object obj) {
-            if (this == obj)
-                return true;
-            if (obj == null)
-                return false;
-            if (getClass() != obj.getClass())
-                return false;
+            if (this == obj) return true;
+            if (obj == null) return false;
+            if (getClass() != obj.getClass()) return false;
             MultiValue other = (MultiValue) obj;
             if (values == null) {
-                if (other.values != null)
-                    return false;
-            } else if (!values.equals(other.values))
-                return false;
+                if (other.values != null) return false;
+            } else if (!values.equals(other.values)) return false;
             return true;
         }
 
@@ -647,7 +617,20 @@ abstract class Value {
 
             return sb.toString();
         }
-
     }
 
+    public static class None extends Value {
+
+        private None() {}
+
+        @Override
+        public org.opengis.filter.expression.Expression toExpression() {
+            return null;
+        }
+
+        @Override
+        public String toLiteral() {
+            return null;
+        }
+    }
 }

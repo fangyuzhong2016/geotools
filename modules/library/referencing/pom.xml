@@ -16,7 +16,7 @@
   <parent>
     <groupId>org.geotools</groupId>
     <artifactId>library</artifactId>
-    <version>19-SNAPSHOT</version>
+    <version>21-SNAPSHOT</version>
   </parent>
 
 
@@ -191,8 +191,9 @@
    <dependency>
      <groupId>net.sf.geographiclib</groupId>
      <artifactId>GeographicLib-Java</artifactId>
-     <version>1.44</version>
+     <version>1.49</version>
    </dependency>
+
 
     <!-- Test dependencies -->
     <dependency>
@@ -209,10 +210,10 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-    	<groupId>net.sourceforge.javacsv</groupId>
-    	<artifactId>javacsv</artifactId>
-    	<version>2.0</version>
-    	<scope>test</scope>
+      <groupId>net.sourceforge.javacsv</groupId>
+      <artifactId>javacsv</artifactId>
+      <version>2.0</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
   

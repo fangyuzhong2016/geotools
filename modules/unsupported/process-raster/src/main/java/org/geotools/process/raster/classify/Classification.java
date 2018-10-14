@@ -16,19 +16,21 @@
  */
 package org.geotools.process.raster.classify;
 
+import java.util.logging.Logger;
 import org.geotools.process.classify.ClassificationMethod;
+import org.geotools.util.logging.Logging;
 
-/**
- * Helper class used for raster classification.
- */
+/** Helper class used for raster classification. */
 public class Classification {
+
+    static final Logger LOGGER = Logging.getLogger(Classification.class);
 
     /** classification method */
     ClassificationMethod method;
 
     /** the breaks */
     Double[][] breaks;
-    
+
     /** min/max */
     Double[] min, max;
 
@@ -48,7 +50,7 @@ public class Classification {
     }
 
     public void setBreaks(int b, Double[] breaks) {
-        this. breaks[b] = breaks;
+        this.breaks[b] = breaks;
     }
 
     public Double getMin(int b) {
@@ -70,7 +72,7 @@ public class Classification {
     public void print() {
         for (int i = 0; i < breaks.length; i++) {
             for (Double d : breaks[i]) {
-                System.out.println(d);
+                LOGGER.info(String.valueOf(d));
             }
         }
     }

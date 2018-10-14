@@ -19,32 +19,23 @@ package org.geotools.validation.attributes;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.util.ResourceBundle;
-
 import org.geotools.validation.DefaultFeatureValidationBeanInfo;
-
 
 /**
  * GazetteerNameValidationBeanInfo purpose.
- * 
- * <p>
- * Description of GazetteerNameValidationBeanInfo ...
- * </p>
+ *
+ * <p>Description of GazetteerNameValidationBeanInfo ...
  *
  * @author dzwiers, Refractions Research, Inc.
  * @author $Author: dmzwiers $ (last modification)
- *
- *
  * @source $URL$
  * @version $Id$
  */
-public class GazetteerNameValidationBeanInfo
-    extends DefaultFeatureValidationBeanInfo {
+public class GazetteerNameValidationBeanInfo extends DefaultFeatureValidationBeanInfo {
     /**
      * GazetteerNameValidationBeanInfo constructor.
-     * 
-     * <p>
-     * Description
-     * </p>
+     *
+     * <p>Description
      */
     public GazetteerNameValidationBeanInfo() {
         super();
@@ -52,7 +43,6 @@ public class GazetteerNameValidationBeanInfo
 
     /**
      * Implementation of getPropertyDescriptors.
-     *
      *
      * @see java.beans.BeanInfo#getPropertyDescriptors()
      */
@@ -67,21 +57,22 @@ public class GazetteerNameValidationBeanInfo
         PropertyDescriptor[] pd = new PropertyDescriptor[pd2.length + 2];
         int i = 0;
 
-        for (; i < pd2.length; i++)
-            pd[i] = pd2[i];
+        for (; i < pd2.length; i++) pd[i] = pd2[i];
 
         try {
-            pd[i] = createPropertyDescriptor("attributeName",
-                    GazetteerNameValidation.class, resourceBundle);
+            pd[i] =
+                    createPropertyDescriptor(
+                            "attributeName", GazetteerNameValidation.class, resourceBundle);
             pd[i].setExpert(false);
-            pd[i + 1] = createPropertyDescriptor("gazetteer",
-                    GazetteerNameValidation.class, resourceBundle);
+            pd[i + 1] =
+                    createPropertyDescriptor(
+                            "gazetteer", GazetteerNameValidation.class, resourceBundle);
             pd[i + 1].setExpert(false);
         } catch (IntrospectionException e) {
             pd = pd2;
 
             // TODO error, log here
-            e.printStackTrace();
+            java.util.logging.Logger.getGlobal().log(java.util.logging.Level.INFO, "", e);
         }
 
         return pd;

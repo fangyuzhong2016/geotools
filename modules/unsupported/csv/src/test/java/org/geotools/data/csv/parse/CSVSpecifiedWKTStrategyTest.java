@@ -9,17 +9,20 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
+import java.io.File;
 import java.io.IOException;
-
+import java.nio.file.Files;
+import java.util.List;
 import org.geotools.data.csv.CSVFileState;
+import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.junit.Test;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.Point;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.GeometryDescriptor;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.Point;
 
 public class CSVSpecifiedWKTStrategyTest {
 
@@ -36,8 +39,9 @@ public class CSVSpecifiedWKTStrategyTest {
 
     @Test
     public void testCreateFeature() throws IOException {
-        String input = CSVTestStrategySupport.buildInputString("fleem,zoo,morx",
-                "foo,POINT(3.14 1.59),car");
+        String input =
+                CSVTestStrategySupport.buildInputString(
+                        "fleem,zoo,morx", "foo,POINT(3.14 1.59),car");
         CSVFileState fileState = new CSVFileState(input, "bar");
         CSVStrategy strategy = new CSVSpecifiedWKTStrategy(fileState, "zoo");
         SimpleFeatureType featureType = strategy.getFeatureType();
@@ -70,4 +74,28 @@ public class CSVSpecifiedWKTStrategyTest {
         assertNull("Unexpected geometry", feature.getAttribute("fleem"));
     }
 
+    @Test
+    public void testCreateSchema() throws IOException {
+        SimpleFeatureTypeBuilder builder = new SimpleFeatureTypeBuilder();
+        builder.setCRS(DefaultGeographicCRS.WGS84);
+        builder.setName("testCreateSchema");
+        builder.add("the_geom", Point.class);
+        builder.add("id", Integer.class);
+        builder.add("int_field", Integer.class);
+        builder.add("string_field", String.class);
+        SimpleFeatureType featureType = builder.buildFeatureType();
+
+        File csvFile = File.createTempFile("testCreateSchema", ".csv");
+        CSVFileState csvFileState = new CSVFileState(csvFile);
+        CSVStrategy strategy = new CSVSpecifiedWKTStrategy(csvFileState, "the_geom_wkt");
+        strategy.createSchema(featureType);
+
+        assertEquals(
+                "Stragegy does not have provided feature type",
+                featureType,
+                strategy.getFeatureType());
+        List<String> content = Files.readAllLines(csvFile.toPath());
+        assertEquals("the_geom_wkt,id,int_field,string_field", content.get(0));
+        csvFile.delete();
+    }
 }

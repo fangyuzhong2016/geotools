@@ -16,32 +16,33 @@
  */
 package org.geotools.wmts.v1;
 
+import static org.junit.Assert.*;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
 import net.opengis.wmts.v_1.CapabilitiesType;
 import net.opengis.wmts.v_1.ContentsType;
 import net.opengis.wmts.v_1.LayerType;
+import org.geotools.util.logging.Logging;
 import org.geotools.wmts.WMTSConfiguration;
 import org.geotools.xml.Parser;
-import static org.junit.Assert.*;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-/**
- *
- * @author Emanuele Tajariol (etj at geo-solutions dot it)
- */
-public class WMTSConfigurationTest
-{
+/** @author Emanuele Tajariol (etj at geo-solutions dot it) */
+public class WMTSConfigurationTest {
 
-    public WMTSConfigurationTest() {
-    }
+    static final Logger LOGGER = Logging.getLogger(WMTSConfigurationTest.class);
+
+    public WMTSConfigurationTest() {}
 
     @Test
     public void testParse() throws IOException, SAXException, ParserConfigurationException {
@@ -52,7 +53,8 @@ public class WMTSConfigurationTest
             parsed = p.parse(is);
         }
 
-        assertTrue("Capabilities failed to parse " + parsed.getClass(),
+        assertTrue(
+                "Capabilities failed to parse " + parsed.getClass(),
                 parsed instanceof CapabilitiesType);
 
         CapabilitiesType caps = (CapabilitiesType) parsed;
@@ -79,12 +81,13 @@ public class WMTSConfigurationTest
     /**
      * TODO.
      *
-     * Validation fails due to a gml/xlink conflict of some type:
+     * <p>Validation fails due to a gml/xlink conflict of some type:
      *
-     * org.xml.sax.SAXParseException; systemId: http://schemas.opengis.net/gml/3.1.1/base/gmlBase.xsd; lineNumber: 268; columnNumber: 44; src-resolve: Cannot resolve the name 'xlink:simpleAttrs' to a(n) 'attribute group' component.
+     * <p>org.xml.sax.SAXParseException; systemId:
+     * http://schemas.opengis.net/gml/3.1.1/base/gmlBase.xsd; lineNumber: 268; columnNumber: 44;
+     * src-resolve: Cannot resolve the name 'xlink:simpleAttrs' to a(n) 'attribute group' component.
      *
-     * on line
-     *    <attributeGroup ref="xlink:simpleAttrs"/>
+     * <p>on line <attributeGroup ref="xlink:simpleAttrs"/>
      */
     @Ignore
     @Test
@@ -95,14 +98,13 @@ public class WMTSConfigurationTest
             p.parse(is);
         }
         if (!p.getValidationErrors().isEmpty()) {
-            for (Iterator e = p.getValidationErrors().iterator(); e.hasNext();) {
+            for (Iterator e = p.getValidationErrors().iterator(); e.hasNext(); ) {
                 SAXParseException ex = (SAXParseException) e.next();
-                System.out.println(
+                LOGGER.log(
+                        Level.SEVERE,
                         ex.getLineNumber() + "," + ex.getColumnNumber() + " -" + ex.toString());
             }
             fail("Document did not validate.");
         }
-
     }
 }
-

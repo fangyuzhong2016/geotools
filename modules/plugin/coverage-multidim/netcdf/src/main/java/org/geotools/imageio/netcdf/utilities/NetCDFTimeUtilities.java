@@ -23,25 +23,22 @@ import java.util.Set;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
-/**
- * @author User
- * 
- */
+/** @author User */
 public class NetCDFTimeUtilities {
 
     public static final int JGREG = 15 + 31 * (10 + 12 * 1582);
 
-    public final static TimeZone UTC_TIMEZONE = TimeZone.getTimeZone("GMT");
+    public static final TimeZone UTC_TIMEZONE = TimeZone.getTimeZone("GMT");
 
-    public final static Set<String> MONTH_SET = new HashSet<String>();
+    public static final Set<String> MONTH_SET = new HashSet<String>();
 
-    public final static Set<String> DAY_SET = new HashSet<String>();
+    public static final Set<String> DAY_SET = new HashSet<String>();
 
-    public final static Set<String> HOUR_SET = new HashSet<String>();
+    public static final Set<String> HOUR_SET = new HashSet<String>();
 
-    public final static Set<String> MINUTE_SET = new HashSet<String>();
+    public static final Set<String> MINUTE_SET = new HashSet<String>();
 
-    public final static Set<String> SECOND_SET = new HashSet<String>();
+    public static final Set<String> SECOND_SET = new HashSet<String>();
 
     static {
         MONTH_SET.add("month");
@@ -69,20 +66,15 @@ public class NetCDFTimeUtilities {
         SECOND_SET.add("seconds");
     }
 
-    /**
-     * 
-     */
-    private NetCDFTimeUtilities() {
-    }
+    /** */
+    private NetCDFTimeUtilities() {}
 
-    /**
-     * @param origin
-     */
+    /** @param origin */
     public static String checkDateDigits(String origin) {
         String digitsCheckedOrigin = "";
         if (origin.indexOf("-") > 0) {
-            String tmp = (origin.indexOf(" ") > 0 ? origin.substring(0, origin.indexOf(" "))
-                    : origin);
+            String tmp =
+                    (origin.indexOf(" ") > 0 ? origin.substring(0, origin.indexOf(" ")) : origin);
             String[] originDateParts = tmp.split("-");
             for (int l = 0; l < originDateParts.length; l++) {
                 String datePart = originDateParts[l];
@@ -97,8 +89,8 @@ public class NetCDFTimeUtilities {
 
         if (origin.indexOf(":") > 0) {
             digitsCheckedOrigin += " ";
-            String tmp = (origin.indexOf(" ") > 0 ? origin.substring(origin.indexOf(" ") + 1)
-                    : origin);
+            String tmp =
+                    (origin.indexOf(" ") > 0 ? origin.substring(origin.indexOf(" ") + 1) : origin);
             String[] originDateParts = tmp.split(":");
             for (int l = 0; l < originDateParts.length; l++) {
                 String datePart = originDateParts[l];
@@ -111,8 +103,7 @@ public class NetCDFTimeUtilities {
             }
         }
 
-        if (digitsCheckedOrigin.length() > 0)
-            return digitsCheckedOrigin;
+        if (digitsCheckedOrigin.length() > 0) return digitsCheckedOrigin;
 
         return origin;
     }
@@ -132,27 +123,42 @@ public class NetCDFTimeUtilities {
         je = (int) ((jb - jd) / 30.6001);
         day = jb - jd - (int) (30.6001 * je);
         month = je - 1;
-        if (month > 12)
-            month = month - 12;
+        if (month > 12) month = month - 12;
         year = jc - 4715;
-        if (month > 2)
-            year--;
-        if (year <= 0)
-            year--;
+        if (month > 2) year--;
+        if (year <= 0) year--;
 
         // Calendar Months are 0 based
         return new GregorianCalendar(year, month - 1, day);
     }
 
-    /**
-     * 
-     */
+    /** */
     public static int getTimeSubUnitsValue(String units, Double vd) {
         if (units == null || units.isEmpty()) {
             return 0;
         }
         String unit = units.toLowerCase();
-        if (DAY_SET.contains(unit)) {
+        if (MONTH_SET.contains(unit)) {
+            int subUnit = getTimeUnits(units, vd);
+            // Using Panoply approach where a month is made of 30 days
+            // Note that UCAR recommends not using "month" as unit
+            if (subUnit == Calendar.DAY_OF_MONTH) {
+                double days = vd * 30;
+                return (int) days;
+            } else if (subUnit == Calendar.HOUR) {
+                double hours = vd * 30 * 24;
+                return (int) hours;
+            } else if (subUnit == Calendar.MINUTE) {
+                double minutes = vd * 30 * 24 * 60;
+                return (int) minutes;
+            } else if (subUnit == Calendar.SECOND) {
+                double seconds = vd * 30 * 24 * 60 * 60;
+                return (int) seconds;
+            } else if (subUnit == Calendar.MILLISECOND) {
+                double milliseconds = vd * 30 * 24 * 60 * 60 * 1000;
+                return (int) milliseconds;
+            }
+        } else if (DAY_SET.contains(unit)) {
             int subUnit = getTimeUnits(units, vd);
             if (subUnit == Calendar.HOUR) {
                 double hours = vd * 24;
@@ -201,7 +207,7 @@ public class NetCDFTimeUtilities {
 
     /**
      * Converts NetCDF time units into opportune Calendar ones.
-     * 
+     *
      * @param units {@link String}
      * @param d
      * @return int
@@ -212,57 +218,59 @@ public class NetCDFTimeUtilities {
         }
         String unit = units.toLowerCase();
         if (MONTH_SET.contains(unit)) {
-            if (vd == null || vd == 0.0)
-                // if no day, it is the first day
-                return Calendar.MONTH; 
+            if (vd == null || vd == 0.0) return Calendar.MONTH;
             else {
-                // TODO: FIXME
+                // Using Panoply approach where a month is made of 30 days
+                // Note that UCAR recommends not using "month" as unit
+                double days = vd * 30;
+                if (days - Math.floor(days) == 0.0) return Calendar.DAY_OF_MONTH;
+
+                double hours = days * 24;
+                if (hours - Math.floor(hours) == 0.0) return Calendar.HOUR;
+
+                double minutes = hours * 60;
+                if (minutes - Math.floor(minutes) == 0.0) return Calendar.MINUTE;
+
+                double seconds = minutes * 60;
+                if (seconds - Math.floor(seconds) == 0.0) return Calendar.SECOND;
+
+                return Calendar.MILLISECOND;
             }
         } else if (DAY_SET.contains(unit)) {
-            if (vd == null || vd == 0.0)
-                return Calendar.DATE;
+            if (vd == null || vd == 0.0) return Calendar.DATE;
             else {
                 double hours = vd * 24;
-                if (hours - Math.floor(hours) == 0.0)
-                    return Calendar.HOUR;
+                if (hours - Math.floor(hours) == 0.0) return Calendar.HOUR;
 
                 double minutes = vd * 24 * 60;
-                if (minutes - Math.floor(minutes) == 0.0)
-                    return Calendar.MINUTE;
+                if (minutes - Math.floor(minutes) == 0.0) return Calendar.MINUTE;
 
                 double seconds = vd * 24 * 60 * 60;
-                if (seconds - Math.floor(seconds) == 0.0)
-                    return Calendar.SECOND;
+                if (seconds - Math.floor(seconds) == 0.0) return Calendar.SECOND;
 
                 return Calendar.MILLISECOND;
             }
         } else if (HOUR_SET.contains(unit)) {
-            if (vd == null || vd == 0.0)
-                return Calendar.HOUR;
+            if (vd == null || vd == 0.0) return Calendar.HOUR;
             else {
                 double minutes = vd * 60;
-                if (minutes - Math.floor(minutes) == 0.0)
-                    return Calendar.MINUTE;
+                if (minutes - Math.floor(minutes) == 0.0) return Calendar.MINUTE;
 
                 double seconds = vd * 60 * 60;
-                if (seconds - Math.floor(seconds) == 0.0)
-                    return Calendar.SECOND;
+                if (seconds - Math.floor(seconds) == 0.0) return Calendar.SECOND;
 
                 return Calendar.MILLISECOND;
             }
         } else if (MINUTE_SET.contains(unit)) {
-            if (vd == null || vd == 0.0)
-                return Calendar.MINUTE;
+            if (vd == null || vd == 0.0) return Calendar.MINUTE;
             else {
                 double seconds = vd * 60;
-                if (seconds - Math.floor(seconds) == 0.0)
-                    return Calendar.SECOND;
+                if (seconds - Math.floor(seconds) == 0.0) return Calendar.SECOND;
 
                 return Calendar.MILLISECOND;
             }
         } else if (SECOND_SET.contains(unit)) {
-            if (vd == null || vd == 0.0)
-                return Calendar.SECOND;
+            if (vd == null || vd == 0.0) return Calendar.SECOND;
             else {
                 return Calendar.MILLISECOND;
             }
@@ -272,20 +280,19 @@ public class NetCDFTimeUtilities {
     }
 
     /**
-     * 
      * @param value
      * @return
      */
     public static String trimFractionalPart(String value) {
         value = value.trim();
-        for (int i = value.length(); --i >= 0;) {
+        for (int i = value.length(); --i >= 0; ) {
             switch (value.charAt(i)) {
-            case '0':
-                continue;
-            case '.':
-                return value.substring(0, i);
-            default:
-                return value;
+                case '0':
+                    continue;
+                case '.':
+                    return value.substring(0, i);
+                default:
+                    return value;
             }
         }
         return value;
@@ -293,7 +300,7 @@ public class NetCDFTimeUtilities {
 
     /**
      * Add a quantity of time units to a Calendar
-     * 
+     *
      * @param cal Calendar to add to
      * @param unit Calendar unit to add
      * @param val Quantity of unit to add
@@ -304,7 +311,7 @@ public class NetCDFTimeUtilities {
 
     /**
      * Add a quantity of time units to a Calendar
-     * 
+     *
      * @param cal Calendar to add to
      * @param unit Calendar unit to add
      * @param val Quantity of TimeUnit to add
@@ -323,8 +330,8 @@ public class NetCDFTimeUtilities {
         } else {
             int intVal = (int) val;
             if (intVal != val) {
-                throw new IllegalArgumentException("Can't convert " + val
-                        + " to an int without losing data");
+                throw new IllegalArgumentException(
+                        "Can't convert " + val + " to an int without losing data");
             }
             cal.add(unit, intVal);
         }

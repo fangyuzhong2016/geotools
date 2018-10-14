@@ -10,7 +10,7 @@
   <parent>
     <groupId>org.geotools</groupId>
     <artifactId>unsupported</artifactId>
-    <version>19-SNAPSHOT</version>
+    <version>21-SNAPSHOT</version>
   </parent>
 
   <!-- =========================================================== -->
@@ -66,17 +66,15 @@
     <dependency>
       <groupId>org.apache.solr</groupId>
       <artifactId>solr-solrj</artifactId>
-      <version>5.2.1</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.slf4j</groupId>
-          <artifactId>slf4j-api</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
-      <groupId>commons-lang</groupId>
-      <artifactId>commons-lang</artifactId>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.geotools</groupId>
+      <artifactId>gt-app-schema</artifactId>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.geotools</groupId>
@@ -96,5 +94,50 @@
       <version>1.7.7</version>
       <scope>test</scope>
     </dependency>
+	<dependency>
+	    <groupId>org.geotools.jdbc</groupId>
+	    <artifactId>gt-jdbc-postgis</artifactId>
+	    <version>${project.version}</version>
+	    <scope>test</scope>
+	</dependency>
+	    
   </dependencies>
+  
+  <build>
+
+        <plugins>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>test-jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>test-jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+  	</build>
 </project>

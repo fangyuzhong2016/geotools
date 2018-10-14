@@ -21,7 +21,6 @@ import java.net.MalformedURLException;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
-
 import org.geotools.data.DataAccess;
 import org.geotools.data.DataStore;
 import org.geotools.data.DataStoreFactorySpi;
@@ -46,8 +45,15 @@ public class RepositoryDataStoreCatalog extends AbstractGTDataStoreGranuleCatalo
 
     private Name storeName;
 
-    public RepositoryDataStoreCatalog(Properties params, boolean create, Repository repository,
-            String dataStoreName, DataStoreFactorySpi spi, Hints hints) {
+    private DataAccessStoreWrapper cachedWrapped;
+
+    public RepositoryDataStoreCatalog(
+            Properties params,
+            boolean create,
+            Repository repository,
+            String dataStoreName,
+            DataStoreFactorySpi spi,
+            Hints hints) {
         super(params, create, spi, hints);
         Utilities.ensureNonNull("repository", repository);
         Utilities.ensureNonNull("dataStoreName", repository);
@@ -106,7 +112,13 @@ public class RepositoryDataStoreCatalog extends AbstractGTDataStoreGranuleCatalo
             // see if we can fall back on a data access exposing simple feature types
             DataAccess access = repository.access(storeName);
             if (access != null) {
-                dataStore = new DataAccessStoreWrapper(access);
+                if (cachedWrapped != null && cachedWrapped.wraps(access)) {
+                    return cachedWrapped;
+                } else {
+                    DataAccessStoreWrapper wrapper = new DataAccessStoreWrapper(access);
+                    cachedWrapped = wrapper;
+                    dataStore = wrapper;
+                }
             } else {
                 throw new IllegalStateException(
                         "Could not find a data store with name " + flatStoreName);
@@ -128,5 +140,4 @@ public class RepositoryDataStoreCatalog extends AbstractGTDataStoreGranuleCatalo
         }
         return validTypeNames;
     }
-
 }

@@ -2,7 +2,6 @@ package org.geotools.data.geojson;
 
 import java.io.IOException;
 import java.util.NoSuchElementException;
-
 import org.geotools.data.FeatureReader;
 import org.geotools.data.Query;
 import org.geotools.data.store.ContentState;
@@ -38,7 +37,6 @@ public class GeoJSONFeatureReader implements FeatureReader<SimpleFeatureType, Si
         this.state = contentState;
         GeoJSONDataStore ds = (GeoJSONDataStore) state.getEntry().getDataStore();
         reader = ds.read();
-
     }
 
     @Override
@@ -52,7 +50,7 @@ public class GeoJSONFeatureReader implements FeatureReader<SimpleFeatureType, Si
             return schema;
         } catch (IOException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            java.util.logging.Logger.getGlobal().log(java.util.logging.Level.INFO, "", e);
         }
         return null;
     }
@@ -80,5 +78,4 @@ public class GeoJSONFeatureReader implements FeatureReader<SimpleFeatureType, Si
             iterator.close();
         }
     }
-
 }

@@ -1,18 +1,15 @@
 /*
- *    GeoTools - The Open Source Java GIS Toolkit
- *    http://geotools.org
+ * GeoTools - The Open Source Java GIS Toolkit http://geotools.org
  *
- *    (C) 2002-2008, Open Source Geospatial Foundation (OSGeo)
+ * (C) 2002-2008, Open Source Geospatial Foundation (OSGeo)
  *
- *    This library is free software; you can redistribute it and/or
- *    modify it under the terms of the GNU Lesser General Public
- *    License as published by the Free Software Foundation;
- *    version 2.1 of the License.
+ * This library is free software; you can redistribute it and/or modify it under the terms of the
+ * GNU Lesser General Public License as published by the Free Software Foundation; version 2.1 of
+ * the License.
  *
- *    This library is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *    Lesser General Public License for more details.
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
  */
 package org.geotools.data.wfs.internal.v2_0;
 
@@ -22,21 +19,21 @@ import java.net.URL;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import javax.swing.Icon;
-
 import net.opengis.ows11.KeywordsType;
 import net.opengis.ows11.LanguageStringType;
 import net.opengis.ows11.OnlineResourceType;
 import net.opengis.ows11.ServiceIdentificationType;
 import net.opengis.ows11.ServiceProviderType;
 import net.opengis.wfs20.WFSCapabilitiesType;
-
 import org.geotools.data.ServiceInfo;
 import org.geotools.data.wfs.WFSServiceInfo;
 
 /**
  * Adapts a WFS capabilities document to {@link ServiceInfo}
+ *
+ * @author unknown
+ * @author Matthias Schulze (LDBV at ldbv dot bayern dot de)
  */
 public final class Capabilities200ServiceInfo implements WFSServiceInfo {
 
@@ -46,8 +43,8 @@ public final class Capabilities200ServiceInfo implements WFSServiceInfo {
 
     private final URI getCapsUrl;
 
-    public Capabilities200ServiceInfo(String schemaUri, URL getCapsUrl,
-            WFSCapabilitiesType capabilities) {
+    public Capabilities200ServiceInfo(
+            String schemaUri, URL getCapsUrl, WFSCapabilitiesType capabilities) {
         try {
             this.getCapsUrl = getCapsUrl.toURI();
             this.schemaUri = new URI(schemaUri);
@@ -59,7 +56,7 @@ public final class Capabilities200ServiceInfo implements WFSServiceInfo {
 
     /**
      * Maps to the capabilities' service identification abstract
-     * 
+     *
      * @see ServiceInfo#getDescription()
      */
     public String getDescription() {
@@ -67,9 +64,18 @@ public final class Capabilities200ServiceInfo implements WFSServiceInfo {
         if (serviceIdentification == null) {
             return null;
         }
-        @SuppressWarnings("unchecked")
-        List<String> abs = serviceIdentification.getAbstract();
-        return abs == null || abs.isEmpty() ? null : abs.get(0);
+
+        // The Abstract is of Type LanguageStringType, not String.
+        StringBuilder sb = new StringBuilder();
+        for (Object line : serviceIdentification.getAbstract()) {
+            if (line instanceof LanguageStringType) {
+                sb.append(((LanguageStringType) line).getValue());
+            } else {
+                sb.append(line);
+            }
+        } // end of for
+
+        return sb.toString();
     }
 
     /**
@@ -82,7 +88,7 @@ public final class Capabilities200ServiceInfo implements WFSServiceInfo {
 
     /**
      * Maps to the capabilities' service identification keywords list
-     * 
+     *
      * @see ServiceInfo#getDescription()
      */
     public Set<String> getKeywords() {
@@ -93,7 +99,7 @@ public final class Capabilities200ServiceInfo implements WFSServiceInfo {
             List<KeywordsType> keywords = serviceIdentification.getKeywords();
             if (keywords != null) {
                 for (KeywordsType k : keywords) {
-                    for (LanguageStringType s : (List<LanguageStringType>) k.getKeyword()){
+                    for (LanguageStringType s : (List<LanguageStringType>) k.getKeyword()) {
                         kws.add(s.getValue());
                     }
                 }
@@ -103,9 +109,7 @@ public final class Capabilities200ServiceInfo implements WFSServiceInfo {
         return kws;
     }
 
-    /**
-     * @see ServiceInfo#getPublisher()
-     */
+    /** @see ServiceInfo#getPublisher() */
     public URI getPublisher() {
         ServiceProviderType serviceProvider = capabilities.getServiceProvider();
         if (null == serviceProvider) {
@@ -125,7 +129,7 @@ public final class Capabilities200ServiceInfo implements WFSServiceInfo {
 
     /**
      * Maps to the WFS xsd schema in schemas.opengis.net
-     * 
+     *
      * @see ServiceInfo#getSchema()
      */
     public URI getSchema() {
@@ -134,28 +138,26 @@ public final class Capabilities200ServiceInfo implements WFSServiceInfo {
 
     /**
      * Maps to the URL of the capabilities document
-     * 
+     *
      * @see ServiceInfo#getSource()
      */
     public URI getSource() {
         return getCapsUrl;
     }
 
-    /**
-     * @see ServiceInfo#getTitle()
-     */
+    /** @see ServiceInfo#getTitle() */
     public String getTitle() {
         ServiceIdentificationType serviceIdentification = capabilities.getServiceIdentification();
-        if (serviceIdentification == null || serviceIdentification.getTitle() == null
+        if (serviceIdentification == null
+                || serviceIdentification.getTitle() == null
                 || serviceIdentification.getTitle().isEmpty()) {
             return null;
         }
-        return String.valueOf(serviceIdentification.getTitle().get(0));
+
+        return ((LanguageStringType) serviceIdentification.getTitle().get(0)).getValue();
     }
 
-    /**
-     * @see WFSServiceInfo#getVersion()
-     */
+    /** @see WFSServiceInfo#getVersion() */
     public String getVersion() {
         return capabilities.getVersion();
     }

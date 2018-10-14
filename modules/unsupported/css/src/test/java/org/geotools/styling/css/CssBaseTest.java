@@ -20,9 +20,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 import java.io.IOException;
-
+import java.util.logging.Logger;
 import org.apache.commons.io.IOUtils;
 import org.geotools.styling.css.selector.PseudoClass;
+import org.geotools.util.logging.Logging;
 import org.opengis.style.Style;
 import org.parboiled.errors.ErrorUtils;
 import org.parboiled.support.ParseTreeUtils;
@@ -33,10 +34,16 @@ import org.parboiled.trees.GraphUtils;
 
 public class CssBaseTest {
 
+    static final Logger LOGGER = Logging.getLogger(CssBaseTest.class);
+
     CssParser parser = CssParser.getInstance();
 
-    protected void assertProperty(CssRule r, PseudoClass pseudoClass, int propertyIdx,
-            String propertyName, Value expectedValue) {
+    protected void assertProperty(
+            CssRule r,
+            PseudoClass pseudoClass,
+            int propertyIdx,
+            String propertyName,
+            Value expectedValue) {
         Property p = r.getProperties().get(pseudoClass).get(propertyIdx);
         assertEquals(propertyName, p.getName());
         assertEquals(1, p.getValues().size());
@@ -44,8 +51,8 @@ public class CssBaseTest {
         assertEquals(expectedValue, value);
     }
 
-    protected void assertProperty(CssRule r, int propertyIdx, String propertyName,
-            Value expectedValue) {
+    protected void assertProperty(
+            CssRule r, int propertyIdx, String propertyName, Value expectedValue) {
         assertProperty(r, PseudoClass.ROOT, propertyIdx, propertyName, expectedValue);
     }
 
@@ -54,15 +61,16 @@ public class CssBaseTest {
         if (value != null) {
             String str = value.toString();
             int ix = str.indexOf('|');
-            if (ix >= 0)
-                str = str.substring(ix + 2); // extract value part of AST node toString()
-            System.out.println(input + " = " + str + '\n');
+            if (ix >= 0) str = str.substring(ix + 2); // extract value part of AST node toString()
+            LOGGER.info(input + " = " + str + '\n');
         }
         if (value instanceof GraphNode) {
-            System.out.println("\nAbstract Syntax Tree:\n"
-                    + GraphUtils.printTree((GraphNode) value, new ToStringFormatter(null)) + '\n');
+            LOGGER.info(
+                    "\nAbstract Syntax Tree:\n"
+                            + GraphUtils.printTree((GraphNode) value, new ToStringFormatter(null))
+                            + '\n');
         } else {
-            System.out.println("\nParse Tree:\n" + ParseTreeUtils.printNodeTree(result) + '\n');
+            LOGGER.info("\nParse Tree:\n" + ParseTreeUtils.printNodeTree(result) + '\n');
         }
     }
 
@@ -82,7 +90,7 @@ public class CssBaseTest {
 
     protected void assertNoErrors(ParsingResult<?> result) {
         if (result.hasErrors()) {
-            System.out.println(ErrorUtils.printParseErrors(result));
+            LOGGER.severe(ErrorUtils.printParseErrors(result));
         }
         assertFalse("\n" + ErrorUtils.printParseErrors(result), result.hasErrors());
     }

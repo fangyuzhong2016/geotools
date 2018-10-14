@@ -35,11 +35,11 @@ Current PMC members:
 
 * Andrea Aime
 * Ben Caradoc-Davies
-* Christian Mueller
 * Ian Turton
 * Jody Garnett
-* Justin Deoliveira
+* Nuno Oliveira
 * Simone Giannecchini
+* Torben Barsballe
 
 Our thanks to previous PMC members:
     
@@ -47,8 +47,10 @@ Our thanks to previous PMC members:
 * Artur Hefczyc
 * Cameron Shorter
 * Chris Holmes
+* Christian Mueller
 * David Blasby
 * Ian Schneider
+* Justin Deoliveira
 * Martin Desruisseaux
 * Michael Bedward
 * David Zwiers

@@ -59,20 +59,18 @@ DataStore plugins:
    pregeneralized
    property
    geopackage
+   mongodb
 
 Unsupported plugins:
 
 .. toctree::
    :maxdepth: 1
    
-   caching
    csv
    dxf
    edigeo
    excel
    georest
    kml
-   mongodb
-   sfs
    solr
    wfs-ng

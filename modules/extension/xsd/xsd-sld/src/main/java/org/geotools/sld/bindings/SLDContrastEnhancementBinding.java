@@ -17,7 +17,6 @@
 package org.geotools.sld.bindings;
 
 import javax.xml.namespace.QName;
-
 import org.geotools.styling.ContrastEnhancement;
 import org.geotools.styling.ContrastMethodStrategy;
 import org.geotools.styling.StyleFactory;
@@ -25,14 +24,15 @@ import org.geotools.xml.AbstractComplexBinding;
 import org.geotools.xml.ElementInstance;
 import org.geotools.xml.Node;
 import org.opengis.filter.FilterFactory;
+import org.opengis.filter.expression.Expression;
 import org.picocontainer.MutablePicoContainer;
-
 
 /**
  * Binding object for the element http://www.opengis.net/sld:ContrastEnhancement.
  *
  * <p>
- *        <pre>
+ *
+ * <pre>
  *         <code>
  *  &lt;xsd:element name="ContrastEnhancement"&gt;
  *      &lt;xsd:annotation&gt;
@@ -55,12 +55,8 @@ import org.picocontainer.MutablePicoContainer;
  *
  *          </code>
  *         </pre>
- * </p>
  *
  * @generated
- *
- *
- *
  * @source $URL$
  */
 public class SLDContrastEnhancementBinding extends AbstractComplexBinding {
@@ -72,14 +68,13 @@ public class SLDContrastEnhancementBinding extends AbstractComplexBinding {
         this.filterFactory = filterFactory;
     }
 
-    /**
-     * @generated
-     */
+    /** @generated */
     public QName getTarget() {
         return SLD.CONTRASTENHANCEMENT;
     }
 
     /**
+     *
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      *
@@ -90,6 +85,7 @@ public class SLDContrastEnhancementBinding extends AbstractComplexBinding {
     }
 
     /**
+     *
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      *
@@ -100,37 +96,39 @@ public class SLDContrastEnhancementBinding extends AbstractComplexBinding {
     }
 
     /**
+     *
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      *
      * @generated modifiable
      */
-    public void initialize(ElementInstance instance, Node node, MutablePicoContainer context) {
-    }
+    public void initialize(ElementInstance instance, Node node, MutablePicoContainer context) {}
 
     /**
+     *
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      *
      * @generated modifiable
      */
-    public Object parse(ElementInstance instance, Node node, Object value)
-        throws Exception {
+    public Object parse(ElementInstance instance, Node node, Object value) throws Exception {
         ContrastEnhancement ce = styleFactory.createContrastEnhancement();
 
-        if (node.getChildValue("GammaValue") != null) {
-            Double gamma = (Double) node.getChildValue("GammaValue");
-            ce.setGammaValue(filterFactory.literal(gamma.doubleValue()));
+        if (node.getChild("GammaValue") != null) {
+            Expression gamma = (Expression) node.getChildValue("GammaValue");
+            ce.setGammaValue(gamma);
         }
 
         if (node.getChild("Normalize") != null) {
-            SLDNormalizeBinding binding = new SLDNormalizeBinding(styleFactory,filterFactory);
+            SLDNormalizeBinding binding = new SLDNormalizeBinding(styleFactory, filterFactory);
             Node child = node.getChild("Normalize");
-            ce.setMethod((((ContrastMethodStrategy) binding.parse(instance, child, value)).getMethod()));
+            ce.setMethod(
+                    (((ContrastMethodStrategy) binding.parse(instance, child, value)).getMethod()));
         } else if (node.getChild("Histogram") != null) {
             SLDHistogramBinding binding = new SLDHistogramBinding();
             Node child = node.getChild("Histogram");
-            ce.setMethod((((ContrastMethodStrategy) binding.parse(instance, child, value)).getMethod()));
+            ce.setMethod(
+                    (((ContrastMethodStrategy) binding.parse(instance, child, value)).getMethod()));
         }
 
         return ce;

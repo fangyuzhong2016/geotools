@@ -2,16 +2,16 @@ package org.geotools.styling.builder;
 
 import static org.junit.Assert.*;
 
+import java.util.logging.Logger;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.styling.SLDTransformer;
+import org.geotools.util.logging.Logging;
 import org.opengis.filter.FilterFactory2;
 
-/**
- * 
- *
- * @source $URL$
- */
+/** @source $URL$ */
 public abstract class AbstractStyleTest {
+
+    static final Logger LOGGER = Logging.getLogger(AbstractStyleTest.class);
 
     protected FilterFactory2 ff = CommonFactoryFinder.getFilterFactory2(null);
 
@@ -19,7 +19,7 @@ public abstract class AbstractStyleTest {
         try {
             SLDTransformer tx = new SLDTransformer();
             tx.setIndentation(2);
-            System.out.println(tx.transform(styleObject));
+            LOGGER.info(tx.transform(styleObject));
         } catch (Exception e) {
             throw new RuntimeException("An error occurred while printing the style", e);
         }
@@ -32,5 +32,4 @@ public abstract class AbstractStyleTest {
         assertEquals(1, collector.styles.size());
         assertTrue(collector.layers.size() == 0 || collector.layers.size() == 1);
     }
-
 }

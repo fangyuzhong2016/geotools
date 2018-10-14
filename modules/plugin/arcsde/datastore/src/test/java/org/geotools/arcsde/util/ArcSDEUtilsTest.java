@@ -19,28 +19,22 @@ package org.geotools.arcsde.util;
 
 import static org.junit.Assert.assertSame;
 
-import java.io.File;
-import java.io.PrintWriter;
-import java.util.Map;
-import java.util.TreeMap;
-
-import org.geotools.referencing.CRS;
-import org.geotools.referencing.crs.DefaultEngineeringCRS;
-import org.junit.Test;
-import org.opengis.referencing.crs.CoordinateReferenceSystem;
-
 import com.esri.sde.sdk.client.SeCoordinateReference;
 import com.esri.sde.sdk.client.SeObjectId;
 import com.esri.sde.sdk.pe.PeFactory;
 import com.esri.sde.sdk.pe.PeGeographicCS;
 import com.esri.sde.sdk.pe.PeProjectedCS;
 import com.esri.sde.sdk.pe.PeProjectionException;
+import java.io.File;
+import java.io.PrintWriter;
+import java.util.Map;
+import java.util.TreeMap;
+import org.geotools.referencing.CRS;
+import org.geotools.referencing.crs.DefaultEngineeringCRS;
+import org.junit.Test;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
-/**
- * 
- *
- * @source $URL$
- */
+/** @source $URL$ */
 public class ArcSDEUtilsTest {
     @Test
     public void testFindCompatibleCRS_Projected() throws Exception {
@@ -88,7 +82,7 @@ public class ArcSDEUtilsTest {
                 if (coordsys != null) {
                     coordsystems.put(i, coordsys.toString());
                 } else {
-                    System.err.println("No PeProjectedCS found for code " + i);
+                    // System.err.println("No PeProjectedCS found for code " + i);
                 }
             }
             for (int i : geogtranCodelist) {
@@ -96,7 +90,7 @@ public class ArcSDEUtilsTest {
                 if (coordsys != null) {
                     coordsystems.put(i, coordsys.toString());
                 } else {
-                    System.err.println("No PeGeographicCS found for code " + i);
+                    // System.err.println("No PeGeographicCS found for code " + i);
                 }
             }
 
@@ -111,11 +105,10 @@ public class ArcSDEUtilsTest {
 
         } catch (Exception e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            java.util.logging.Logger.getGlobal().log(java.util.logging.Level.INFO, "", e);
         } catch (PeProjectionException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            java.util.logging.Logger.getGlobal().log(java.util.logging.Level.INFO, "", e);
         }
     }
-
 }

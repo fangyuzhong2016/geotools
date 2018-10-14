@@ -18,23 +18,20 @@ package org.geotools.data.shapefile.shp;
 
 import java.nio.ByteBuffer;
 import java.nio.DoubleBuffer;
-
+import java.util.ArrayList;
+import java.util.List;
 import org.geotools.geometry.jts.JTS;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.CoordinateSequence;
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.MultiPoint;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.CoordinateSequence;
+import org.locationtech.jts.geom.Envelope;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.MultiPoint;
+import org.locationtech.jts.geom.Point;
 
 /**
- * 
  * @author aaime
  * @author Ian Schneider
- *
- *
  * @source $URL$
- * 
  */
 public class MultiPointHandler implements ShapeHandler {
     final ShapeType shapeType;
@@ -47,7 +44,8 @@ public class MultiPointHandler implements ShapeHandler {
     }
 
     public MultiPointHandler(ShapeType type, GeometryFactory gf) throws ShapefileException {
-        if ((type != ShapeType.MULTIPOINT) && (type != ShapeType.MULTIPOINTM)
+        if ((type != ShapeType.MULTIPOINT)
+                && (type != ShapeType.MULTIPOINTM)
                 && (type != ShapeType.MULTIPOINTZ)) {
             throw new ShapefileException(
                     "Multipointhandler constructor - expected type to be 8, 18, or 28");
@@ -56,10 +54,10 @@ public class MultiPointHandler implements ShapeHandler {
         shapeType = type;
         this.geometryFactory = gf;
     }
-    
+
     /**
      * Returns the shapefile shape type value for a point
-     * 
+     *
      * @return int Shapefile.POINT
      */
     public ShapeType getShapeType() {
@@ -68,9 +66,8 @@ public class MultiPointHandler implements ShapeHandler {
 
     /**
      * Calcuates the record length of this object.
-     * 
-     * @return int The length of the record that this shapepoint will take up in
-     *         a shapefile
+     *
+     * @return int The length of the record that this shapepoint will take up in a shapefile
      */
     public int getLength(Object geometry) {
         MultiPoint mp = (MultiPoint) geometry;
@@ -82,16 +79,18 @@ public class MultiPointHandler implements ShapeHandler {
             length = (mp.getNumGeometries() * 16) + 40;
         } else if (shapeType == ShapeType.MULTIPOINTM) {
             // add the additional MMin, MMax for 16, then 8 per measure
-            length = (mp.getNumGeometries() * 16) + 40 + 16
-                    + (8 * mp.getNumGeometries());
+            length = (mp.getNumGeometries() * 16) + 40 + 16 + (8 * mp.getNumGeometries());
         } else if (shapeType == ShapeType.MULTIPOINTZ) {
             // add the additional ZMin,ZMax, plus 8 per Z
-            length = (mp.getNumGeometries() * 16) + 40 + 16
-                    + (8 * mp.getNumGeometries()) + 16
-                    + (8 * mp.getNumGeometries());
+            length =
+                    (mp.getNumGeometries() * 16)
+                            + 40
+                            + 16
+                            + (8 * mp.getNumGeometries())
+                            + 16
+                            + (8 * mp.getNumGeometries());
         } else {
-            throw new IllegalStateException("Expected ShapeType of Arc, got "
-                    + shapeType);
+            throw new IllegalStateException("Expected ShapeType of Arc, got " + shapeType);
         }
 
         return length;
@@ -113,7 +112,7 @@ public class MultiPointHandler implements ShapeHandler {
         int numpoints = buffer.getInt();
         int dimensions = shapeType == shapeType.MULTIPOINTZ && !flatGeometry ? 3 : 2;
         CoordinateSequence cs =
-            JTS.createCS(geometryFactory.getCoordinateSequenceFactory(), numpoints, dimensions);
+                JTS.createCS(geometryFactory.getCoordinateSequenceFactory(), numpoints, dimensions);
 
         DoubleBuffer dbuffer = buffer.asDoubleBuffer();
         double[] ordinates = new double[numpoints * 2];
@@ -174,16 +173,22 @@ public class MultiPointHandler implements ShapeHandler {
                 }
             }
         }
-
-        if (shapeType == ShapeType.MULTIPOINTM
-                || shapeType == ShapeType.MULTIPOINTZ) {
-            buffer.putDouble(-10E40);
-            buffer.putDouble(-10E40);
-
-            for (int t = 0; t < mp.getNumGeometries(); t++) {
-                buffer.putDouble(-10E40);
+        // if have M coordinates
+        if (shapeType == ShapeType.MULTIPOINTM || shapeType == ShapeType.MULTIPOINTZ) {
+            // obtain all M values
+            List<Double> mvalues = new ArrayList<>();
+            for (int t = 0, tt = mp.getNumGeometries(); t < tt; t++) {
+                Point point = (Point) mp.getGeometryN(t);
+                mvalues.add(point.getCoordinateSequence().getM(0));
             }
+            // min, max
+            buffer.putDouble(mvalues.stream().min(Double::compare).get());
+            buffer.putDouble(mvalues.stream().max(Double::compare).get());
+            // encode all M values
+            mvalues.forEach(
+                    x -> {
+                        buffer.putDouble(x);
+                    });
         }
     }
-
 }

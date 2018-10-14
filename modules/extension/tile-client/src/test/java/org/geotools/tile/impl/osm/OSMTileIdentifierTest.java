@@ -27,7 +27,7 @@ public class OSMTileIdentifierTest extends TileIdentifierTest {
 
     @Test
     public void testGetId() {
-        System.out.println(this.tileId.getId());
+        // System.out.println(this.tileId.getId());
         Assert.assertEquals("SomeService_5_10_12", this.tileId.getId());
     }
 
@@ -38,23 +38,22 @@ public class OSMTileIdentifierTest extends TileIdentifierTest {
 
     @Test
     public void testGetRightNeighbour() {
-        OSMTileIdentifier neighbour = new OSMTileIdentifier(11, 12, new WebMercatorZoomLevel(5),
-                "SomeService");
+        OSMTileIdentifier neighbour =
+                new OSMTileIdentifier(11, 12, new WebMercatorZoomLevel(5), "SomeService");
 
         Assert.assertEquals(neighbour, this.tileId.getRightNeighbour());
     }
 
     @Test
     public void testGetLowertNeighbour() {
-        OSMTileIdentifier neighbour = new OSMTileIdentifier(10, 13, new WebMercatorZoomLevel(5),
-                "SomeService");
+        OSMTileIdentifier neighbour =
+                new OSMTileIdentifier(10, 13, new WebMercatorZoomLevel(5), "SomeService");
 
         Assert.assertEquals(neighbour, this.tileId.getLowerNeighbour());
     }
 
-    protected TileIdentifier createTestTileIdentifier(ZoomLevel zoomLevel, int x, int y,
-            String name) {
+    protected TileIdentifier createTestTileIdentifier(
+            ZoomLevel zoomLevel, int x, int y, String name) {
         return new OSMTileIdentifier(x, y, zoomLevel, name);
-
     }
 }

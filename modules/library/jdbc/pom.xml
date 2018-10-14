@@ -16,7 +16,7 @@
   <parent>
     <groupId>org.geotools</groupId>
     <artifactId>library</artifactId>
-    <version>19-SNAPSHOT</version>
+    <version>21-SNAPSHOT</version>
   </parent>
   
 
@@ -101,10 +101,9 @@
       <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
-    <dependency>
+    <dependency>    
       <groupId>com.mockrunner</groupId>
-      <artifactId>mockrunner</artifactId>
-      <!-- The version number is specified in the parent POM. -->
+      <artifactId>mockrunner-jdbc</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>

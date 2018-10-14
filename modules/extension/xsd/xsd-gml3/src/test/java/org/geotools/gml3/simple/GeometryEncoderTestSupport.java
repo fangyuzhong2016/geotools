@@ -21,7 +21,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Properties;
-
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
@@ -31,7 +30,6 @@ import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-
 import org.custommonkey.xmlunit.XMLUnit;
 import org.custommonkey.xmlunit.XpathEngine;
 import org.geotools.gml2.simple.GMLWriter;
@@ -39,10 +37,9 @@ import org.geotools.gml2.simple.GeometryEncoder;
 import org.geotools.gml3.GML;
 import org.geotools.gml3.GML3TestSupport;
 import org.geotools.xml.Encoder;
+import org.locationtech.jts.geom.Geometry;
 import org.w3c.dom.Document;
 import org.xml.sax.helpers.AttributesImpl;
-
-import com.vividsolutions.jts.geom.Geometry;
 
 public abstract class GeometryEncoderTestSupport extends GML3TestSupport {
 
@@ -58,17 +55,36 @@ public abstract class GeometryEncoderTestSupport extends GML3TestSupport {
         this.gtEncoder = new Encoder(createConfiguration());
         this.xpath = XMLUnit.newXpathEngine();
     }
-    
+
     protected Document encode(GeometryEncoder encoder, Geometry geometry) throws Exception {
         return encode(encoder, geometry, null);
     }
 
-    protected Document encode(GeometryEncoder encoder, Geometry geometry, String gmlId) throws Exception {
+    protected Document encode(GeometryEncoder encoder, Geometry geometry, String gmlId)
+            throws Exception {
+        return encode(encoder, geometry, true, gmlId, 6, false, false);
+    }
+
+    protected Document encode(
+            GeometryEncoder encoder, Geometry geometry, boolean encodeMeasures, String gmlId)
+            throws Exception {
+        return encode(encoder, geometry, encodeMeasures, gmlId, 6, false, false);
+    }
+
+    protected Document encode(
+            GeometryEncoder encoder,
+            Geometry geometry,
+            boolean encodeMeasures,
+            String gmlId,
+            int numDecimals,
+            boolean decimalEncoding,
+            boolean padWithZeros)
+            throws Exception {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
 
         // create the document serializer
-        SAXTransformerFactory txFactory = (SAXTransformerFactory) SAXTransformerFactory
-                .newInstance();
+        SAXTransformerFactory txFactory =
+                (SAXTransformerFactory) SAXTransformerFactory.newInstance();
 
         TransformerHandler xmls;
         try {
@@ -82,7 +98,15 @@ public abstract class GeometryEncoderTestSupport extends GML3TestSupport {
         xmls.getTransformer().setOutputProperty(OutputKeys.METHOD, "xml");
         xmls.setResult(new StreamResult(out));
 
-        GMLWriter handler = new GMLWriter(xmls, gtEncoder.getNamespaces(), 6, false, "gml");
+        GMLWriter handler =
+                new GMLWriter(
+                        xmls,
+                        gtEncoder.getNamespaces(),
+                        numDecimals,
+                        decimalEncoding,
+                        padWithZeros,
+                        "gml",
+                        encodeMeasures);
         handler.startDocument();
         handler.startPrefixMapping("gml", GML.NAMESPACE);
         handler.endPrefixMapping("gml");
@@ -97,5 +121,4 @@ public abstract class GeometryEncoderTestSupport extends GML3TestSupport {
         Document d = (Document) result.getNode();
         return d;
     }
-
 }
