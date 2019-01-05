@@ -19,7 +19,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Logger;
-import org.geotools.arcsde.ArcSDEDataStoreFactory;
 import org.geotools.arcsde.session.Command;
 import org.geotools.arcsde.session.ISession;
 import org.geotools.arcsde.session.ISessionPool;
@@ -31,10 +30,9 @@ import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.io.ParseException;
 import org.locationtech.jts.io.WKTReader;
 
-/** @source $URL$ */
 public class ClobTestData {
     private static final Logger LOGGER =
-            org.geotools.util.logging.Logging.getLogger(TestData.class.getPackage().getName());
+            org.geotools.util.logging.Logging.getLogger(TestData.class);
 
     public static SeColumnDefinition[] TEST_TABLE_COLS;
 

@@ -31,7 +31,6 @@ import org.locationtech.jts.geom.LineString;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 
-/** @source $URL$ */
 public class FeatureGraphGeneratorTest extends TestCase {
 
     public void test() throws Exception {
@@ -87,7 +86,7 @@ public class FeatureGraphGeneratorTest extends TestCase {
         SimpleFeature[] features = new SimpleFeature[lines.length];
 
         for (int i = 0; i < lines.length; i++) {
-            Integer id = new Integer(i);
+            Integer id = Integer.valueOf(i);
             features[i] =
                     SimpleFeatureBuilder.build(
                             schema, new Object[] {lines[i], id}, "fid" + id.toString());

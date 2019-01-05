@@ -25,7 +25,6 @@ import org.geotools.filter.FunctionExpressionImpl;
 import org.geotools.filter.capability.FunctionNameImpl;
 import org.opengis.filter.capability.FunctionName;
 
-/** @source $URL$ */
 public class FilterFunction_min_2 extends FunctionExpressionImpl {
 
     // public static FunctionName NAME = new FunctionNameImpl("min_2","long","long");
@@ -61,6 +60,6 @@ public class FilterFunction_min_2 extends FunctionExpressionImpl {
                     "Filter Function problem for function min argument #1 - expected type long");
         }
 
-        return new Long(Math.min(arg0, arg1));
+        return Long.valueOf(Math.min(arg0, arg1));
     }
 }

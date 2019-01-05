@@ -25,7 +25,6 @@ import org.geotools.filter.FunctionExpressionImpl;
 import org.geotools.filter.capability.FunctionNameImpl;
 import org.opengis.filter.capability.FunctionName;
 
-/** @source $URL$ */
 public class FilterFunction_in4 extends FunctionExpressionImpl {
 
     public static FunctionName NAME =
@@ -89,6 +88,6 @@ public class FilterFunction_in4 extends FunctionExpressionImpl {
                     "Filter Function problem for function in4 argument #4 - expected type Object");
         }
 
-        return new Boolean(StaticGeometry.in4(arg0, arg1, arg2, arg3, arg4));
+        return Boolean.valueOf(StaticGeometry.in4(arg0, arg1, arg2, arg3, arg4));
     }
 }

@@ -68,7 +68,6 @@ import org.geotools.data.simple.SimpleFeatureSource;
 import org.geotools.data.simple.SimpleFeatureStore;
 import org.geotools.data.store.ContentFeatureSource;
 import org.geotools.factory.CommonFactoryFinder;
-import org.geotools.factory.FactoryRegistryException;
 import org.geotools.feature.DefaultFeatureCollection;
 import org.geotools.feature.FeatureTypes;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
@@ -79,6 +78,7 @@ import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.util.URLs;
+import org.geotools.util.factory.FactoryRegistryException;
 import org.junit.After;
 import org.junit.Test;
 import org.locationtech.jts.geom.Coordinate;
@@ -108,7 +108,6 @@ import org.opengis.geometry.BoundingBox;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 /**
- * @source $URL$
  * @version $Id$
  * @author Ian Schneider
  */
@@ -860,7 +859,7 @@ public class ShapefileDataStoreTest extends TestCaseSupport {
                 if (b.byteValue() % 2 == 0) {
                     writer.remove();
                 } else {
-                    feat.setAttribute(1, new Byte((byte) -1));
+                    feat.setAttribute(1, Byte.valueOf((byte) -1));
                 }
             }
         } finally {
@@ -1063,15 +1062,15 @@ public class ShapefileDataStoreTest extends TestCaseSupport {
         for (int i = 0, ii = 20; i < ii; i++) {
 
             build.add(new GeometryFactory().createPoint(new Coordinate(1, -1)));
-            build.add(new Byte((byte) i));
-            build.add(new Short((short) i));
+            build.add(Byte.valueOf((byte) i));
+            build.add(Short.valueOf((short) i));
             build.add(new Double(i));
             build.add(new Float(i));
             build.add(new String(i + " "));
             build.add(new Date(i));
-            build.add(new Boolean(true));
-            build.add(new Integer(22));
-            build.add(new Long(1234567890123456789L));
+            build.add(Boolean.valueOf(true));
+            build.add(Integer.valueOf(22));
+            build.add(Long.valueOf(1234567890123456789L));
             build.add(new BigDecimal(new BigInteger("12345678901234567890123456789"), 2));
             build.add(new BigInteger("12345678901234567890123456789"));
             GregorianCalendar calendar = new GregorianCalendar();

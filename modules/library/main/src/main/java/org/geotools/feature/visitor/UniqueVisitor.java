@@ -38,7 +38,6 @@ import org.opengis.filter.expression.Expression;
  *
  * @author Cory Horner, Refractions
  * @since 2.2.M2
- * @source $URL$
  */
 public class UniqueVisitor implements FeatureCalc, FeatureAttributeVisitor, LimitingVisitor {
     private Expression expr;
@@ -102,7 +101,7 @@ public class UniqueVisitor implements FeatureCalc, FeatureAttributeVisitor, Limi
     }
 
     public void visit(SimpleFeature feature) {
-        visit(feature);
+        visit((Feature) feature);
     }
 
     public void visit(Feature feature) {

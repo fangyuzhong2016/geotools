@@ -47,7 +47,6 @@ import org.geotools.styling.LineSymbolizer;
 import org.geotools.styling.PointSymbolizer;
 import org.geotools.styling.PolygonSymbolizer;
 import org.geotools.styling.Rule;
-import org.geotools.styling.SLDParser;
 import org.geotools.styling.Stroke;
 import org.geotools.styling.Style;
 import org.geotools.styling.StyleBuilder;
@@ -57,6 +56,7 @@ import org.geotools.styling.StyledLayerDescriptor;
 import org.geotools.styling.Symbolizer;
 import org.geotools.styling.UserLayer;
 import org.geotools.test.TestData;
+import org.geotools.xml.styling.SLDParser;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Envelope;
 import org.locationtech.jts.geom.Geometry;
@@ -76,15 +76,12 @@ import org.opengis.filter.FilterFactory;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 
-/**
- * @author jamesm
- * @source $URL$
- */
+/** @author jamesm */
 public class Rendering2DTest extends TestCase {
 
     /** The logger for the rendering module. */
     private static final Logger LOGGER =
-            org.geotools.util.logging.Logging.getLogger("org.geotools.rendering");
+            org.geotools.util.logging.Logging.getLogger(Rendering2DTest.class);
 
     private final int xCenter = -74;
 
@@ -105,7 +102,7 @@ public class Rendering2DTest extends TestCase {
     protected static final FilterFactory filterFactory = CommonFactoryFinder.getFilterFactory(null);
 
     {
-        rendererHints.put("optimizedDataLoadingEnabled", new Boolean(true));
+        rendererHints.put("optimizedDataLoadingEnabled", Boolean.valueOf(true));
     }
 
     public Rendering2DTest(java.lang.String testName) {
@@ -172,7 +169,7 @@ public class Rendering2DTest extends TestCase {
         LineSymbolizer linesym = sFac.createLineSymbolizer();
         Stroke myStroke = sFac.getDefaultStroke();
         myStroke.setColor(filterFactory.literal("#0000ff"));
-        myStroke.setWidth(filterFactory.literal(new Integer(5)));
+        myStroke.setWidth(filterFactory.literal(Integer.valueOf(5)));
         LOGGER.fine("got new Stroke " + myStroke);
         linesym.setStroke(myStroke);
         return linesym;
@@ -186,7 +183,7 @@ public class Rendering2DTest extends TestCase {
         polysym.setFill(myFill);
         myStroke = sFac.getDefaultStroke();
         myStroke.setColor(filterFactory.literal("#0000ff"));
-        myStroke.setWidth(filterFactory.literal(new Integer(2)));
+        myStroke.setWidth(filterFactory.literal(Integer.valueOf(2)));
         polysym.setStroke(myStroke);
         return polysym;
     }
@@ -199,7 +196,7 @@ public class Rendering2DTest extends TestCase {
         polysym.setFill(myFill);
         myStroke = sFac.getDefaultStroke();
         myStroke.setColor(filterFactory.literal("#00ff00"));
-        myStroke.setWidth(filterFactory.literal(new Integer(2)));
+        myStroke.setWidth(filterFactory.literal(Integer.valueOf(2)));
         polysym.setStroke(myStroke);
         return polysym;
     }
@@ -909,7 +906,7 @@ public class Rendering2DTest extends TestCase {
 
         Stroke myStroke = sFac.getDefaultStroke();
         myStroke.setColor(filterFactory.literal("#0000ff"));
-        myStroke.setWidth(filterFactory.literal(new Integer(3)));
+        myStroke.setWidth(filterFactory.literal(Integer.valueOf(3)));
         LOGGER.info("got new Stroke " + myStroke);
         linesym.setStroke(myStroke);
 

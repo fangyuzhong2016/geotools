@@ -23,11 +23,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Map;
-import org.geotools.factory.Hints;
 import org.geotools.jdbc.ColumnMetadata;
 import org.geotools.jdbc.JDBCDataStore;
 import org.geotools.jdbc.PreparedFilterToSQL;
 import org.geotools.jdbc.PreparedStatementSQLDialect;
+import org.geotools.util.factory.Hints;
 import org.locationtech.jts.geom.Envelope;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.GeometryFactory;
@@ -37,7 +37,6 @@ import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.feature.type.GeometryDescriptor;
 
-/** @source $URL$ */
 public class PostGISPSDialect extends PreparedStatementSQLDialect {
 
     private PostGISDialect delegate;
@@ -283,5 +282,10 @@ public class PostGISPSDialect extends PreparedStatementSQLDialect {
             return name.substring(1);
         }
         return super.getArrayComponentTypeName(att);
+    }
+
+    public void encodeGeometryValue(Geometry value, int dimension, int srid, StringBuffer sql)
+            throws IOException {
+        delegate.encodeGeometryValue(value, dimension, srid, sql);
     }
 }

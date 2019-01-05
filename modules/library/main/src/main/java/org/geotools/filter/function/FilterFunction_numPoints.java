@@ -26,7 +26,6 @@ import org.geotools.filter.capability.FunctionNameImpl;
 import org.locationtech.jts.geom.Geometry;
 import org.opengis.filter.capability.FunctionName;
 
-/** @source $URL$ */
 public class FilterFunction_numPoints extends FunctionExpressionImpl {
 
     public static FunctionName NAME =
@@ -47,6 +46,6 @@ public class FilterFunction_numPoints extends FunctionExpressionImpl {
                     "Filter Function problem for function numPoints argument #0 - expected type Geometry");
         }
 
-        return new Integer(StaticGeometry.numPoints(arg0));
+        return Integer.valueOf(StaticGeometry.numPoints(arg0));
     }
 }

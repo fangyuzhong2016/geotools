@@ -29,7 +29,7 @@ import org.geotools.data.shapefile.index.quadtree.QuadTree;
 import org.geotools.data.shapefile.index.quadtree.StoreException;
 import org.geotools.data.shapefile.index.quadtree.fs.FileSystemIndexStore;
 import org.geotools.data.shapefile.shp.IndexFile;
-import org.geotools.util.NullProgressListener;
+import org.geotools.data.util.NullProgressListener;
 import org.geotools.util.URLs;
 import org.geotools.util.logging.Logging;
 import org.locationtech.jts.geom.Envelope;
@@ -260,8 +260,8 @@ class IndexManager {
                     }
                     try {
                         Data data = new Data(def);
-                        data.addValue(new Integer((int) recno + 1));
-                        data.addValue(new Long(shx.getOffsetInBytes((int) recno)));
+                        data.addValue(Integer.valueOf((int) recno + 1));
+                        data.addValue(Long.valueOf(shx.getOffsetInBytes((int) recno)));
                         if (LOGGER.isLoggable(Level.FINEST)) {
                             LOGGER.finest(
                                     "fid "

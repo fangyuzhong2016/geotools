@@ -31,7 +31,6 @@ import org.opengis.filter.expression.Expression;
  *
  * @author Cory Horner, Refractions Research Inc.
  * @since 2.2.M2
- * @source $URL$
  */
 public class MaxVisitor implements FeatureCalc, FeatureAttributeVisitor {
     private Expression expr;
@@ -132,7 +131,7 @@ public class MaxVisitor implements FeatureCalc, FeatureAttributeVisitor {
     public void reset() {
         /** Reset the count and current maximum */
         this.visited = false;
-        this.maxvalue = new Integer(Integer.MIN_VALUE);
+        this.maxvalue = Integer.valueOf(Integer.MIN_VALUE);
         this.countNaN = 0;
         this.countNull = 0;
     }

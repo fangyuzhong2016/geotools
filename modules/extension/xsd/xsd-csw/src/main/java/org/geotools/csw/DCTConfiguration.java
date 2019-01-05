@@ -5,7 +5,7 @@ import java.lang.reflect.Modifier;
 import java.util.Map;
 import javax.xml.namespace.QName;
 import org.geotools.csw.bindings.SimpleLiteralBinding;
-import org.geotools.xml.Configuration;
+import org.geotools.xsd.Configuration;
 
 /**
  * Parser configuration for the http://purl.org/dc/terms/ schema.
@@ -74,6 +74,7 @@ public class DCTConfiguration extends Configuration {
      *
      * @param args
      */
+    @SuppressWarnings("PMD.SystemPrintln")
     public static void main(String[] args) {
         for (Field f : DCT.class.getFields()) {
             if ((f.getModifiers() & (Modifier.STATIC | Modifier.FINAL)) != 0

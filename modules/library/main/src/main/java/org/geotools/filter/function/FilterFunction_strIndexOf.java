@@ -25,7 +25,6 @@ import org.geotools.filter.FunctionExpressionImpl;
 import org.geotools.filter.capability.FunctionNameImpl;
 import org.opengis.filter.capability.FunctionName;
 
-/** @source $URL$ */
 public class FilterFunction_strIndexOf extends FunctionExpressionImpl {
 
     public static FunctionName NAME =
@@ -65,6 +64,6 @@ public class FilterFunction_strIndexOf extends FunctionExpressionImpl {
                     "Filter Function problem for function strIndexOf argument #1 - expected type String");
         }
 
-        return new Integer(StaticGeometry.strIndexOf(arg0, arg1));
+        return Integer.valueOf(StaticGeometry.strIndexOf(arg0, arg1));
     }
 }

@@ -45,7 +45,6 @@ import java.util.regex.Pattern;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import org.geotools.factory.CommonFactoryFinder;
-import org.geotools.factory.Hints;
 import org.geotools.renderer.VendorOptionParser;
 import org.geotools.renderer.composite.BlendComposite;
 import org.geotools.renderer.composite.BlendComposite.BlendingMode;
@@ -65,13 +64,13 @@ import org.geotools.styling.Mark;
 import org.geotools.styling.PointPlacement;
 import org.geotools.styling.PointSymbolizer;
 import org.geotools.styling.PolygonSymbolizer;
-import org.geotools.styling.StyleAttributeExtractorTruncated;
 import org.geotools.styling.StyleFactory;
 import org.geotools.styling.Symbolizer;
 import org.geotools.styling.TextSymbolizer;
 import org.geotools.styling.TextSymbolizer2;
 import org.geotools.util.Range;
 import org.geotools.util.SoftValueHashMap;
+import org.geotools.util.factory.Hints;
 import org.locationtech.jts.geom.Geometry;
 import org.opengis.feature.Feature;
 import org.opengis.feature.simple.SimpleFeature;
@@ -88,12 +87,11 @@ import org.opengis.style.GraphicalSymbol;
  *
  * @author aaime
  * @author dblasby
- * @source $URL$
  */
 public class SLDStyleFactory {
     /** The logger for the rendering module. */
     private static final Logger LOGGER =
-            org.geotools.util.logging.Logging.getLogger("org.geotools.rendering");
+            org.geotools.util.logging.Logging.getLogger(SLDStyleFactory.class);
 
     /** Java System Property to enable legacy default anchor point. */
     public static final String USE_LEGACY_ANCHOR_POINT_KEY =
@@ -130,18 +128,18 @@ public class SLDStyleFactory {
     public static final int DEFAULT_MARK_SIZE = 16;
 
     static { // static block to populate the lookups
-        JOIN_LOOKUP.put("miter", new Integer(BasicStroke.JOIN_MITER));
-        JOIN_LOOKUP.put("bevel", new Integer(BasicStroke.JOIN_BEVEL));
-        JOIN_LOOKUP.put("round", new Integer(BasicStroke.JOIN_ROUND));
+        JOIN_LOOKUP.put("miter", Integer.valueOf(BasicStroke.JOIN_MITER));
+        JOIN_LOOKUP.put("bevel", Integer.valueOf(BasicStroke.JOIN_BEVEL));
+        JOIN_LOOKUP.put("round", Integer.valueOf(BasicStroke.JOIN_ROUND));
 
-        CAP_LOOKUP.put("butt", new Integer(BasicStroke.CAP_BUTT));
-        CAP_LOOKUP.put("round", new Integer(BasicStroke.CAP_ROUND));
-        CAP_LOOKUP.put("square", new Integer(BasicStroke.CAP_SQUARE));
+        CAP_LOOKUP.put("butt", Integer.valueOf(BasicStroke.CAP_BUTT));
+        CAP_LOOKUP.put("round", Integer.valueOf(BasicStroke.CAP_ROUND));
+        CAP_LOOKUP.put("square", Integer.valueOf(BasicStroke.CAP_SQUARE));
 
-        FONT_STYLE_LOOKUP.put("normal", new Integer(java.awt.Font.PLAIN));
-        FONT_STYLE_LOOKUP.put("italic", new Integer(java.awt.Font.ITALIC));
-        FONT_STYLE_LOOKUP.put("oblique", new Integer(java.awt.Font.ITALIC));
-        FONT_STYLE_LOOKUP.put("bold", new Integer(java.awt.Font.BOLD));
+        FONT_STYLE_LOOKUP.put("normal", Integer.valueOf(java.awt.Font.PLAIN));
+        FONT_STYLE_LOOKUP.put("italic", Integer.valueOf(java.awt.Font.ITALIC));
+        FONT_STYLE_LOOKUP.put("oblique", Integer.valueOf(java.awt.Font.ITALIC));
+        FONT_STYLE_LOOKUP.put("bold", Integer.valueOf(java.awt.Font.BOLD));
 
         ALPHA_COMPOSITE_LOOKUP.put("copy", AlphaComposite.SRC);
         ALPHA_COMPOSITE_LOOKUP.put("destination", AlphaComposite.DST);

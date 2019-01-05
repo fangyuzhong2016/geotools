@@ -26,7 +26,6 @@ import org.geotools.filter.capability.FunctionNameImpl;
 import org.locationtech.jts.geom.Geometry;
 import org.opengis.filter.capability.FunctionName;
 
-/** @source $URL$ */
 public class FilterFunction_numInteriorRing extends FunctionExpressionImpl {
 
     public static FunctionName NAME =
@@ -48,6 +47,6 @@ public class FilterFunction_numInteriorRing extends FunctionExpressionImpl {
                     "Filter Function problem for function numInteriorRing argument #0 - expected type Geometry");
         }
 
-        return new Integer(StaticGeometry.numInteriorRing(arg0));
+        return Integer.valueOf(StaticGeometry.numInteriorRing(arg0));
     }
 }

@@ -73,7 +73,7 @@ import org.opengis.geometry.BoundingBox;
 
 abstract class ArcSdeFeatureWriter implements FeatureWriter<SimpleFeatureType, SimpleFeature> {
 
-    protected static final Logger LOGGER = Logging.getLogger(ArcSdeFeatureWriter.class.getName());
+    protected static final Logger LOGGER = Logging.getLogger(ArcSdeFeatureWriter.class);
 
     /** Fid prefix used for just created and not yet committed features */
     private static final String NEW_FID_PREFIX = "@NEW_";
@@ -762,7 +762,7 @@ abstract class ArcSdeFeatureWriter implements FeatureWriter<SimpleFeatureType, S
                 // ignore SeColumns for which we don't have a known mapping
                 final int sdeType = columnDefinition.getType();
                 if (SeColumnDefinition.TYPE_SHAPE != sdeType
-                        && null == ArcSDEAdapter.getJavaBinding(new Integer(sdeType))) {
+                        && null == ArcSDEAdapter.getJavaBinding(Integer.valueOf(sdeType))) {
                     continue;
                 }
 

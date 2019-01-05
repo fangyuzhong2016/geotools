@@ -16,7 +16,7 @@
  */
 package org.geotools.gce.imagemosaic;
 
-import java.awt.Color;
+import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FilenameFilter;
@@ -41,7 +41,6 @@ import org.geotools.data.DataStoreFactorySpi;
 import org.geotools.data.DataUtilities;
 import org.geotools.data.shapefile.ShapefileDataStore;
 import org.geotools.data.simple.SimpleFeatureSource;
-import org.geotools.factory.Hints;
 import org.geotools.gce.imagemosaic.catalog.CatalogConfigurationBean;
 import org.geotools.gce.imagemosaic.catalog.GranuleCatalog;
 import org.geotools.parameter.DefaultParameterDescriptor;
@@ -50,6 +49,7 @@ import org.geotools.parameter.ParameterGroup;
 import org.geotools.util.Converters;
 import org.geotools.util.URLs;
 import org.geotools.util.Utilities;
+import org.geotools.util.factory.Hints;
 import org.locationtech.jts.geom.Geometry;
 import org.opengis.coverage.grid.Format;
 import org.opengis.coverage.grid.GridCoverageWriter;
@@ -94,15 +94,14 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
  *       new Double(1));--- Controls the transparency addition by specifying the treshold to use.
  *   <li>INPUT_IMAGE_THRESHOLD = new DefaultParameterDescriptor( "InputImageROI", Boolean.class,
  *       null, Boolean.FALSE)--- INPUT_IMAGE_THRESHOLD_VALUE = new DefaultParameterDescriptor(
- *       "InputImageROIThreshold", Integer.class, null, new Integer(1));--- These two can be used to
- *       control the application of ROIs on the input images based on tresholding values. Basically
- *       using the threshold you can ask the mosaic plugin to load or not certain pixels of the
- *       original images.
+ *       "InputImageROIThreshold", Integer.class, null, Integer.valueOf(1));--- These two can be
+ *       used to control the application of ROIs on the input images based on tresholding values.
+ *       Basically using the threshold you can ask the mosaic plugin to load or not certain pixels
+ *       of the original images.
  *
  * @author Simone Giannecchini (simboss), GeoSolutions
  * @author Stefan Alfons Krueger (alfonx), Wikisquare.de : Support for
  *     jar:file:foo.jar/bar.properties URLs
- * @source $URL$
  * @since 2.3
  */
 @SuppressWarnings("rawtypes")
@@ -112,7 +111,7 @@ public final class ImageMosaicFormat extends AbstractGridFormat implements Forma
 
     /** Logger. */
     private static final Logger LOGGER =
-            org.geotools.util.logging.Logging.getLogger(ImageMosaicFormat.class.toString());
+            org.geotools.util.logging.Logging.getLogger(ImageMosaicFormat.class);
 
     /** Filter tiles based on attributes from the input coverage */
     public static final ParameterDescriptor<Filter> FILTER =
@@ -525,7 +524,9 @@ public final class ImageMosaicFormat extends AbstractGridFormat implements Forma
                 }
 
                 final SimpleFeatureType schema = featureSource.getSchema();
-                if (schema == null) return false;
+                if (schema == null) {
+                    return false;
+                }
 
                 crs =
                         featureSource
@@ -535,9 +536,13 @@ public final class ImageMosaicFormat extends AbstractGridFormat implements Forma
                 if (crs == null) return false;
                 // looking for the location attribute
                 final String locationAttributeName = catalogBean.getLocationAttribute();
-                if (schema.getDescriptor(locationAttributeName) == null
-                        && schema.getDescriptor(locationAttributeName.toUpperCase()) == null)
+                if (locationAttributeName != null
+                        && schema != null
+                        && (schema.getDescriptor(locationAttributeName) == null
+                                && schema.getDescriptor(locationAttributeName.toUpperCase())
+                                        == null)) {
                     return false;
+                }
 
                 return true;
 

@@ -72,15 +72,11 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
  * mapping SDE types to Java ones and JTS Geometries, etc.
  *
  * @author Gabriel Roldan
- * @source $URL$
- *     http://svn.geotools.org/geotools/trunk/gt/modules/unsupported/arcsde/datastore/src/main
- *     /java/org/geotools/arcsde/data/ArcSDEAdapter.java $
- * @version $Id$
  */
 @SuppressWarnings("deprecation")
 public class ArcSDEAdapter {
-    /** Logger for ths class' package */
-    private static final Logger LOGGER = Logging.getLogger(ArcSDEAdapter.class.getName());
+    /** Logger for this class' package */
+    private static final Logger LOGGER = Logging.getLogger(ArcSDEAdapter.class);
 
     /** mappings of SDE attribute's types to Java ones */
     private static final Map<Integer, Class<?>> sde2JavaTypes = new HashMap<Integer, Class<?>>();
@@ -99,16 +95,16 @@ public class ArcSDEAdapter {
         sde2JavaTypes.put(Integer.valueOf(SeColumnDefinition.TYPE_FLOAT64), Double.class);
         sde2JavaTypes.put(Integer.valueOf(SeColumnDefinition.TYPE_DATE), Date.class);
         // @TODO: not at all, only for capable open table with GeoServer
-        // sde2JavaTypes.put(new Integer(SeColumnDefinition.TYPE_BLOB),
+        // sde2JavaTypes.put(Integer.valueOf(SeColumnDefinition.TYPE_BLOB),
         // byte[].class);
         sde2JavaTypes.put(Integer.valueOf(SeColumnDefinition.TYPE_CLOB), String.class);
         sde2JavaTypes.put(Integer.valueOf(SeColumnDefinition.TYPE_NCLOB), String.class);
 
-        // @TODO sde2JavaTypes.put(new Integer(SeColumnDefinition.TYPE_CLOB),
+        // @TODO sde2JavaTypes.put(Integer.valueOf(SeColumnDefinition.TYPE_CLOB),
         // String.class);
         // @Tested for view
         sde2JavaTypes.put(Integer.valueOf(SeColumnDefinition.TYPE_UUID), String.class);
-        // @TODO sde2JavaTypes.put(new Integer(SeColumnDefinition.TYPE_XML),
+        // @TODO sde2JavaTypes.put(Integer.valueOf(SeColumnDefinition.TYPE_XML),
         // org.w3c.dom.Document.class);
 
         // deprecated codes as for ArcSDE 9.0+. Adding them to maintain < 9.0
@@ -278,7 +274,7 @@ public class ArcSDEAdapter {
                                 @Override
                                 public Integer execute(ISession session, SeConnection connection)
                                         throws SeException, IOException {
-                                    return new Integer(table.getPermissions());
+                                    return Integer.valueOf(table.getPermissions());
                                 }
                             });
             final boolean hasWritePermissions = userHasWritePermissions(permMask.intValue());

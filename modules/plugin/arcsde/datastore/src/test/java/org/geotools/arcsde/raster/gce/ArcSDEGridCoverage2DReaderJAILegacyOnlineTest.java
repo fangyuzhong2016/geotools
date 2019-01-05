@@ -41,7 +41,7 @@ import javax.media.jai.JAI;
 import javax.media.jai.PlanarImage;
 import javax.media.jai.RecyclingTileFactory;
 import javax.media.jai.TileCache;
-import org.geotools.arcsde.ArcSDERasterFormatFactory;
+import org.geotools.arcsde.data.ArcSDERasterFormatFactory;
 import org.geotools.arcsde.session.ArcSDEConnectionConfig;
 import org.geotools.coverage.grid.GridCoverage2D;
 import org.geotools.coverage.grid.GridEnvelope2D;
@@ -71,18 +71,15 @@ import org.opengis.geometry.Envelope;
 import org.opengis.parameter.GeneralParameterValue;
 import org.opengis.parameter.ParameterValueGroup;
 
-/**
- * Tests over legacy data that should not be deleted
- *
- * @source $URL$
- */
+/** Tests over legacy data that should not be deleted */
 @SuppressWarnings("nls")
 @Ignore
 public class ArcSDEGridCoverage2DReaderJAILegacyOnlineTest {
 
     private static final String RASTER_TEST_DEBUG_TO_DISK = "raster.test.debugToDisk";
 
-    private static final Logger LOGGER = Logging.getLogger("org.geotools.arcsde.gce");
+    private static final Logger LOGGER =
+            Logging.getLogger(ArcSDEGridCoverage2DReaderJAILegacyOnlineTest.class);
 
     /** Whether to write the fetched rasters to disk or not */
     private static boolean DEBUG;

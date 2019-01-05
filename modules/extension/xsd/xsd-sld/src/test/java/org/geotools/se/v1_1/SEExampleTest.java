@@ -57,7 +57,6 @@ import org.opengis.style.GraphicalSymbol;
 import org.opengis.style.OverlapBehavior;
 import org.opengis.style.Rule;
 
-/** @source $URL$ */
 public class SEExampleTest extends SETestSupport {
 
     SimpleFeature f1;
@@ -272,7 +271,7 @@ public class SEExampleTest extends SETestSupport {
 
         Stroke s = sym.getStroke();
         assertEquals(255, s.getColor().evaluate(null, Color.class).getBlue());
-        assertEquals(new Integer(2), s.getWidth().evaluate(null, Integer.class));
+        assertEquals(Integer.valueOf(2), s.getWidth().evaluate(null, Integer.class));
     }
 
     public void testParsePolygonSymbolizer() throws Exception {

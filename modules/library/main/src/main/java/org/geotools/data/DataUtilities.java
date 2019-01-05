@@ -59,9 +59,9 @@ import org.geotools.data.simple.SimpleFeatureLocking;
 import org.geotools.data.simple.SimpleFeatureReader;
 import org.geotools.data.simple.SimpleFeatureSource;
 import org.geotools.data.simple.SimpleFeatureStore;
+import org.geotools.data.util.NullProgressListener;
 import org.geotools.data.view.DefaultView;
 import org.geotools.factory.CommonFactoryFinder;
-import org.geotools.factory.Hints;
 import org.geotools.feature.AttributeImpl;
 import org.geotools.feature.AttributeTypeBuilder;
 import org.geotools.feature.DefaultFeatureCollection;
@@ -87,9 +87,9 @@ import org.geotools.metadata.iso.citation.Citations;
 import org.geotools.referencing.CRS;
 import org.geotools.styling.UserLayer;
 import org.geotools.util.Converters;
-import org.geotools.util.NullProgressListener;
 import org.geotools.util.URLs;
 import org.geotools.util.Utilities;
+import org.geotools.util.factory.Hints;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.GeometryCollection;
@@ -190,9 +190,6 @@ import org.opengis.util.ProgressListener;
  * </ul>
  *
  * @author Jody Garnett, Refractions Research
- * @source $URL$
- *     http://svn.osgeo.org/geotools/trunk/modules/library/main/src/main/java/org/geotools/
- *     data/DataUtilities.java $
  */
 public class DataUtilities {
     /** Typemap used by {@link #createType(String, String)} methods */
@@ -818,7 +815,7 @@ public class DataUtilities {
 
     /**
      * Returns a non-null default value for the class that is passed in. This is a helper class an
-     * can't create a default class for any type but it does support:
+     * can't create a default class for all types but it does support:
      *
      * <ul>
      *   <li>String
@@ -838,6 +835,7 @@ public class DataUtilities {
      *   <li>java.sql.Time
      *   <li>java.util.Date
      *   <li>JTS Geometries
+     *   <li>Arrays - will return an empty array of the appropriate type
      * </ul>
      *
      * @param type
@@ -848,16 +846,16 @@ public class DataUtilities {
             return "";
         }
         if (type == Integer.class) {
-            return new Integer(0);
+            return Integer.valueOf(0);
         }
         if (type == Double.class) {
             return new Double(0);
         }
         if (type == Long.class) {
-            return new Long(0);
+            return Long.valueOf(0);
         }
         if (type == Short.class) {
-            return new Short((short) 0);
+            return Short.valueOf((short) 0);
         }
         if (type == Float.class) {
             return new Float(0.0f);
@@ -918,6 +916,10 @@ public class DataUtilities {
         }
         if (type == MultiPolygon.class) {
             return fac.createMultiPolygon(new Polygon[] {polygon});
+        }
+
+        if (type.isArray()) {
+            return Array.newInstance(type.getComponentType(), 0);
         }
 
         throw new IllegalArgumentException(type + " is not supported by this method");
@@ -2451,7 +2453,7 @@ public class DataUtilities {
      * This method changes the query object by simplifying the filter using SimplifyingFilterVisitor
      */
     public static Query simplifyFilter(Query query) {
-        if (query == null) {
+        if (query == null || query == Query.ALL) {
             return query;
         }
         Filter filter = SimplifyingFilterVisitor.simplify(query.getFilter());

@@ -40,7 +40,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
 import java.util.logging.Logger;
-import org.geotools.arcsde.ArcSDEDataStoreFactory;
 import org.geotools.arcsde.ArcSdeException;
 import org.geotools.arcsde.session.Command;
 import org.geotools.arcsde.session.Commands;
@@ -76,16 +75,12 @@ import org.opengis.feature.simple.SimpleFeatureType;
  * Provides access to the ArcSDEDataStore test data configuration.
  *
  * @author Gabriel Roldan, Axios Engineering
- * @source $URL$
- *     http://svn.geotools.org/geotools/trunk/gt/modules/plugin/arcsde/datastore/src/test/java
- *     /org/geotools/arcsde/data/TestData.java $
- * @version $Id$
  */
 @SuppressWarnings({"nls", "unchecked"})
 public class TestData {
 
     private static final Logger LOGGER =
-            org.geotools.util.logging.Logging.getLogger(TestData.class.getPackage().getName());
+            org.geotools.util.logging.Logging.getLogger(TestData.class);
 
     public static final String[] TEST_TABLE_COLS = {
         "INT32_COL",

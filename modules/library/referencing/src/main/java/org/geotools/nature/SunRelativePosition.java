@@ -61,7 +61,6 @@ import java.util.TimeZone;
  * range, results will be given, but the potential for error is higher.
  *
  * @since 2.1
- * @source $URL$
  * @version $Id$
  * @author Remi Eve
  * @author Martin Desruisseaux (IRD)
@@ -620,6 +619,7 @@ public class SunRelativePosition {
      * où <var>date</var> est un argument optionel spécifiant la date et l'heure. Si cet argument
      * est omis, la date et heure actuelles seront utilisées.
      */
+    @SuppressWarnings("PMD.SystemPrintln")
     public static void main(final String[] args) throws ParseException {
         final DateFormat format =
                 DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);

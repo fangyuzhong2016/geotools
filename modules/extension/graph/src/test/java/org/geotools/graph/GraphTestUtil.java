@@ -30,7 +30,6 @@ import org.geotools.graph.structure.opt.OptDirectedNode;
 import org.geotools.graph.structure.opt.OptNode;
 import org.geotools.graph.util.FIFOQueue;
 
-/** @source $URL$ */
 public class GraphTestUtil {
 
     /**
@@ -93,7 +92,7 @@ public class GraphTestUtil {
         n1.setDegree(1);
 
         builder.addNode(n1);
-        node2id.put(n1, new Integer(0));
+        node2id.put(n1, Integer.valueOf(0));
 
         OptNode n2 = null;
         Edge e = null;
@@ -105,11 +104,11 @@ public class GraphTestUtil {
             else n2.setDegree(1);
 
             builder.addNode(n2);
-            node2id.put(n2, new Integer(i));
+            node2id.put(n2, Integer.valueOf(i));
 
             e = builder.buildEdge(n1, n2);
             builder.addEdge(e);
-            edge2id.put(e, new Integer(i - 1));
+            edge2id.put(e, Integer.valueOf(i - 1));
 
             n1 = n2;
         }
@@ -127,7 +126,7 @@ public class GraphTestUtil {
         n1.setOutDegree(1);
 
         builder.addNode(n1);
-        node2id.put(n1, new Integer(0));
+        node2id.put(n1, Integer.valueOf(0));
 
         OptDirectedNode n2 = null;
         Edge e = null;
@@ -144,11 +143,11 @@ public class GraphTestUtil {
             }
 
             builder.addNode(n2);
-            node2id.put(n2, new Integer(i));
+            node2id.put(n2, Integer.valueOf(i));
 
             e = builder.buildEdge(n1, n2);
             builder.addEdge(e);
-            edge2id.put(e, new Integer(i - 1));
+            edge2id.put(e, Integer.valueOf(i - 1));
 
             n1 = n2;
         }

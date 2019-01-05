@@ -48,12 +48,11 @@ import org.xml.sax.helpers.NamespaceSupport;
  *
  * @author iant
  * @author Niels Charlier
- * @source $URL$
  */
 public final class ExpressionDOMParser {
     /** The logger for the filter module. */
     private static final Logger LOGGER =
-            org.geotools.util.logging.Logging.getLogger("org.geotools.filter");
+            org.geotools.util.logging.Logging.getLogger(ExpressionDOMParser.class);
 
     /** Factory for creating filters. */
     private FilterFactory2 ff;
@@ -418,7 +417,7 @@ public final class ExpressionDOMParser {
             // see if it's an int
             try {
                 try {
-                    Integer intLiteral = new Integer(nodeValue);
+                    Integer intLiteral = Integer.valueOf(nodeValue);
 
                     return ff.literal(intLiteral);
                 } catch (NumberFormatException e) {

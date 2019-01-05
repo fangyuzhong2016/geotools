@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-/** @source $URL$ */
 public class PriorityQueue implements Collection, Queue {
     public static double RESIZE_FACTOR = 1.5;
 
@@ -51,7 +50,7 @@ public class PriorityQueue implements Collection, Queue {
         if (m_count >= m_values.length) resize((int) (m_values.length * RESIZE_FACTOR), true);
 
         m_values[m_count] = value;
-        m_obj2index.put(value, new Integer(m_count));
+        m_obj2index.put(value, Integer.valueOf(m_count));
 
         moveUp(m_count);
     }

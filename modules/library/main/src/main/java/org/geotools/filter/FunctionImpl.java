@@ -42,7 +42,6 @@ import org.opengis.parameter.Parameter;
  * <p>
  *
  * @author Cory Horner, Refractions Research
- * @source $URL$
  */
 public class FunctionImpl extends ExpressionAbstract implements Function {
 
@@ -160,7 +159,8 @@ public class FunctionImpl extends ExpressionAbstract implements Function {
         for (int i = 0; i < args.size(); i++) {
             Parameter<?> arg = args.get(i);
             if (arg.getMaxOccurs() == 0) {
-                throw new IllegalArgumentException(String.format("Argument %s has zero max"));
+                throw new IllegalArgumentException(
+                        String.format("Argument %s has zero max", arg.getName()));
             }
             if (arg.getMinOccurs() != 1 || arg.getMaxOccurs() != 1) {
                 // this can only happen for the last argument

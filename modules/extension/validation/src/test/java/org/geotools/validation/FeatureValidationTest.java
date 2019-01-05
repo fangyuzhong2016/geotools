@@ -31,7 +31,6 @@ import org.geotools.validation.spatial.IsValidGeometryValidation;
  *
  * @author jgarnett, Refractions Research, Inc.
  * @author $Author: sploreg $ (last modification)
- * @source $URL$
  * @version $Id$
  */
 public class FeatureValidationTest extends DataTestCase {
@@ -87,7 +86,7 @@ public class FeatureValidationTest extends DataTestCase {
             this.newRoad =
                     SimpleFeatureBuilder.build(
                             this.roadType,
-                            (new Object[] {new Integer(2), line(new int[] {1, 2, 1, 2}), "r4"}),
+                            (new Object[] {Integer.valueOf(2), line(new int[] {1, 2, 1, 2}), "r4"}),
                             "road.rd4");
         } catch (IllegalAttributeException e) {
         }

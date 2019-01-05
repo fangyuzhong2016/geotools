@@ -6,8 +6,8 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 import net.opengis.cat.csw20.Csw20Factory;
 import org.geotools.csw.bindings.SimpleLiteralBinding;
-import org.geotools.xml.Configuration;
-import org.geotools.xml.SimpleContentComplexEMFBinding;
+import org.geotools.xsd.Configuration;
+import org.geotools.xsd.SimpleContentComplexEMFBinding;
 import org.picocontainer.MutablePicoContainer;
 
 /**
@@ -65,6 +65,7 @@ public class DCConfiguration extends Configuration {
      *
      * @param args
      */
+    @SuppressWarnings("PMD.SystemPrintln")
     public static void main(String[] args) {
         for (Field f : DC.class.getFields()) {
             if ((f.getModifiers() & (Modifier.STATIC | Modifier.FINAL)) != 0

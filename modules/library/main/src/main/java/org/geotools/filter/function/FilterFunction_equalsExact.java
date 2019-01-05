@@ -26,7 +26,6 @@ import org.geotools.filter.capability.FunctionNameImpl;
 import org.locationtech.jts.geom.Geometry;
 import org.opengis.filter.capability.FunctionName;
 
-/** @source $URL$ */
 public class FilterFunction_equalsExact extends FunctionExpressionImpl {
 
     public static FunctionName NAME =
@@ -60,6 +59,6 @@ public class FilterFunction_equalsExact extends FunctionExpressionImpl {
                     "Filter Function problem for function equalsExact argument #1 - expected type Geometry");
         }
 
-        return new Boolean(StaticGeometry.equalsExact(arg0, arg1));
+        return Boolean.valueOf(StaticGeometry.equalsExact(arg0, arg1));
     }
 }

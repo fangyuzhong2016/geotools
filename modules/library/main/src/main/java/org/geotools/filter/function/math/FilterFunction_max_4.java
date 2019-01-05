@@ -25,7 +25,6 @@ import org.geotools.filter.FunctionExpressionImpl;
 import org.geotools.filter.capability.FunctionNameImpl;
 import org.opengis.filter.capability.FunctionName;
 
-/** @source $URL$ */
 public class FilterFunction_max_4 extends FunctionExpressionImpl {
 
     // public static FunctionName NAME = new FunctionNameImpl("max_4","int","int");
@@ -61,6 +60,6 @@ public class FilterFunction_max_4 extends FunctionExpressionImpl {
                     "Filter Function problem for function max argument #1 - expected type double");
         }
 
-        return new Integer(Math.max(arg0, arg1));
+        return Integer.valueOf(Math.max(arg0, arg1));
     }
 }

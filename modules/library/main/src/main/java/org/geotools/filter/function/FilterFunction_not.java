@@ -25,7 +25,6 @@ import org.geotools.filter.FunctionExpressionImpl;
 import org.geotools.filter.capability.FunctionNameImpl;
 import org.opengis.filter.capability.FunctionName;
 
-/** @source $URL$ */
 public class FilterFunction_not extends FunctionExpressionImpl {
 
     public static FunctionName NAME =
@@ -46,6 +45,6 @@ public class FilterFunction_not extends FunctionExpressionImpl {
                     "Filter Function problem for function not argument #0 - expected type boolean");
         }
 
-        return new Boolean(StaticGeometry.not(arg0));
+        return Boolean.valueOf(StaticGeometry.not(arg0));
     }
 }

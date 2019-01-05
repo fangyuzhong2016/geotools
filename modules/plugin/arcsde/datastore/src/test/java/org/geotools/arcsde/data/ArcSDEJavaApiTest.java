@@ -69,16 +69,11 @@ import org.junit.Test;
  * obvious things.
  *
  * @author Gabriel Roldan, Axios Engineering
- * @source $URL$
- *     http://svn.geotools.org/geotools/trunk/gt/modules/plugin/arcsde/datastore/src/test/java
- *     /org/geotools/arcsde/data/ArcSDEJavaApiTest.java $
- * @version $Id$
  */
 public class ArcSDEJavaApiTest {
     /** package logger */
     private static Logger LOGGER =
-            org.geotools.util.logging.Logging.getLogger(
-                    ArcSDEJavaApiTest.class.getPackage().getName());
+            org.geotools.util.logging.Logging.getLogger(ArcSDEJavaApiTest.class);
 
     /** utility to load test parameters and build a datastore with them */
     private static TestData testData;
@@ -215,7 +210,7 @@ public class ArcSDEJavaApiTest {
 
                         rowQuery.close();
                         countQuery.close();
-                        return new Integer(resultCount);
+                        return Integer.valueOf(resultCount);
                     }
                 };
         final Integer resultCount = session.issue(countCmd);
@@ -272,7 +267,7 @@ public class ArcSDEJavaApiTest {
 
                         int actualCount = tableStats.getCount();
                         query.close();
-                        return new Integer(actualCount);
+                        return Integer.valueOf(actualCount);
                     }
                 };
 

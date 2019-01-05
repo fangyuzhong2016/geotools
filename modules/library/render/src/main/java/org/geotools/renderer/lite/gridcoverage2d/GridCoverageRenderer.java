@@ -62,12 +62,15 @@ import org.geotools.coverage.grid.GridEnvelope2D;
 import org.geotools.coverage.grid.GridGeometry2D;
 import org.geotools.coverage.grid.io.AbstractGridFormat;
 import org.geotools.coverage.grid.io.GridCoverage2DReader;
-import org.geotools.factory.Hints;
-import org.geotools.factory.Hints.Key;
+import org.geotools.coverage.util.CoverageUtilities;
 import org.geotools.geometry.GeneralEnvelope;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.image.ImageWorker;
+import org.geotools.image.util.ColorUtilities;
+import org.geotools.image.util.ImageUtilities;
+import org.geotools.metadata.i18n.ErrorKeys;
+import org.geotools.metadata.i18n.Errors;
 import org.geotools.parameter.Parameter;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.operation.builder.GridToEnvelopeMapper;
@@ -78,15 +81,12 @@ import org.geotools.renderer.composite.BlendComposite.BlendingMode;
 import org.geotools.renderer.crs.ProjectionHandler;
 import org.geotools.renderer.crs.ProjectionHandlerFinder;
 import org.geotools.renderer.crs.WrappingProjectionHandler;
-import org.geotools.resources.coverage.CoverageUtilities;
-import org.geotools.resources.i18n.ErrorKeys;
-import org.geotools.resources.i18n.Errors;
-import org.geotools.resources.image.ColorUtilities;
-import org.geotools.resources.image.ImageUtilities;
 import org.geotools.styling.ChannelSelection;
 import org.geotools.styling.RasterSymbolizer;
 import org.geotools.styling.SelectedChannelType;
 import org.geotools.styling.SelectedChannelTypeImpl;
+import org.geotools.util.factory.Hints;
+import org.geotools.util.factory.Hints.Key;
 import org.locationtech.jts.algorithm.match.HausdorffSimilarityMeasure;
 import org.locationtech.jts.geom.Envelope;
 import org.locationtech.jts.geom.Geometry;
@@ -110,7 +110,6 @@ import org.opengis.referencing.operation.TransformException;
  * @author Simone Giannecchini, GeoSolutions SAS
  * @author Andrea Aime, GeoSolutions SAS
  * @author Alessio Fabiani, GeoSolutions SAS
- * @source $URL$
  * @version $Id$
  */
 @SuppressWarnings("deprecation")
@@ -139,12 +138,12 @@ public final class GridCoverageRenderer {
             final File tempDir = new File(System.getProperty("user.home"), "gt-renderer");
             if (!tempDir.exists()) {
                 if (!tempDir.mkdir())
-                    System.out.println("Unable to create debug dir, exiting application!!!");
+                    LOGGER.severe("Unable to create debug dir, exiting application!!!");
                 DEBUG = false;
                 DUMP_DIRECTORY = null;
             } else {
                 DUMP_DIRECTORY = tempDir.getAbsolutePath();
-                System.out.println("Rendering debug dir " + DUMP_DIRECTORY);
+                LOGGER.info("Rendering debug dir " + DUMP_DIRECTORY);
             }
         }
     }
@@ -454,7 +453,7 @@ public final class GridCoverageRenderer {
         // FINAL AFFINE
         //
         // ///////////////////////////////////////////////////////////////////
-        final GridCoverage2D preSymbolizer = affine(coverage, bkgValues);
+        final GridCoverage2D preSymbolizer = affine(coverage, bkgValues, symbolizer);
         if (preSymbolizer == null) {
             return null;
         }
@@ -606,7 +605,8 @@ public final class GridCoverageRenderer {
      * @param preResample
      * @return
      */
-    private GridCoverage2D affine(GridCoverage2D input, double[] bkgValues) {
+    private GridCoverage2D affine(
+            GridCoverage2D input, double[] bkgValues, RasterSymbolizer symbolizer) {
         // NOTICE that at this stage the image we get should be 8 bits, either RGB, RGBA, Gray,
         // GrayA
         // either multiband or indexed. It could also be 16 bits indexed!!!!
@@ -665,8 +665,14 @@ public final class GridCoverageRenderer {
 
         RenderedImage im = null;
         try {
+            // if we have a color map don't expand the index color model
+            Hints localHints = new Hints();
+            localHints.putAll(hints);
+            if (symbolizer != null && symbolizer.getColorMap() != null) {
+                localHints.put(JAI.KEY_REPLACE_INDEX_COLOR_MODEL, false);
+            }
             ImageWorker iw = new ImageWorker(finalImage);
-            iw.setRenderingHints(hints);
+            iw.setRenderingHints(localHints);
             iw.setROI(roi);
             iw.setNoData(noData);
             iw.affine(finalRasterTransformation, interpolation, bkgValues);

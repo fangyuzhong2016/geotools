@@ -25,7 +25,6 @@ import org.geotools.filter.FunctionExpressionImpl;
 import org.geotools.filter.capability.FunctionNameImpl;
 import org.opengis.filter.capability.FunctionName;
 
-/** @source $URL$ */
 public class FilterFunction_strStartsWith extends FunctionExpressionImpl {
 
     public static FunctionName NAME =
@@ -65,6 +64,6 @@ public class FilterFunction_strStartsWith extends FunctionExpressionImpl {
                     "Filter Function problem for function strStartsWith argument #1 - expected type String");
         }
 
-        return new Boolean(StaticGeometry.strStartsWith(arg0, arg1));
+        return Boolean.valueOf(StaticGeometry.strStartsWith(arg0, arg1));
     }
 }

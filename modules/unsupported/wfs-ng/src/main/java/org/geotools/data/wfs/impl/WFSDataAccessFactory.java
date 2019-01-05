@@ -40,8 +40,8 @@ import org.geotools.data.wfs.internal.WFSClient;
 import org.geotools.data.wfs.internal.WFSConfig;
 import org.geotools.ows.ServiceException;
 import org.geotools.util.KVP;
+import org.geotools.util.PreventLocalEntityResolver;
 import org.geotools.util.SimpleInternationalString;
-import org.geotools.xml.PreventLocalEntityResolver;
 import org.geotools.xml.XMLHandlerHints;
 import org.opengis.feature.Feature;
 import org.opengis.feature.type.FeatureType;
@@ -649,7 +649,7 @@ public class WFSDataAccessFactory implements DataAccessFactory {
         }
 
         if (params.containsKey(GML_COMPATIBLE_TYPENAMES.getName())
-                && (Boolean) params.get(GML_COMPATIBLE_TYPENAMES)) {}
+                && (Boolean) params.get(GML_COMPATIBLE_TYPENAMES.getName())) {}
 
         return dataAccess;
     }

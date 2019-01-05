@@ -28,8 +28,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import org.geotools.filter.ExpressionDOMParser;
 import org.geotools.filter.FilterDOMParser;
-import org.geotools.filter.FilterTransformer;
 import org.geotools.gml.producer.GeometryTransformer;
+import org.geotools.xml.filter.FilterTransformer;
 import org.locationtech.jts.geom.Envelope;
 import org.locationtech.jts.geom.Geometry;
 import org.opengis.filter.Filter;
@@ -41,7 +41,6 @@ import org.xml.sax.SAXException;
  *
  * @author dzwiers, Refractions Research, Inc.
  * @author $Author: dmzwiers $ (last modification)
- * @source $URL$
  * @version $Id$
  */
 public class ArgHelper {
@@ -714,7 +713,7 @@ public class ArgHelper {
                 throw new NullPointerException("The short element passed in was null");
             }
 
-            return new Short(ReaderUtils.getElementText(elem));
+            return Short.valueOf(ReaderUtils.getElementText(elem));
         }
 
         public Object getInstance(String value) {
@@ -722,7 +721,7 @@ public class ArgHelper {
                 throw new NullPointerException("The short element passed in was null");
             }
 
-            return new Short(value);
+            return Short.valueOf(value);
         }
 
         /**
@@ -809,7 +808,7 @@ public class ArgHelper {
                 throw new NullPointerException("The integer passed in was null");
             }
 
-            return new Integer(ReaderUtils.getElementText(elem));
+            return Integer.valueOf(ReaderUtils.getElementText(elem));
         }
 
         public Object getInstance(String value) {
@@ -817,7 +816,7 @@ public class ArgHelper {
                 throw new NullPointerException("The integer passed in was null");
             }
 
-            return new Integer(value);
+            return Integer.valueOf(value);
         }
 
         /**
@@ -904,7 +903,7 @@ public class ArgHelper {
                 throw new NullPointerException("The long passed in was null");
             }
 
-            return new Long(ReaderUtils.getElementText(elem));
+            return Long.valueOf(ReaderUtils.getElementText(elem));
         }
 
         public Object getInstance(String value) {
@@ -912,7 +911,7 @@ public class ArgHelper {
                 throw new NullPointerException("The long passed in was null");
             }
 
-            return new Long(value);
+            return Long.valueOf(value);
         }
 
         /**
@@ -1405,7 +1404,7 @@ public class ArgHelper {
                 throw new NullPointerException("The boolean passed in was null");
             }
 
-            return new Boolean(ReaderUtils.getElementText(elem));
+            return Boolean.valueOf(ReaderUtils.getElementText(elem));
         }
 
         public Object getInstance(String elem) {
@@ -1413,7 +1412,7 @@ public class ArgHelper {
                 throw new NullPointerException("The boolean passed in was null");
             }
 
-            return new Boolean(elem);
+            return Boolean.valueOf(elem);
         }
 
         /**
@@ -1500,7 +1499,7 @@ public class ArgHelper {
                 throw new NullPointerException("The string passed in was null");
             }
 
-            return new String(ReaderUtils.getElementText(elem));
+            return ReaderUtils.getElementText(elem);
         }
 
         public Object getInstance(String value) {
@@ -1508,7 +1507,7 @@ public class ArgHelper {
                 throw new NullPointerException("The string passed in was null");
             }
 
-            return new String(value);
+            return value;
         }
 
         /**

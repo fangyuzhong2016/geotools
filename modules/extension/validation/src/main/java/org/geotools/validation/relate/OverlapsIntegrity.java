@@ -19,15 +19,16 @@ package org.geotools.validation.relate;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.data.simple.SimpleFeatureSource;
 import org.geotools.factory.CommonFactoryFinder;
-import org.geotools.factory.FactoryRegistryException;
 import org.geotools.filter.IllegalFilterException;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.geometry.jts.ReferencedEnvelope;
+import org.geotools.util.factory.FactoryRegistryException;
 import org.geotools.validation.ValidationResults;
 import org.locationtech.jts.geom.Envelope;
 import org.locationtech.jts.geom.Geometry;
@@ -44,7 +45,6 @@ import org.opengis.filter.spatial.Disjoint;
  *
  * @author bowens, ptozer<br>
  *     Created Apr 27, 2004<br>
- * @source $URL$
  * @version <br>
  *     <b>Puropse:</b><br>
  *     <p>Tests to see if a Geometry overlaps, partially or entirely, with another Geometry.
@@ -62,9 +62,8 @@ import org.opengis.filter.spatial.Disjoint;
  */
 public class OverlapsIntegrity extends RelationIntegrity {
     private static final Logger LOGGER =
-            org.geotools.util.logging.Logging.getLogger("org.geotools.validation");
+            org.geotools.util.logging.Logging.getLogger(OverlapsIntegrity.class);
     private static HashSet usedIDs;
-    private boolean showPrintLines = true;
 
     /** OverlapsIntegrity Constructor */
     public OverlapsIntegrity() {
@@ -187,11 +186,6 @@ public class OverlapsIntegrity extends RelationIntegrity {
                                                     + "("
                                                     + f2.getID()
                                                     + ")");
-                                    if (showPrintLines) {
-                                        // System.out.println(f1.getDefaultGeometry().getGeometryType()+" "+getGeomTypeRefA()+"("+f1.getID()+")"+" overlapped "+getGeomTypeRefA()+"("+f2.getID()+"), Result was not "+expected);
-                                        // System.out.println(f1.getID().substring(8)+ " " +
-                                        // f2.getID().substring(8));
-                                    }
                                     success = false;
                                     errors++;
                                 }
@@ -199,8 +193,8 @@ public class OverlapsIntegrity extends RelationIntegrity {
                         }
                     }
                     usedIDs.add(f1.getID());
-                    if (counter % countInterval == 0 && showPrintLines)
-                        System.out.println("count: " + counter);
+                    if (counter % countInterval == 0 && LOGGER.isLoggable(Level.INFO))
+                        LOGGER.info("count: " + counter);
 
                 } finally {
                     fr2.close();
@@ -250,7 +244,9 @@ public class OverlapsIntegrity extends RelationIntegrity {
         int counter = 0;
         SimpleFeatureType ft = featureSourceA.getSchema();
 
-        System.out.println("---------------- In Overlaps Integrity ----------------");
+        if (LOGGER.isLoggable(Level.INFO)) {
+            LOGGER.info("---------------- In Overlaps Integrity ----------------");
+        }
 
         SimpleFeatureCollection collectionA = null;
 
@@ -310,11 +306,6 @@ public class OverlapsIntegrity extends RelationIntegrity {
                                                         + f2.getID()
                                                         + ")");
                                     }
-                                    if (showPrintLines) {
-                                        // System.out.println(f1.getDefaultGeometry().getGeometryType()+" "+getGeomTypeRefA()+"("+f1.getID()+")"+" overlapped "+getGeomTypeRefA()+"("+f2.getID()+"), Result was not "+expected);
-                                        // System.out.println(f1.getID().substring(11)+ " " +
-                                        // f2.getID().substring(11));
-                                    }
                                     success = false;
                                     errors++;
                                 }
@@ -332,9 +323,9 @@ public class OverlapsIntegrity extends RelationIntegrity {
         } finally {
             Date date2 = new Date();
             float dt = date2.getTime() - date1.getTime();
-            if (showPrintLines) {
-                System.out.println("########## Validation duration: " + dt);
-                System.out.println("########## Validation errors: " + errors);
+            if (LOGGER.isLoggable(Level.INFO)) {
+                LOGGER.info("########## Validation duration: " + dt);
+                LOGGER.info("########## Validation errors: " + errors);
             }
             fr1.close();
         }

@@ -46,8 +46,8 @@ import org.xml.sax.SAXException;
  *
  * @author dzwiers www.refractions.net
  * @see Schema
- * @source $URL$
  */
+@SuppressWarnings("PMD")
 public class XSISimpleTypes {
     private static Map m;
 

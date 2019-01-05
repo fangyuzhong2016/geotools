@@ -31,7 +31,6 @@ import org.opengis.filter.expression.Literal;
  *
  * @author Jody
  * @author mbedward
- * @source $URL$
  */
 public class CategorizeFunctionTest extends SEFunctionTestBase {
 
@@ -155,5 +154,30 @@ public class CategorizeFunctionTest extends SEFunctionTestBase {
             parameters.add(ff2.literal(thresholds[i]));
         }
         parameters.add(ff2.literal(categories[categories.length - 1]));
+    }
+
+    @Test
+    public void testEqualsHashCode() {
+        final String[] categories = {"low", "mid", "high", "super"};
+        final Double[] thresholds = {0.0, 50.0, 100.0};
+        setupParameters(categories, thresholds);
+        parameters.add(ff2.literal("preceding"));
+
+        Function fn1 = finder.findFunction("categorize", parameters);
+        Function fn2 = finder.findFunction("categorize", parameters);
+        thresholds[0] = -20d;
+        setupParameters(categories, thresholds);
+        parameters.add(ff2.literal("preceding"));
+        Function fn3 = finder.findFunction("categorize", parameters);
+
+        // symmetric
+        assertEquals(fn1, fn2);
+        assertEquals(fn2, fn1);
+        // same hashcode
+        assertEquals(fn1.hashCode(), fn2.hashCode());
+
+        // but not equal to fn3
+        assertNotEquals(fn1, fn3);
+        assertNotEquals(fn2, fn3);
     }
 }

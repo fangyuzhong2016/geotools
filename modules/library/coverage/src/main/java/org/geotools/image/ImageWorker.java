@@ -112,17 +112,17 @@ import javax.media.jai.operator.MultiplyConstDescriptor;
 import javax.media.jai.operator.SubtractDescriptor;
 import javax.media.jai.operator.XorConstDescriptor;
 import javax.media.jai.registry.RenderedRegistryMode;
-import org.geotools.factory.Hints;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.geometry.jts.LiteCoordinateSequence;
 import org.geotools.image.io.ImageIOExt;
+import org.geotools.image.util.ColorUtilities;
+import org.geotools.image.util.ImageUtilities;
+import org.geotools.metadata.i18n.ErrorKeys;
+import org.geotools.metadata.i18n.Errors;
 import org.geotools.referencing.ReferencingFactoryFinder;
 import org.geotools.referencing.operation.transform.WarpBuilder;
-import org.geotools.resources.Arguments;
-import org.geotools.resources.i18n.ErrorKeys;
-import org.geotools.resources.i18n.Errors;
-import org.geotools.resources.image.ColorUtilities;
-import org.geotools.resources.image.ImageUtilities;
+import org.geotools.util.Arguments;
+import org.geotools.util.factory.Hints;
 import org.geotools.util.logging.Logging;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.GeometryFactory;
@@ -141,13 +141,37 @@ import org.opengis.referencing.operation.MathTransformFactory;
  * an undetermined state and should not be used anymore.
  *
  * @since 2.3
- * @source $URL$
  * @version $Id$
  * @author Simone Giannecchini
  * @author Bryce Nordgren
  * @author Martin Desruisseaux
  */
 public class ImageWorker {
+
+    static final Integer ONE = 1;
+
+    /** Byte identity lookup table for indexed color models */
+    private static final byte[][] IDENTITY_BYTE;
+    /** Short identity lookup table for indexed color models */
+    private static final short[][] IDENTITY_SHORT;
+
+    static {
+        final byte[][] data = new byte[1][256];
+        for (int i = 0; i < 256; i++) {
+            data[0][i] = (byte) (0xFF & i);
+        }
+
+        IDENTITY_BYTE = data;
+    }
+
+    static {
+        final short[][] data = new short[1][65535];
+        for (int i = 0; i < 65535; i++) {
+            data[0][i] = (short) (0xFFFF & i);
+        }
+        IDENTITY_SHORT = data;
+    }
+
     private static final double[] ROI_BACKGROUND = new double[] {0};
 
     private static final double[][] ROI_THRESHOLDS = new double[][] {{1.0}};
@@ -175,7 +199,7 @@ public class ImageWorker {
     }
 
     /** The logger to use for this class. */
-    private static final Logger LOGGER = Logging.getLogger("org.geotools.image");
+    private static final Logger LOGGER = Logging.getLogger(ImageWorker.class);
 
     /** CODEC_LIB_AVAILABLE */
     private static final boolean CODEC_LIB_AVAILABLE = PackageUtil.isCodecLibAvailable();
@@ -353,7 +377,7 @@ public class ImageWorker {
     static {
         ALPHA_LUT = new byte[256];
         for (int i = 1; i < 256; i++) {
-            ALPHA_LUT[i] = (byte) (255 & 0xFF);
+            ALPHA_LUT[i] = (byte) 255;
         }
     }
 
@@ -433,6 +457,12 @@ public class ImageWorker {
      */
     private int tileCacheDisabled = 0;
 
+    /** Subsampling factor for the x axis, used in statistical operations (extrema and histogram) */
+    private int xPeriod = ONE;
+
+    /** Subsampling factor for the y axis, used in statistical operations (extrema and histogram) */
+    private int yPeriod = ONE;
+
     /**
      * Creates a new uninitialized builder for an {@linkplain #load image read} or a {@linkplain
      * #mosaic mosaic operation}
@@ -473,6 +503,44 @@ public class ImageWorker {
      */
     public ImageWorker(final RenderedImage image) {
         setImage(image);
+    }
+
+    /**
+     * The x-period used by statistical operations (e.g. extrema, mean, histogram). Defaults to 1.
+     *
+     * @return
+     */
+    public int getXPeriod() {
+        return xPeriod;
+    }
+
+    /**
+     * Sets the x-period used by statistical operations (e.g. extrema, mean, histogram). E.g.,
+     * setting it to 2 wil make the statistical operations read one pixel and skip one pixel, and so
+     * on.
+     */
+    public ImageWorker setXPeriod(int xPeriod) {
+        this.xPeriod = xPeriod;
+        return this;
+    }
+
+    /**
+     * The y-period used by statistical operations (e.g. extrema, mean, histogram). Defaults to 1.
+     *
+     * @return
+     */
+    public int getYPeriod() {
+        return yPeriod;
+    }
+
+    /**
+     * Sets the x-period used by statistical operations (e.g. extrema, mean, histogram). E.g.,
+     * setting it to 2 wil make the statistical operations read one pixel and skip one pixel, and so
+     * on.
+     */
+    public ImageWorker setYPeriod(int yPeriod) {
+        this.yPeriod = yPeriod;
+        return this;
     }
 
     public Range extractNoDataProperty(final RenderedImage image) {
@@ -1018,7 +1086,6 @@ public class ImageWorker {
     private double[][] getExtremas() {
         Object extrema = getComputedProperty(EXTREMA);
         if (!(extrema instanceof double[][])) {
-            final Integer ONE = 1;
             // Create the parameterBlock
             ParameterBlock pb = new ParameterBlock();
             pb.setSource(image, 0);
@@ -1032,8 +1099,8 @@ public class ImageWorker {
                 }
 
                 // Image parameters
-                pb.set(ONE, 0); // xPeriod
-                pb.set(ONE, 1); // yPeriod
+                pb.set(xPeriod, 0); // xPeriod
+                pb.set(yPeriod, 1); // yPeriod
                 pb.set(roi, 2); // ROI
                 pb.set(nodata, 3); // NoData
                 pb.set(bands, 5); // band indexes
@@ -1058,8 +1125,8 @@ public class ImageWorker {
                 }
             } else {
                 pb.set(roi, 0); // The region of the image to scan. Default to all.
-                pb.set(ONE, 1); // The horizontal sampling rate. Default to 1.
-                pb.set(ONE, 2); // The vertical sampling rate. Default to 1.
+                pb.set(xPeriod, 1); // The horizontal sampling rate. Default to 1.
+                pb.set(yPeriod, 2); // The vertical sampling rate. Default to 1.
                 pb.set(ONE, 4); // Maximum number of run length codes to store. Default to 1.
                 image = JAI.create("Extrema", pb, getRenderingHints());
             }
@@ -1086,8 +1153,8 @@ public class ImageWorker {
                 }
 
                 // Image parameters
-                pb.set(ONE, 0); // xPeriod
-                pb.set(ONE, 1); // yPeriod
+                pb.set(xPeriod, 0); // xPeriod
+                pb.set(yPeriod, 1); // yPeriod
                 pb.set(roi, 2); // ROI
                 pb.set(nodata, 3); // NoData
                 pb.set(bands, 5); // band indexes
@@ -1132,8 +1199,8 @@ public class ImageWorker {
                 }
             } else {
                 pb.set(roi, 0); // The region of the image to scan. Default to all.
-                pb.set(ONE, 1); // The horizontal sampling rate. Default to 1.
-                pb.set(ONE, 2); // The vertical sampling rate. Default to 1.
+                pb.set(xPeriod, 1); // The horizontal sampling rate. Default to 1.
+                pb.set(yPeriod, 2); // The vertical sampling rate. Default to 1.
                 pb.set(numBins, 3); // Bin number.
                 pb.set(lowValues, 4); // Lower values per band.
                 pb.set(highValues, 5); // Higher values per band.
@@ -1165,8 +1232,8 @@ public class ImageWorker {
                 }
 
                 // Image parameters
-                pb.set(ONE, 0); // xPeriod
-                pb.set(ONE, 1); // yPeriod
+                pb.set(xPeriod, 0); // xPeriod
+                pb.set(yPeriod, 1); // yPeriod
                 pb.set(roi, 2); // ROI
                 pb.set(nodata, 3); // NoData
                 pb.set(bands, 5); // band indexes
@@ -1189,8 +1256,8 @@ public class ImageWorker {
                 }
             } else {
                 pb.set(roi, 0); // The region of the image to scan. Default to all.
-                pb.set(ONE, 1); // The horizontal sampling rate. Default to 1.
-                pb.set(ONE, 2); // The vertical sampling rate. Default to 1.
+                pb.set(xPeriod, 1); // The horizontal sampling rate. Default to 1.
+                pb.set(yPeriod, 2); // The vertical sampling rate. Default to 1.
                 image = JAI.create("Mean", pb, getRenderingHints());
             }
             mean = getComputedProperty(MEAN);
@@ -1935,6 +2002,64 @@ public class ImageWorker {
 
         // All post conditions for this method contract.
         assert image.getColorModel() instanceof ComponentColorModel;
+        return this;
+    }
+
+    /**
+     * If the image has an indexed color model, removes it, and replaces it with a component color
+     * model. can be useful before a band-merge if the image in question is not meant to be color
+     * expanded.
+     *
+     * @return
+     */
+    public final ImageWorker removeIndexColorModel() {
+        if (image.getColorModel() instanceof IndexColorModel) {
+            LookupTable lut = null;
+            SampleModel sampleModel = image.getSampleModel();
+            int dataType = sampleModel.getDataType();
+            switch (dataType) {
+                case DataBuffer.TYPE_BYTE:
+                    lut = LookupTableFactory.create(IDENTITY_BYTE);
+                    break;
+
+                case DataBuffer.TYPE_USHORT:
+                    boolean unsigned = dataType == DataBuffer.TYPE_SHORT;
+                    lut = LookupTableFactory.create(IDENTITY_SHORT, unsigned);
+                    break;
+
+                default:
+                    throw new IllegalArgumentException(
+                            Errors.format(ErrorKeys.ILLEGAL_ARGUMENT_$2, "datatype", dataType));
+            }
+
+            // prepare color model and sample model
+            final ComponentColorModel destinationColorModel =
+                    new ComponentColorModel(
+                            ColorSpace.getInstance(ColorSpace.CS_GRAY),
+                            false,
+                            false,
+                            Transparency.OPAQUE,
+                            dataType);
+            final SampleModel destinationSampleModel =
+                    destinationColorModel.createCompatibleSampleModel(
+                            sampleModel.getWidth(), sampleModel.getHeight());
+            ImageLayout layout = new ImageLayout(image);
+            layout.setColorModel(destinationColorModel);
+            layout.setSampleModel(destinationSampleModel);
+
+            // perform the lookup
+            final RenderingHints oldRi = this.getRenderingHints();
+            final RenderingHints newRi = (RenderingHints) oldRi.clone();
+            newRi.add(new RenderingHints(JAI.KEY_IMAGE_LAYOUT, layout));
+            try {
+                setRenderingHints(newRi);
+                lookup(lut);
+            } finally {
+                // restore RI
+                this.setRenderingHints(oldRi);
+            }
+        }
+
         return this;
     }
 
@@ -3406,7 +3531,7 @@ public class ImageWorker {
                         ConstantDescriptor.create(
                                 (float) image.getWidth(),
                                 (float) image.getHeight(),
-                                new Byte[] {new Byte(alpha)},
+                                new Byte[] {Byte.valueOf(alpha)},
                                 new RenderingHints(JAI.KEY_IMAGE_LAYOUT, layout));
 
                 ParameterBlock pb = new ParameterBlock();

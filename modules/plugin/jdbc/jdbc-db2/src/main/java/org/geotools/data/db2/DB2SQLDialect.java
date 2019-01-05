@@ -27,13 +27,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
-import org.geotools.factory.Hints;
-import org.geotools.factory.Hints.Key;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.jdbc.JDBCDataStore;
 import org.geotools.jdbc.SQLDialect;
 import org.geotools.referencing.CRS;
+import org.geotools.util.factory.Hints;
+import org.geotools.util.factory.Hints.Key;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Envelope;
 import org.locationtech.jts.geom.Geometry;
@@ -53,7 +53,6 @@ import org.opengis.feature.type.GeometryDescriptor;
 import org.opengis.referencing.ReferenceIdentifier;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
-/** @source $URL$ */
 public class DB2SQLDialect extends SQLDialect {
 
     private static Integer GEOMETRY = 9001;
@@ -547,7 +546,7 @@ public class DB2SQLDialect extends SQLDialect {
                             gDescr.getCoordinateReferenceSystem().getIdentifiers()) {
                         PreparedStatement ps1 = cx.prepareStatement(SELECT_SRS_NAME_FROM_ORG);
                         ps1.setString(1, ident.getCodeSpace());
-                        ps1.setInt(2, new Integer(ident.getCode()));
+                        ps1.setInt(2, Integer.valueOf(ident.getCode()));
                         ResultSet rs = ps1.executeQuery();
                         if (rs.next()) {
                             srsName = rs.getString(1);

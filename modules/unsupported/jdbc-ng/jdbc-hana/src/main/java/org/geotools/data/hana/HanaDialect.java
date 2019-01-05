@@ -18,42 +18,20 @@ package org.geotools.data.hana;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
+import java.sql.*;
 import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Time;
-import java.sql.Timestamp;
-import java.sql.Types;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Level;
 import org.geotools.data.Query;
 import org.geotools.data.hana.wkb.HanaWKBParser;
 import org.geotools.data.hana.wkb.HanaWKBParserException;
 import org.geotools.data.hana.wkb.HanaWKBWriter;
 import org.geotools.data.hana.wkb.HanaWKBWriterException;
-import org.geotools.factory.Hints;
 import org.geotools.jdbc.JDBCDataStore;
 import org.geotools.jdbc.PreparedFilterToSQL;
 import org.geotools.jdbc.PreparedStatementSQLDialect;
 import org.geotools.referencing.CRS;
-import org.locationtech.jts.geom.Envelope;
-import org.locationtech.jts.geom.Geometry;
-import org.locationtech.jts.geom.GeometryCollection;
-import org.locationtech.jts.geom.GeometryFactory;
-import org.locationtech.jts.geom.LineString;
-import org.locationtech.jts.geom.MultiLineString;
-import org.locationtech.jts.geom.MultiPoint;
-import org.locationtech.jts.geom.MultiPolygon;
-import org.locationtech.jts.geom.Point;
-import org.locationtech.jts.geom.Polygon;
+import org.locationtech.jts.geom.*;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.feature.type.GeometryDescriptor;
@@ -144,6 +122,8 @@ public class HanaDialect extends PreparedStatementSQLDialect {
 
     private boolean functionEncodingEnabled;
 
+    private HanaVersion hanaVersion;
+
     private SchemaCache currentSchemaCache = new SchemaCache();
 
     public void setFunctionEncodingEnabled(boolean enabled) {
@@ -153,7 +133,12 @@ public class HanaDialect extends PreparedStatementSQLDialect {
     @Override
     public void initializeConnection(Connection cx) throws SQLException {
         super.initializeConnection(cx);
-        // Probably a good location to retrieve version information
+        if (hanaVersion == null) {
+            hanaVersion = new HanaVersion(cx.getMetaData().getDatabaseProductVersion());
+            if ((hanaVersion.getVersion() == 1) && (hanaVersion.getRevision() < 120)) {
+                throw new SQLException("Only HANA 2 and HANA 1 SPS 12 and later are supported");
+            }
+        }
     }
 
     @Override
@@ -370,7 +355,11 @@ public class HanaDialect extends PreparedStatementSQLDialect {
 
     @Override
     public void encodeGeometryColumn(
-            GeometryDescriptor gatt, String prefix, int srid, Hints hints, StringBuffer sql) {
+            GeometryDescriptor gatt,
+            String prefix,
+            int srid,
+            org.geotools.util.factory.Hints hints,
+            StringBuffer sql) {
         encodeColumnName(prefix, gatt.getLocalName(), sql);
         sql.append(".ST_AsBinary()");
     }
@@ -389,7 +378,7 @@ public class HanaDialect extends PreparedStatementSQLDialect {
             String column,
             GeometryFactory factory,
             Connection cx,
-            Hints hints)
+            org.geotools.util.factory.Hints hints)
             throws IOException, SQLException {
         try {
             return parseWkb(rs.getBytes(column), factory);
@@ -405,7 +394,7 @@ public class HanaDialect extends PreparedStatementSQLDialect {
             int column,
             GeometryFactory factory,
             Connection cx,
-            Hints hints)
+            org.geotools.util.factory.Hints hints)
             throws IOException, SQLException {
         try {
             return parseWkb(rs.getBytes(column), factory);
@@ -508,7 +497,9 @@ public class HanaDialect extends PreparedStatementSQLDialect {
         // HANA accepts 2-, 3- and 4-dimensional geometries in each geometry column.
         // Therefore, we store the information about the dimension in an extra metadata table.
         int dimensions = 2;
-        Integer dimHint = (Integer) gd.getUserData().get(Hints.COORDINATE_DIMENSION);
+        Integer dimHint =
+                (Integer)
+                        gd.getUserData().get(org.geotools.util.factory.Hints.COORDINATE_DIMENSION);
         if (dimHint != null) {
             dimensions = dimHint;
         }
@@ -718,7 +709,7 @@ public class HanaDialect extends PreparedStatementSQLDialect {
     }
 
     @Override
-    protected void addSupportedHints(Set<Hints.Key> hints) {
+    protected void addSupportedHints(Set<org.geotools.util.factory.Hints.Key> hints) {
         // TODO Add Hints#GEOMETRY_SIMPLIFICATION as soon as it is available
     }
 
@@ -797,7 +788,7 @@ public class HanaDialect extends PreparedStatementSQLDialect {
 
     @Override
     public PreparedFilterToSQL createPreparedFilterToSQL() {
-        return new HanaFilterToSQL(this, functionEncodingEnabled);
+        return new HanaFilterToSQL(this, functionEncodingEnabled, hanaVersion);
     }
 
     private String resolveSchema(String schemaName, Connection cx)

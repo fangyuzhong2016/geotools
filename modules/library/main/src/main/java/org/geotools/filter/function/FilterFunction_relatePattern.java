@@ -26,7 +26,6 @@ import org.geotools.filter.capability.FunctionNameImpl;
 import org.locationtech.jts.geom.Geometry;
 import org.opengis.filter.capability.FunctionName;
 
-/** @source $URL$ */
 public class FilterFunction_relatePattern extends FunctionExpressionImpl {
     public static FunctionName NAME =
             new FunctionNameImpl(
@@ -72,6 +71,6 @@ public class FilterFunction_relatePattern extends FunctionExpressionImpl {
                     "Filter Function problem for function relatePattern argument #2 - expected type String");
         }
 
-        return new Boolean(StaticGeometry.relatePattern(arg0, arg1, arg2));
+        return Boolean.valueOf(StaticGeometry.relatePattern(arg0, arg1, arg2));
     }
 }

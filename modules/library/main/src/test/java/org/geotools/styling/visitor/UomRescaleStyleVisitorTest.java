@@ -63,10 +63,7 @@ import org.opengis.filter.expression.Expression;
 import si.uom.SI;
 import systems.uom.common.USCustomary;
 
-/**
- * @author milton
- * @source $URL$
- */
+/** @author milton */
 public class UomRescaleStyleVisitorTest {
 
     FilterFactory2 ff = CommonFactoryFinder.getFilterFactory2();
@@ -402,26 +399,32 @@ public class UomRescaleStyleVisitorTest {
     }
 
     // LINE SYMBOLIZER TESTS with dynamic dash arrays
+    @Test
     public void testVisitLineSymbolizerDynamicDashArray_ScalePixelNull() {
         visitLineSymbolizerTestDynamicDashArray(10, null);
     }
 
+    @Test
     public void testVisitLineSymbolizerDynamicDashArray_ScalePixelExplicit() {
         visitLineSymbolizerTestDynamicDashArray(10, Units.PIXEL);
     }
 
+    @Test
     public void testVisitLineSymbolizerDynamicDashArray_ScaleMeter1() {
         visitLineSymbolizerTestDynamicDashArray(1, SI.METRE);
     }
 
+    @Test
     public void testVisitLineSymbolizerDynamicDashArray_ScaleMeter10() {
         visitLineSymbolizerTestDynamicDashArray(10, SI.METRE);
     }
 
+    @Test
     public void testVisitLineSymbolizerDynamicDashArray_ScaleFoot1() {
         visitLineSymbolizerTestDynamicDashArray(1, USCustomary.FOOT);
     }
 
+    @Test
     public void testVisitLineSymbolizerDynamicDashArray_ScaleFoot10() {
         visitLineSymbolizerTestDynamicDashArray(10, USCustomary.FOOT);
     }

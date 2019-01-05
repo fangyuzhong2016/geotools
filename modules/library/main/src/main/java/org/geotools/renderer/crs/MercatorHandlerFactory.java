@@ -25,16 +25,12 @@ import org.geotools.referencing.operation.projection.Mercator;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
-/**
- * Returns a {@link ProjectionHandler} for the {@link Mercator} projection
- *
- * @source $URL$
- */
+/** Returns a {@link ProjectionHandler} for the {@link Mercator} projection */
 public class MercatorHandlerFactory implements ProjectionHandlerFactory {
 
     private static final ReferencedEnvelope VALID_AREA =
             new ReferencedEnvelope(
-                    -Double.MAX_VALUE, Double.MAX_VALUE, -85, 85, DefaultGeographicCRS.WGS84);
+                    -Integer.MAX_VALUE, Integer.MAX_VALUE, -85, 85, DefaultGeographicCRS.WGS84);
 
     public ProjectionHandler getHandler(
             ReferencedEnvelope renderingEnvelope,

@@ -65,11 +65,10 @@ import org.opengis.filter.expression.PropertyName;
  * WARNING: this is unstable and subject to radical change.
  *
  * @author Cory Horner, Refractions Research Inc.
- * @source $URL$
  */
 public class StyleGenerator {
     private static final java.util.logging.Logger LOGGER =
-            org.geotools.util.logging.Logging.getLogger("org.geotools.brewer.color");
+            org.geotools.util.logging.Logging.getLogger(StyleGenerator.class);
     public static final int ELSEMODE_IGNORE = 0;
     public static final int ELSEMODE_INCLUDEASMIN = 1;
     public static final int ELSEMODE_INCLUDEASMAX = 2;
@@ -279,7 +278,7 @@ public class StyleGenerator {
      */
     private static Object chopInteger(Object value) {
         if ((value instanceof Number) && (value.toString().endsWith(".0"))) {
-            return new Integer(((Number) value).intValue());
+            return Integer.valueOf(((Number) value).intValue());
         } else {
             return value;
         }
@@ -291,7 +290,7 @@ public class StyleGenerator {
      * @param count
      */
     private static String getRuleName(int count) {
-        String strVal = new Integer(count).toString();
+        String strVal = Integer.valueOf(count).toString();
 
         if (strVal.length() == 1) {
             return "rule0" + strVal;

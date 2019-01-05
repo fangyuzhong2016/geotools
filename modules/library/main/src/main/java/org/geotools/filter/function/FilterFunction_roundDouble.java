@@ -25,7 +25,6 @@ import org.geotools.filter.FunctionExpressionImpl;
 import org.geotools.filter.capability.FunctionNameImpl;
 import org.opengis.filter.capability.FunctionName;
 
-/** @source $URL$ */
 public class FilterFunction_roundDouble extends FunctionExpressionImpl {
 
     public static FunctionName NAME =
@@ -50,6 +49,6 @@ public class FilterFunction_roundDouble extends FunctionExpressionImpl {
                     "Filter Function problem for function roundDouble argument #0 - expected type double");
         }
 
-        return new Integer(StaticGeometry.roundDouble(arg0));
+        return Integer.valueOf(StaticGeometry.roundDouble(arg0));
     }
 }

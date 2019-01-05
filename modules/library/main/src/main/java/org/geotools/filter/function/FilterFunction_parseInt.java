@@ -25,7 +25,6 @@ import org.geotools.filter.FunctionExpressionImpl;
 import org.geotools.filter.capability.FunctionNameImpl;
 import org.opengis.filter.capability.FunctionName;
 
-/** @source $URL$ */
 public class FilterFunction_parseInt extends FunctionExpressionImpl {
 
     public static FunctionName NAME =
@@ -49,6 +48,6 @@ public class FilterFunction_parseInt extends FunctionExpressionImpl {
                     "Filter Function problem for function parseInt argument #0 - expected type String");
         }
 
-        return new Integer(StaticGeometry.parseInt(arg0));
+        return Integer.valueOf(StaticGeometry.parseInt(arg0));
     }
 }

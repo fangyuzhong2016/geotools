@@ -28,7 +28,6 @@ import java.util.List;
  * @author roehrig
  *     <p>TODO To change the template for this generated type comment go to Window - Preferences -
  *     Java - Code Style - Code Templates
- * @source $URL$
  */
 public class AlgoPoint2D {
 
@@ -204,7 +203,7 @@ public class AlgoPoint2D {
 
     public static Point2D[] split(Point2D p0, Point2D p1, double maxLength) {
         // The first and last node are not inserted
-        if (maxLength <= 0.0 || maxLength == Double.NaN) return null;
+        if (maxLength <= 0.0 || Double.isNaN(maxLength)) return null;
         int n = (int) Math.ceil(p0.distance(p1) / maxLength);
         if (n == 0) return null;
         double x1 = p0.getX();
@@ -270,7 +269,7 @@ public class AlgoPoint2D {
             result += AlgoPoint2D.cross(p10, (AlgoPoint2D.subtract(p, p0)));
         }
 
-        return new Boolean(result > 0.0);
+        return Boolean.valueOf(result > 0.0);
     }
 
     /**

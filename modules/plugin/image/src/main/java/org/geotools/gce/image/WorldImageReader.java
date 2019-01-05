@@ -56,13 +56,13 @@ import org.geotools.data.DataSourceException;
 import org.geotools.data.FileGroupProvider.FileGroup;
 import org.geotools.data.PrjFileReader;
 import org.geotools.data.WorldFileReader;
-import org.geotools.factory.Hints;
 import org.geotools.geometry.GeneralEnvelope;
 import org.geotools.image.io.ImageIOExt;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.operation.builder.GridToEnvelopeMapper;
 import org.geotools.referencing.operation.matrix.XAffineTransform;
 import org.geotools.referencing.operation.transform.ProjectiveTransform;
+import org.geotools.util.factory.Hints;
 import org.opengis.coverage.grid.Format;
 import org.opengis.geometry.Envelope;
 import org.opengis.geometry.MismatchedDimensionException;
@@ -83,13 +83,12 @@ import org.opengis.referencing.operation.TransformException;
  * @author simone giannecchini
  * @author alessio fabiani
  * @author rgould
- * @source $URL$
  */
 public final class WorldImageReader extends AbstractGridCoverage2DReader
         implements GridCoverage2DReader {
 
     /** Logger. */
-    private Logger LOGGER = org.geotools.util.logging.Logging.getLogger("org.geotools.gce.image");
+    private Logger LOGGER = org.geotools.util.logging.Logging.getLogger(WorldImageReader.class);
 
     private boolean wmsRequest;
 
@@ -416,13 +415,13 @@ public final class WorldImageReader extends AbstractGridCoverage2DReader
         // set params
         //
         // /////////////////////////////////////////////////////////////////////
-        Integer imageChoice = new Integer(0);
+        Integer imageChoice = Integer.valueOf(0);
         final ImageReadParam readP = new ImageReadParam();
         if (!wmsRequest) {
             try {
                 imageChoice = setReadParams(overviewPolicy, readP, requestedEnvelope, dim);
             } catch (TransformException e) {
-                new DataSourceException(e);
+                throw new DataSourceException(e);
             }
         }
         // /////////////////////////////////////////////////////////////////////

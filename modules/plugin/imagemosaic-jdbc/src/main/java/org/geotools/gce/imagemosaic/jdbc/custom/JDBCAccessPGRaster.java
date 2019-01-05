@@ -55,14 +55,10 @@ import org.locationtech.jts.io.WKBWriter;
  * This class is used for JDBC Access to the Postgis raster feature
  *
  * @author Christian Mueller
- * @source $URL$
- *     http://svn.osgeo.org/geotools/trunk/modules/plugin/imagemosaic-jdbc/src/main/java/org
- *     /geotools/gce/imagemosaic/jdbc/custom/JDBCAccessPGRaster.java $
  */
 public class JDBCAccessPGRaster extends JDBCAccessCustom {
 
-    private static final Logger LOGGER =
-            Logging.getLogger(JDBCAccessPGRaster.class.getPackage().getName());
+    private static final Logger LOGGER = Logging.getLogger(JDBCAccessPGRaster.class);
 
     /** Different sql statements needed for in-db and out-db raster data */
     protected Map<ImageLevelInfo, String> statementMap;
@@ -715,7 +711,7 @@ public class JDBCAccessPGRaster extends JDBCAccessCustom {
         String[] crsComponents = crsStr.split(":");
         if (crsComponents.length == 2) {
             try {
-                return new Integer(crsComponents[1]);
+                return Integer.valueOf(crsComponents[1]);
             } catch (Exception e) {
                 return null;
             }

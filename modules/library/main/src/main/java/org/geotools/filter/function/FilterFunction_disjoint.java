@@ -26,7 +26,6 @@ import org.geotools.filter.capability.FunctionNameImpl;
 import org.locationtech.jts.geom.Geometry;
 import org.opengis.filter.capability.FunctionName;
 
-/** @source $URL$ */
 public class FilterFunction_disjoint extends FunctionExpressionImpl {
 
     public static FunctionName NAME =
@@ -60,6 +59,6 @@ public class FilterFunction_disjoint extends FunctionExpressionImpl {
                     "Filter Function problem for function disjoint argument #1 - expected type Geometry");
         }
 
-        return new Boolean(StaticGeometry.disjoint(arg0, arg1));
+        return Boolean.valueOf(StaticGeometry.disjoint(arg0, arg1));
     }
 }

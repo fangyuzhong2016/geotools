@@ -56,9 +56,9 @@ import org.geotools.coverage.grid.io.imageio.IIOMetadataDumper;
 import org.geotools.coverage.grid.io.imageio.geotiff.TiePoint;
 import org.geotools.coverage.processing.CoverageProcessor;
 import org.geotools.coverage.processing.operation.Scale;
+import org.geotools.coverage.util.CoverageUtilities;
 import org.geotools.data.DataSourceException;
 import org.geotools.data.PrjFileReader;
-import org.geotools.factory.Hints;
 import org.geotools.geometry.DirectPosition2D;
 import org.geotools.geometry.GeneralEnvelope;
 import org.geotools.referencing.CRS;
@@ -66,8 +66,9 @@ import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.referencing.operation.matrix.XAffineTransform;
 import org.geotools.referencing.operation.projection.Sinusoidal;
 import org.geotools.referencing.operation.transform.ProjectiveTransform;
-import org.geotools.resources.coverage.CoverageUtilities;
 import org.geotools.test.TestData;
+import org.geotools.util.factory.Hints;
+import org.hamcrest.CoreMatchers;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -88,11 +89,10 @@ import org.opengis.referencing.operation.Projection;
  * Testing {@link GeoTiffReader} as well as {@link IIOMetadataDumper}.
  *
  * @author Simone Giannecchini
- * @source $URL$
  */
 public class GeoTiffReaderTest extends org.junit.Assert {
     private static final Logger LOGGER =
-            org.geotools.util.logging.Logging.getLogger(GeoTiffReaderTest.class.toString());
+            org.geotools.util.logging.Logging.getLogger(GeoTiffReaderTest.class);
 
     static boolean oldOverrideInnerCRS;
 
@@ -500,6 +500,13 @@ public class GeoTiffReaderTest extends org.junit.Assert {
         assertTrue(nd.isPoint());
         assertEquals(nd.getMin().doubleValue(), -9999, 0.001);
         assertEquals(nd.getMax().doubleValue(), -9999, 0.001);
+
+        // check the image too
+        RenderedImage image = coverage.getRenderedImage();
+        Object property = image.getProperty(NoDataContainer.GC_NODATA);
+        assertThat(property, CoreMatchers.instanceOf(NoDataContainer.class));
+        NoDataContainer nc = (NoDataContainer) property;
+        assertEquals(-9999, nc.getAsSingleValue(), 0.0001);
     }
 
     /**

@@ -40,13 +40,12 @@ import org.xml.sax.Attributes;
  *
  * @author Rob Hranac, TOPP<br>
  * @author Chris Holmes, TOPP
- * @source $URL$
  * @version $Id$
  */
 public class ExpressionSAXParser {
     /** The logger for the filter module. */
     private static final Logger LOGGER =
-            org.geotools.util.logging.Logging.getLogger("org.geotools.filter");
+            org.geotools.util.logging.Logging.getLogger(ExpressionSAXParser.class);
 
     /** Factory to construct filters. */
     private FilterFactory2 ff;
@@ -312,7 +311,7 @@ public class ExpressionSAXParser {
                 // expensive and bad code practice.
                 if (convertToNumber) {
                     try {
-                        Object temp = new Integer(message);
+                        Object temp = Integer.valueOf(message);
                         ((LiteralExpressionImpl) curExprssn).setValue(temp);
                         currentState = "complete";
                     } catch (NumberFormatException nfe1) {

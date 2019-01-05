@@ -38,12 +38,11 @@ import org.locationtech.jts.geom.Polygon;
  *
  * @author aaime
  * @author Ian Schneider
- * @source $URL$
  * @version $Id$
  */
 public class PolygonHandler implements ShapeHandler {
     protected static final Logger LOGGER =
-            org.geotools.util.logging.Logging.getLogger("org.geotools.data.shapefile");
+            org.geotools.util.logging.Logging.getLogger(PolygonHandler.class);
 
     GeometryFactory geometryFactory;
 
@@ -76,7 +75,7 @@ public class PolygonHandler implements ShapeHandler {
             // nan test; x!=x iff x is nan
             if ((testPoint.x == p.x)
                     && (testPoint.y == p.y)
-                    && ((testPoint.z == p.z) || (!(testPoint.z == testPoint.z)))) {
+                    && ((testPoint.z == p.z) || Double.isNaN(testPoint.z))) {
                 return true;
             }
         }

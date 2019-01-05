@@ -67,7 +67,7 @@ import junit.framework.TestResult;
  * @since 2.4
  *
  *
- * @source $URL$
+ *
  * @version $Id$
  * @author Justin Deoliveira, The Open Planning Project
  * @author Ben Caradoc-Davies, CSIRO Earth Science and Resource Engineering
@@ -119,6 +119,7 @@ public abstract class OnlineTestCase extends TestCase {
      *
      * @return true if fixture is available for use
      */
+    @SuppressWarnings("PMD.SystemPrintln")
     boolean checkAvailable() {
         configureFixture();
         if (fixture == null) {

@@ -36,7 +36,6 @@ import org.opengis.referencing.operation.TransformException;
  * geometries 45° away from the projection central meridian
  *
  * @author Andrea Aime - OpenGeo
- * @source $URL$
  */
 public class PolarStereographicHandlerFactory implements ProjectionHandlerFactory {
 
@@ -88,16 +87,16 @@ public class PolarStereographicHandlerFactory implements ProjectionHandlerFactor
             if (north) {
                 validArea =
                         new ReferencedEnvelope(
-                                -Double.MAX_VALUE,
-                                Double.MAX_VALUE,
+                                -Integer.MAX_VALUE,
+                                Integer.MAX_VALUE,
                                 -0,
                                 90,
                                 DefaultGeographicCRS.WGS84);
             } else {
                 validArea =
                         new ReferencedEnvelope(
-                                -Double.MAX_VALUE,
-                                Double.MAX_VALUE,
+                                -Integer.MAX_VALUE,
+                                Integer.MAX_VALUE,
                                 -90,
                                 0,
                                 DefaultGeographicCRS.WGS84);

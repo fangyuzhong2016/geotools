@@ -39,7 +39,6 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
  * point.
  *
  * @author Jackson Roehrig & Sanjay Jena
- * @source $URL$
  */
 public class PointArrayImpl extends ArrayList<Position> implements PointArray {
     CoordinateReferenceSystem crs;
@@ -570,7 +569,7 @@ public class PointArrayImpl extends ArrayList<Position> implements PointArray {
             Object o2 = e2.next();
             if (!(o1 == null ? o2 == null : o1.equals(o2))) return false;
         }
-        if (!(!(e1.hasNext() || e2.hasNext()))) return false;
+        if ((e1.hasNext() && !e2.hasNext())) return false;
         if (getClass() != obj.getClass()) return false;
         final PointArrayImpl other = (PointArrayImpl) obj;
         if (crs == null) {

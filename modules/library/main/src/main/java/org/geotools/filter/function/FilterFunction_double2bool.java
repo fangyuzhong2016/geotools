@@ -25,7 +25,6 @@ import org.geotools.filter.FunctionExpressionImpl;
 import org.geotools.filter.capability.FunctionNameImpl;
 import org.opengis.filter.capability.FunctionName;
 
-/** @source $URL$ */
 public class FilterFunction_double2bool extends FunctionExpressionImpl {
 
     public static FunctionName NAME =
@@ -46,6 +45,6 @@ public class FilterFunction_double2bool extends FunctionExpressionImpl {
                     "Filter Function problem for function double2bool argument #0 - expected type double");
         }
 
-        return new Boolean(StaticGeometry.double2bool(arg0));
+        return Boolean.valueOf(StaticGeometry.double2bool(arg0));
     }
 }

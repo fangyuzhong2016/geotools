@@ -26,7 +26,6 @@ import org.geotools.filter.capability.FunctionNameImpl;
 import org.locationtech.jts.geom.Geometry;
 import org.opengis.filter.capability.FunctionName;
 
-/** @source $URL$ */
 public class FilterFunction_isWithinDistance extends FunctionExpressionImpl {
 
     public static FunctionName NAME =
@@ -70,6 +69,6 @@ public class FilterFunction_isWithinDistance extends FunctionExpressionImpl {
                     "Filter Function problem for function isWithinDistance argument #2 - expected type double");
         }
 
-        return new Boolean(StaticGeometry.isWithinDistance(arg0, arg1, arg2));
+        return Boolean.valueOf(StaticGeometry.isWithinDistance(arg0, arg1, arg2));
     }
 }

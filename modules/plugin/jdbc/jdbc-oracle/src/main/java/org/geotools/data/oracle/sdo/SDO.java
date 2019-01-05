@@ -64,13 +64,11 @@ import org.locationtech.jts.geom.Polygon;
  *     href="http://otn.oracle.com/pls/db10g/db10g.to_toc?pathname=appdev.101%2Fb10826%2Ftoc.htm&remark=portal+%28Unstructured+data%29">Spatial
  *     User's Guide (10.1)</a>
  * @author Jody Garnett, Refractions Reasearch Inc.
- * @source $URL$
  * @version CVS Version
  * @see net.refractions.jspatial.jts
  */
 public final class SDO {
-    private static final Logger LOGGER =
-            org.geotools.util.logging.Logging.getLogger("org.geotools.data.oracle.sdo");
+    private static final Logger LOGGER = org.geotools.util.logging.Logging.getLogger(SDO.class);
     public static final int SRID_NULL = -1;
 
     //
@@ -450,12 +448,12 @@ public final class SDO {
      */
     private static void addInts(List list, int[] array) {
         for (int i = 0; i < array.length; i++) {
-            list.add(new Integer(array[i]));
+            list.add(Integer.valueOf(array[i]));
         }
     }
 
     private static void addInt(List list, int i) {
-        list.add(new Integer(i));
+        list.add(Integer.valueOf(i));
     }
 
     /**
@@ -1731,7 +1729,9 @@ public final class SDO {
             String msg =
                     MessageFormat.format(
                             condition,
-                            new Object[] {new Integer(min), new Integer(actual), new Integer(max)});
+                            new Object[] {
+                                Integer.valueOf(min), Integer.valueOf(actual), Integer.valueOf(max)
+                            });
             throw new IllegalArgumentException(msg);
         }
     }
@@ -1764,7 +1764,7 @@ public final class SDO {
                 array.append(",");
             }
         }
-        String msg = MessageFormat.format(condition, new Object[] {new Integer(actual), array});
+        String msg = MessageFormat.format(condition, new Object[] {Integer.valueOf(actual), array});
         throw new IllegalArgumentException(msg);
     }
     /**
@@ -2499,7 +2499,7 @@ public final class SDO {
             } else if (etype == ETYPE.COMPOUND_POLYGON_INTERIOR) {
                 int subelements = INTERPRETATION(elemInfo, i);
                 rings.add(createLinearRing(gf, GTYPE, SRID, elemInfo, i, coords));
-                i += subelements;
+                i = i + subelements + 1;
             } else if (etype
                     == ETYPE.POLYGON) { // nead to test Orientationwiseness of Ring to see if it
                 // is

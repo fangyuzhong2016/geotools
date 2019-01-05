@@ -36,7 +36,6 @@ import org.xml.sax.SAXException;
  * DOCUMENT ME! @
  *
  * @author dzwiers www.refractions.net
- * @source $URL$
  */
 public class GMLParserTest extends TestCase {
     public void testSchema() {
@@ -356,8 +355,8 @@ public class GMLParserTest extends TestCase {
 
             checkFeatureCollection((SimpleFeatureCollection) doc);
             fail("Didn't catch an exception :(");
-        } catch (Throwable e) {
-            //           e.printStackTrace();
+        } catch (Exception e) {
+            // fine, they were expected
         }
     }
 }

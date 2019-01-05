@@ -16,9 +16,12 @@
  */
 package org.geotools.geopkg.mosaic;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
@@ -26,6 +29,7 @@ import org.geotools.coverage.grid.GridCoverage2D;
 import org.geotools.coverage.grid.GridEnvelope2D;
 import org.geotools.coverage.grid.GridGeometry2D;
 import org.geotools.coverage.grid.io.AbstractGridFormat;
+import org.geotools.coverage.grid.io.OverviewPolicy;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.geopkg.GeoPackageTest;
 import org.geotools.image.test.ImageAssert;
@@ -34,6 +38,7 @@ import org.geotools.referencing.CRS;
 import org.geotools.util.URLs;
 import org.junit.Test;
 import org.opengis.parameter.GeneralParameterValue;
+import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 public class GeoPackageReaderTest {
@@ -69,6 +74,17 @@ public class GeoPackageReaderTest {
         RenderedImage img = gc.getRenderedImage();
         assertEquals(1536, img.getWidth());
         assertEquals(768, img.getHeight());
+        reader.dispose();
+    }
+
+    @Test
+    public void testCoverageSRS() throws IOException, FactoryException {
+        GeoPackageReader reader =
+                new GeoPackageReader(
+                        GeoPackageTest.class.getResource("test_tiles_srid.gpkg"), null);
+        CoordinateReferenceSystem crs =
+                reader.getCoordinateReferenceSystem(reader.getGridCoverageNames()[0]);
+        assertEquals(crs, CRS.decode("EPSG:3857", true));
         reader.dispose();
     }
 
@@ -244,5 +260,24 @@ public class GeoPackageReaderTest {
         File referenceFull = new File("./src/test/resources/org/geotools/geopkg/giantPolyFull.png");
         ImageAssert.assertEquals(referenceFull, img, 1000);
         reader.dispose();
+    }
+
+    @Test
+    public void testNumberOverviews() throws IOException {
+        GeoPackageReader reader =
+                new GeoPackageReader(GeoPackageTest.class.getResource("Blue_Marble.gpkg"), null);
+        assertEquals(4, reader.getNumOverviews());
+
+        // get all
+        final double[][] resolutionLevels = reader.getResolutionLevels();
+        assertArrayEquals(new double[] {0.015, 0.015}, resolutionLevels[0], 0.01);
+        assertArrayEquals(new double[] {0.03, 0.03}, resolutionLevels[1], 0.01);
+        assertArrayEquals(new double[] {0.06, 0.06}, resolutionLevels[2], 0.01);
+        assertArrayEquals(new double[] {0.12, 0.12}, resolutionLevels[3], 0.01);
+        assertArrayEquals(new double[] {0.24, 0.24}, resolutionLevels[4], 0.01);
+
+        final double[] readingResolutions =
+                reader.getReadingResolutions(OverviewPolicy.NEAREST, new double[] {0.03, 0.03});
+        assertArrayEquals(new double[] {0.03, 0.03}, readingResolutions, 0.01);
     }
 }

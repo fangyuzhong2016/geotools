@@ -66,8 +66,7 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
  */
 abstract class JDBCAccessBase implements JDBCAccess {
     /** Logger. */
-    protected static final Logger LOGGER =
-            Logging.getLogger(JDBCAccessBase.class.getPackage().getName());
+    protected static final Logger LOGGER = Logging.getLogger(JDBCAccessBase.class);
 
     private List<ImageLevelInfo> levelInfos = new ArrayList<ImageLevelInfo>();
 
@@ -184,7 +183,8 @@ abstract class JDBCAccessBase implements JDBCAccess {
                 // check cardinalities
                 if (config.getVerifyCardinality().booleanValue()) {
                     imageLevelInfo.setCountFeature(
-                            new Integer(getRowCount(imageLevelInfo.getSpatialTableName(), con)));
+                            Integer.valueOf(
+                                    getRowCount(imageLevelInfo.getSpatialTableName(), con)));
 
                     if (imageLevelInfo
                             .getSpatialTableName()
@@ -192,7 +192,8 @@ abstract class JDBCAccessBase implements JDBCAccess {
                         imageLevelInfo.setCountTiles(imageLevelInfo.getCountFeature());
                     } else {
                         imageLevelInfo.setCountTiles(
-                                new Integer(getRowCount(imageLevelInfo.getTileTableName(), con)));
+                                Integer.valueOf(
+                                        getRowCount(imageLevelInfo.getTileTableName(), con)));
                     }
 
                     if (imageLevelInfo.getCountFeature().intValue() == 0) {

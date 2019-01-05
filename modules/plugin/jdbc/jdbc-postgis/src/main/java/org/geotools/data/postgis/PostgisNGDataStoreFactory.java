@@ -33,7 +33,6 @@ import org.geotools.jdbc.JDBCDataStoreFactory;
 import org.geotools.jdbc.SQLDialect;
 import org.geotools.util.KVP;
 
-/** @source $URL$ */
 public class PostgisNGDataStoreFactory extends JDBCDataStoreFactory {
 
     /** parameter for database type */
@@ -112,7 +111,7 @@ public class PostgisNGDataStoreFactory extends JDBCDataStoreFactory {
                             + "However this allows to push more of the filter into the database, increasing performance."
                             + "the postgis table.",
                     false,
-                    new Boolean(true),
+                    Boolean.TRUE,
                     new KVP(Param.LEVEL, "advanced"));
 
     /** Enables usage of ST_Simplify when the queries contain geometry simplification hints */

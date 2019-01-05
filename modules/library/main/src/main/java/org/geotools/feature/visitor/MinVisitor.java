@@ -31,7 +31,6 @@ import org.opengis.filter.expression.Expression;
  *
  * @author Cory Horner, Refractions
  * @since 2.2.M2
- * @source $URL$
  */
 public class MinVisitor implements FeatureCalc, FeatureAttributeVisitor {
     private Expression expr;
@@ -109,7 +108,7 @@ public class MinVisitor implements FeatureCalc, FeatureAttributeVisitor {
     public void reset() {
         /** Reset the count and current minimum */
         this.visited = false;
-        this.minvalue = new Integer(0);
+        this.minvalue = Integer.valueOf(0);
     }
 
     public CalcResult getResult() {
