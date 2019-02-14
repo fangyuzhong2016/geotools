@@ -104,8 +104,6 @@ public class Diff {
      */
     public final Map<String, SimpleFeature> added;
 
-    private final List<String> order;
-
     /** counter used to genreate the "next" new feature id */
     public int nextFID = 0;
 
@@ -125,7 +123,6 @@ public class Diff {
         // public "views" requiring synchronised( mutex )
         modified2 = Collections.unmodifiableMap(modifiedFeatures);
         added = Collections.unmodifiableMap(addedFeatures);
-        order = Collections.unmodifiableList(addedFidList);
 
         spatialIndex = new Quadtree();
         mutex = this;
@@ -145,7 +142,6 @@ public class Diff {
         // create public "views"
         modified2 = Collections.unmodifiableMap(modifiedFeatures);
         added = Collections.unmodifiableMap(addedFeatures);
-        order = Collections.unmodifiableList(addedFidList);
 
         spatialIndex = copySTRtreeFrom(other);
         nextFID = other.nextFID;
@@ -210,7 +206,7 @@ public class Diff {
     }
 
     protected void addToSpatialIndex(SimpleFeature f) {
-        if (f.getDefaultGeometry() != null) {
+        if (f != null && f.getDefaultGeometry() != null) {
             BoundingBox bounds = f.getBounds();
             if (!bounds.isEmpty()) spatialIndex.insert(ReferencedEnvelope.reference(bounds), f);
         }

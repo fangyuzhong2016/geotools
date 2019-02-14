@@ -105,13 +105,13 @@ public class FeatureTransformer extends TransformerBase {
     private static final Logger LOGGER =
             org.geotools.util.logging.Logging.getLogger(FeatureTransformer.class);
 
-    private static Set gmlAtts;
+    private Set gmlAtts;
+
     private String collectionPrefix = "wfs";
     private String collectionNamespace = "http://www.opengis.net/wfs";
     private NamespaceSupport nsLookup = new NamespaceSupport();
     private FeatureTypeNamespaces featureTypeNamespaces = new FeatureTypeNamespaces(nsLookup);
     private SchemaLocationSupport schemaLocation = new SchemaLocationSupport();
-    private int maxFeatures = -1;
     private boolean prefixGml = false;
     private boolean featureBounding = false;
     private boolean collectionBounding = true;
@@ -354,7 +354,7 @@ public class FeatureTransformer extends TransformerBase {
     }
 
     /** Outputs gml without any fancy indents or newlines. */
-    public static class FeatureTranslator extends TranslatorSupport
+    public class FeatureTranslator extends TranslatorSupport
             implements FeatureCollectionIteration.Handler {
         String fc = "FeatureCollection";
         protected GeometryTransformer.GeometryTranslator geometryTranslator;
@@ -915,9 +915,7 @@ public class FeatureTransformer extends TransformerBase {
                                     + name
                                     + "look up in: "
                                     + types);
-                } else if (currentPrefix.length() == 0) {
-                    // must be the default prefix
-                } else {
+                } else if (currentPrefix.length() > 0) {
                     name = currentPrefix + ":" + name;
                 }
 
@@ -930,9 +928,7 @@ public class FeatureTransformer extends TransformerBase {
                     // HACK pt.2 see line 511, if the cite stuff wanted to hack
                     // in a boundedBy geometry, we don't want to do it twice.
                     // So if
-                    if (prefixGml && (f.getProperty("boundedBy") != null)) {
-                        // do nothing, since our hack will handle it.
-                    } else {
+                    if (!prefixGml || (f.getProperty("boundedBy") == null)) {
                         writeBounds(f.getBounds());
                     }
                 }

@@ -186,9 +186,6 @@ public class SLDParser {
 
     protected StyleFactory factory;
 
-    /** useful for detecting relative onlineresources */
-    private URL sourceUrl;
-
     /** provides complete control for detecting relative onlineresources */
     private ResourceLocator onlineResourceLocator;
 
@@ -351,7 +348,6 @@ public class SLDParser {
 
     /** Internal setter for source url. */
     void setSourceUrl(URL sourceUrl) {
-        this.sourceUrl = sourceUrl;
         if (onlineResourceLocator instanceof DefaultResourceLocator) {
             ((DefaultResourceLocator) onlineResourceLocator).setSourceUrl(sourceUrl);
         }
@@ -435,10 +431,10 @@ public class SLDParser {
 
         // for our next trick do something with the dom.
         NodeList nodes = findElements(document, "UserStyle");
-        final int length = nodes.getLength();
 
         if (nodes == null) return new Style[0];
 
+        final int length = nodes.getLength();
         Style[] styles = new Style[length];
 
         for (int i = 0; i < length; i++) {
@@ -1307,7 +1303,6 @@ public class SLDParser {
             }
             if (childName.equalsIgnoreCase(opacityString)) {
                 try {
-                    final String opacityString = getFirstChildValue(child);
                     Expression opacity = parseParameterValueExpression(child, false);
                     symbol.setOpacity(opacity);
                 } catch (Throwable e) {
@@ -1509,9 +1504,12 @@ public class SLDParser {
 
     /** Internal parse method - made protected for unit testing */
     protected ChannelSelection parseChannelSelection(Node root) {
-        List<SelectedChannelType> channels = new ArrayList<SelectedChannelType>();
-
         NodeList children = root.getChildNodes();
+        boolean isGray = isGray(children);
+        List<SelectedChannelType> channels = new ArrayList<>();
+        for (int i = 0; i < (isGray ? 1 : 3); i++) {
+            channels.add(null);
+        }
         final int length = children.getLength();
         for (int i = 0; i < length; i++) {
             Node child = children.item(i);
@@ -1520,16 +1518,16 @@ public class SLDParser {
                 continue;
             }
             String childName = child.getLocalName();
-            if (childName == null) {
-                childName = child.getNodeName();
-            } else if (childName.equalsIgnoreCase("GrayChannel")) {
-                channels.add(parseSelectedChannel(child));
-            } else if (childName.equalsIgnoreCase("RedChannel")) {
-                channels.add(parseSelectedChannel(child));
-            } else if (childName.equalsIgnoreCase("GreenChannel")) {
-                channels.add(parseSelectedChannel(child));
-            } else if (childName.equalsIgnoreCase("BlueChannel")) {
-                channels.add(parseSelectedChannel(child));
+            if (childName != null) {
+                if (childName.equalsIgnoreCase("GrayChannel")) {
+                    channels.set(0, parseSelectedChannel(child));
+                } else if (childName.equalsIgnoreCase("RedChannel")) {
+                    channels.set(0, parseSelectedChannel(child));
+                } else if (childName.equalsIgnoreCase("GreenChannel")) {
+                    channels.set(1, parseSelectedChannel(child));
+                } else if (childName.equalsIgnoreCase("BlueChannel")) {
+                    channels.set(2, parseSelectedChannel(child));
+                }
             }
         }
 
@@ -1538,6 +1536,29 @@ public class SLDParser {
                         channels.toArray(new SelectedChannelType[channels.size()]));
 
         return dap;
+    }
+
+    private boolean isGray(NodeList children) {
+        final int length = children.getLength();
+        for (int i = 0; i < length; i++) {
+            Node child = children.item(i);
+
+            if ((child == null) || (child.getNodeType() != Node.ELEMENT_NODE)) {
+                continue;
+            }
+            String childName = child.getLocalName();
+            if (childName != null) {
+                if (childName.equalsIgnoreCase("GrayChannel")) {
+                    return true;
+                } else if (childName.equalsIgnoreCase("RedChannel")
+                        || childName.equalsIgnoreCase("GreenChannel")
+                        || childName.equalsIgnoreCase("BlueChannel")) {
+                    return false;
+                }
+            }
+        }
+
+        return false;
     }
 
     /** Internal parse method - made protected for unit testing */

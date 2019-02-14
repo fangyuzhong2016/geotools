@@ -81,8 +81,6 @@ public class CachingFeatureSource implements SimpleFeatureSource {
 
     private Envelope cachedBounds;
 
-    private SimpleFeatureType cachedSchema;
-
     private Envelope originalBounds;
 
     private static FilterFactory ff = CommonFactoryFinder.getFilterFactory(null);
@@ -132,7 +130,6 @@ public class CachingFeatureSource implements SimpleFeatureSource {
         fi.close();
         index = newIndex;
         cachedQuery = query;
-        cachedSchema = (SimpleFeatureType) features.getSchema();
         cachedBounds = getEnvelope(query.getFilter());
         dirty = false;
     }
@@ -223,7 +220,6 @@ public class CachingFeatureSource implements SimpleFeatureSource {
         String id = feature.getID();
         int numAtts = featureType.getAttributeCount();
         Object[] attributes = new Object[numAtts];
-        String xpath;
 
         for (int i = 0; i < numAtts; i++) {
             AttributeDescriptor curAttType = featureType.getDescriptor(i);
@@ -353,7 +349,7 @@ public class CachingFeatureSource implements SimpleFeatureSource {
         private SimpleFeatureType sourceSchema;
         private SimpleFeatureType targetSchema;
         private Query query;
-        private ReferencedEnvelope queryBounds = null;
+        private Envelope queryBounds;
 
         protected CachingFeatureCollection(
                 Envelope queryBounds,
@@ -361,6 +357,7 @@ public class CachingFeatureSource implements SimpleFeatureSource {
                 SimpleFeatureType targetSchema,
                 Query query) {
             super(targetSchema);
+            this.queryBounds = queryBounds;
             this.sourceSchema = sourceSchema;
             this.targetSchema = targetSchema;
             this.query = query;

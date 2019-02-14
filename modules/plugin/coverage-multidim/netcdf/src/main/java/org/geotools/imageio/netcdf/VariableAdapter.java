@@ -347,10 +347,6 @@ public class VariableAdapter extends CoverageSourceDescriptor {
                                                 + " is not the same as "
                                                 + o2.getClass());
                             }
-
-                            public boolean equals(Object o) {
-                                return false;
-                            }
                         });
 
         /** The domain name */
@@ -448,8 +444,6 @@ public class VariableAdapter extends CoverageSourceDescriptor {
     private CoordinateReferenceSystem coordinateReferenceSystem;
 
     private Name coverageName;
-
-    private SimpleFeatureType indexSchema;
 
     private int[] nDimensionIndex;
 
@@ -555,7 +549,6 @@ public class VariableAdapter extends CoverageSourceDescriptor {
                         if (schemaType != null) {
                             // Schema found: proceed with remapping attributes
                             updateMapping(schemaType, dimensionDescriptors);
-                            indexSchema = schemaType;
                             break;
                         }
                         throw new IllegalStateException(

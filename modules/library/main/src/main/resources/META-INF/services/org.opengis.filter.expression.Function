@@ -81,6 +81,9 @@ org.geotools.filter.function.FilterFunction_strConcat
 org.geotools.filter.function.FilterFunction_strEndsWith
 org.geotools.filter.function.FilterFunction_strStartsWith
 org.geotools.filter.function.FilterFunction_strCapitalize
+org.geotools.filter.function.FilterFunction_strAbbreviate
+org.geotools.filter.function.FilterFunction_strDefaultIfBlank
+org.geotools.filter.function.FilterFunction_strStripAccents
 org.geotools.filter.function.FilterFunction_strEqualsIgnoreCase
 org.geotools.filter.function.FilterFunction_strIndexOf
 org.geotools.filter.function.FilterFunction_strLastIndexOf
@@ -191,3 +194,4 @@ org.geotools.filter.function.color.GrayscaleFunction
 org.geotools.filter.function.color.ConstrastFunction
 org.geotools.filter.function.BoundedByFunction
 org.geotools.filter.function.DateDifferenceFunction
+org.geotools.filter.function.JsonPointerFunction

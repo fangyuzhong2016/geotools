@@ -102,15 +102,13 @@ public class TimePositionTypeBinding extends AbstractComplexBinding {
             value.appendChild(
                     document.createElementNS(
                             GML.NAMESPACE, org.geotools.gml3.GML.Null.getLocalPart()));
+        } else {
+            value.appendChild(document.createTextNode(timePosition.getDateTime().toString()));
         }
-
-        value.appendChild(document.createTextNode(timePosition.getDateTime().toString()));
         return null;
     }
 
     public Object getProperty(Object object, QName name) {
-        Position value = (Position) object;
-
         if (name.getLocalPart().equals("frame")) {
             return "ISO-8601";
         }

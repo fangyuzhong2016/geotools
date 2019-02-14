@@ -31,7 +31,6 @@ import org.geotools.data.Repository;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.feature.NameImpl;
 import org.geotools.geometry.jts.ReferencedEnvelope;
-import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.type.Name;
 
 /**
@@ -99,41 +98,6 @@ public class Validator {
     }
 
     /**
-     * <b>getFeatureValidationResults Purpose:</b> <br>
-     *
-     * <p>DOCUMENT ME!! <b>Description:</b><br>
-     *
-     * <p>DOCUMENT ME!! Author: bowens<br>
-     * Created on: Jun 26, 2004<br>
-     *
-     * @param failed
-     */
-    private ValidationResults makeFeatureValidationResults(final Map failed) {
-        ValidationResults results =
-                new ValidationResults() {
-                    String name;
-                    String description;
-
-                    public void setValidation(Validation validation) {
-                        name = validation.getName();
-                        description = validation.getDescription();
-                    }
-
-                    public void error(SimpleFeature feature, String message) {
-                        LOGGER.warning(name + ": " + message + " (" + description + ")");
-                        failed.put(
-                                feature.getID(),
-                                name + ": " + message + " " + "(" + description + ")");
-                    }
-
-                    public void warning(SimpleFeature feature, String message) {
-                        LOGGER.warning(name + ": " + message + " (" + description + ")");
-                    }
-                };
-        return results;
-    }
-
-    /**
      * Integrity validation will iterate over all data stores passed in through the stores map and
      * run the tests associated with each store. Author: bowens<br>
      * Created on: Jun 26, 2004<br>
@@ -174,7 +138,7 @@ public class Validator {
         // Grab from the provided stores - so we check against
         // the transaction
         //
-        Map sources = new HashMap();
+        Map<String, FeatureSource> sources = new HashMap<>();
 
         for (Iterator i = typeRefs.iterator(); i.hasNext(); ) {
             String typeRef = (String) i.next();
@@ -262,45 +226,5 @@ public class Validator {
         }
         throw new IllegalArgumentException(
                 "Invalid typeref, should contain : once or none, but was '" + typeref + "'");
-    }
-
-    /**
-     * <b>getIntegrityValidationResults Purpose:</b> <br>
-     *
-     * <p>Gets the validation results for Integrity tests. <b>Description:</b><br>
-     *
-     * <p>DOCUMENT ME!! Author: bowens<br>
-     * Created on: Jun 26, 2004<br>
-     *
-     * @param failed the map of failed features
-     */
-    private ValidationResults makeIntegrityValidationResults(final Map failed) {
-        ValidationResults results =
-                new ValidationResults() {
-                    String name;
-                    String description;
-
-                    public void setValidation(Validation validation) {
-                        name = validation.getName();
-                        description = validation.getDescription();
-                    }
-
-                    public void error(SimpleFeature feature, String message) {
-                        LOGGER.warning(name + ": " + message + " (" + description + ")");
-                        if (feature == null) {
-                            failed.put(
-                                    "ALL", name + ": " + message + " " + "(" + description + ")");
-                        } else {
-                            failed.put(
-                                    feature.getID(),
-                                    name + ": " + message + " " + "(" + description + ")");
-                        }
-                    }
-
-                    public void warning(SimpleFeature feature, String message) {
-                        LOGGER.warning(name + ": " + message + " (" + description + ")");
-                    }
-                };
-        return results;
     }
 }

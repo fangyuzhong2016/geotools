@@ -206,7 +206,7 @@ public class ImageWorker {
 
     /** Registration of the JAI-EXT operations */
     static {
-        JAIEXT_ENABLED = Boolean.getBoolean(JAIEXT_ENABLED_KEY);
+        JAIEXT_ENABLED = Boolean.valueOf(System.getProperty(JAIEXT_ENABLED_KEY, "true"));
         JAIExt.initJAIEXT(JAIEXT_ENABLED);
         USE_JAI_SCALE2 = Boolean.getBoolean(USE_JAI_SCALE2_KEY) && JAIEXT_ENABLED;
         SCALE_OP_NAME = USE_JAI_SCALE2 ? SCALE2_NAME : SCALE_NAME;
@@ -1139,7 +1139,6 @@ public class ImageWorker {
     public Histogram getHistogram(int[] numBins, double[] lowValues, double[] highValues) {
         Object histogram = getComputedProperty(HISTOGRAM);
         if (!(histogram instanceof Histogram)) {
-            final Integer ONE = 1;
             // Create the parameterBlock
             ParameterBlock pb = new ParameterBlock();
             pb.setSource(image, 0);
@@ -1218,7 +1217,6 @@ public class ImageWorker {
     public double[] getMean() {
         Object mean = getComputedProperty(MEAN);
         if (!(mean instanceof double[])) {
-            final Integer ONE = 1;
             // Create the parameterBlock
             ParameterBlock pb = new ParameterBlock();
             pb.setSource(image, 0);
@@ -2173,7 +2171,6 @@ public class ImageWorker {
                     isJaiExtEnabled()
                             ? IHSColorSpaceJAIExt.getInstance()
                             : IHSColorSpace.getInstance();
-            ;
             final int numBits = image.getColorModel().getComponentSize(0);
             final ColorModel ihsColorModel =
                     new ComponentColorModel(
@@ -4628,10 +4625,11 @@ public class ImageWorker {
             alphaChannel = JAI.create(SCALE_OP_NAME, pb2, hints);
 
             // Now, re-attach the scaled alpha to the scaled image
-            ImageLayout newImageLayout = null;
-            if (hints.containsKey(JAI.KEY_IMAGE_LAYOUT)) {
-                ImageLayout layout = (ImageLayout) hints.get(JAI.KEY_IMAGE_LAYOUT);
-                newImageLayout =
+            ImageWorker merged = new ImageWorker(scaledImage);
+            Object candidate = hints.get(JAI.KEY_IMAGE_LAYOUT);
+            if (candidate instanceof ImageLayout) {
+                ImageLayout layout = (ImageLayout) candidate;
+                ImageLayout layout2 =
                         new ImageLayout2(
                                 layout.getTileGridXOffset(null),
                                 layout.getTileGridYOffset(null),
@@ -4639,13 +4637,9 @@ public class ImageWorker {
                                 layout.getTileHeight(null),
                                 sm,
                                 cm);
-                RenderingHints hints2 = new RenderingHints(JAI.KEY_IMAGE_LAYOUT, newImageLayout);
-                ImageWorker merging =
-                        new ImageWorker(scaledImage)
-                                .setRenderingHints(hints2)
-                                .addBand(alphaChannel, false, true, null);
-                image = merging.getRenderedImage();
+                merged.setRenderingHints(new RenderingHints(JAI.KEY_IMAGE_LAYOUT, layout2));
             }
+            image = merged.addBand(alphaChannel, false, true, null).getRenderedImage();
         }
     }
 
@@ -5137,13 +5131,6 @@ public class ImageWorker {
         pb.set(roi, 3);
         pb.set(nodata, 4);
         pb.set(background, 2);
-        if (isNoDataNeeded()) {
-            if (background != null && background.length > 0) {
-                //                // We must set the new NoData value
-                //                setNoData(RangeFactory.create(background[0], background[0]));
-                //                invalidateStatistics();
-            }
-        }
         image = JAI.create("Warp", pb, getRenderingHints());
         updateROI(true, null);
         return this;

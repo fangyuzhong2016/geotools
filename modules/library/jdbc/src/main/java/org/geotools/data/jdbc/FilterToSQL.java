@@ -1544,13 +1544,21 @@ public class FilterToSQL implements FilterVisitor, ExpressionVisitor {
         LOGGER.finer("exporting Expression Math");
 
         try {
-            expression.getExpression1().accept(this, extraData);
+            encodeBinaryExpressionChild(expression.getExpression1(), extraData);
             out.write(" " + operator + " ");
-            expression.getExpression2().accept(this, extraData);
+            encodeBinaryExpressionChild(expression.getExpression2(), extraData);
         } catch (java.io.IOException ioe) {
             throw new RuntimeException("IO problems writing expression", ioe);
         }
         return extraData;
+    }
+
+    private void encodeBinaryExpressionChild(Expression expression, Object extraData)
+            throws IOException {
+        boolean needsParens = expression instanceof BinaryExpression;
+        if (needsParens) out.write("(");
+        expression.accept(this, extraData);
+        if (needsParens) out.write(")");
     }
 
     /**
@@ -1569,12 +1577,6 @@ public class FilterToSQL implements FilterVisitor, ExpressionVisitor {
         } else {
             try {
                 List<Expression> parameters = function.getParameters();
-                List contexts = null;
-                // check context, if a list which patches parameter size list assume its context
-                // to pass along to each Expression for encoding
-                if (extraData instanceof List && ((List) extraData).size() == parameters.size()) {
-                    contexts = (List) extraData;
-                }
 
                 // set the encoding function flag to signal we are inside a function
                 encodingFunction = true;

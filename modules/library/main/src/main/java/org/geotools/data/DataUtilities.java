@@ -439,9 +439,7 @@ public class DataUtilities {
 
             if (isMatch(a, typeB.getDescriptor(i))) {
                 match++;
-            } else if (isMatch(a, typeB.getDescriptor(a.getLocalName()))) {
-                // match was found in a different position
-            } else {
+            } else if (!isMatch(a, typeB.getDescriptor(a.getLocalName()))) {
                 // cannot find any match for Attribute in typeA
                 return -1;
             }
@@ -559,7 +557,6 @@ public class DataUtilities {
         String id = feature.getID();
         int numAtts = featureType.getAttributeCount();
         Object[] attributes = new Object[numAtts];
-        String xpath;
 
         for (int i = 0; i < numAtts; i++) {
             AttributeDescriptor curAttType = featureType.getDescriptor(i);
@@ -2457,8 +2454,12 @@ public class DataUtilities {
             return query;
         }
         Filter filter = SimplifyingFilterVisitor.simplify(query.getFilter());
-        query.setFilter(filter);
-        return query;
+        if (filter.equals(query.getFilter())) {
+            return query;
+        }
+        Query result = new Query(query);
+        result.setFilter(filter);
+        return result;
     }
 
     /**

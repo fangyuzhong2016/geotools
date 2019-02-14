@@ -76,7 +76,7 @@ public class FeatureTypes {
         try {
             uri = new URI("http://www.opengis.net/gml");
         } catch (URISyntaxException e) {
-            uri = null; // will never happen
+            throw new RuntimeException("Unexpected URI syntax exception", e);
         }
         DEFAULT_NAMESPACE = uri;
     }
@@ -205,12 +205,10 @@ public class FeatureTypes {
         tb.setNamespaceURI(schema.getName().getNamespaceURI());
         tb.setAbstract(schema.isAbstract());
 
-        GeometryDescriptor defaultGeometryType = null;
         for (int i = 0; i < schema.getAttributeCount(); i++) {
             AttributeDescriptor attributeType = schema.getDescriptor(i);
             if (attributeType instanceof GeometryDescriptor) {
                 GeometryDescriptor geometryType = (GeometryDescriptor) attributeType;
-                AttributeDescriptor forced;
 
                 tb.descriptor(geometryType);
                 if (!forceOnlyMissing || geometryType.getCoordinateReferenceSystem() == null) {
