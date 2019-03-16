@@ -478,7 +478,7 @@ public class Encoder {
      * <p>This method is used in cases where the element being encoded is not declared as global in
      * the schema.
      *
-     * @param typeName The type name of the root element.
+     * @param rootElementType The type name of the root element.
      * @since 8.0
      */
     public void setRootElementType(QName rootElementType) {
@@ -1000,6 +1000,10 @@ public class Encoder {
                                 XSDParticle particle = (XSDParticle) tuple[0];
                                 XSDElementDeclaration child =
                                         (XSDElementDeclaration) particle.getContent();
+
+                                if (child == null) {
+                                    continue;
+                                }
 
                                 // check for a comment
                                 if ((child != null)

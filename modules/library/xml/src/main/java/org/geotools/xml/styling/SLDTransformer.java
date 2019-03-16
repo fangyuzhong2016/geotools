@@ -195,12 +195,7 @@ public class SLDTransformer extends TransformerBase {
         return result;
     }
 
-    /**
-     * Currently does nothing.
-     *
-     * @param args DOCUMENT ME!
-     * @throws Exception DOCUMENT ME!
-     */
+    /** Currently does nothing. */
     public static final void main(String[] args) throws Exception {
         java.net.URL url = new java.io.File(args[0]).toURI().toURL();
         SLDParser s = new SLDParser(CommonFactoryFinder.getStyleFactory(null), url);
@@ -1433,7 +1428,7 @@ public class SLDTransformer extends TransformerBase {
             if (cs == null) return;
             start("ChannelSelection");
             final SelectedChannelType[] sct = cs.getSelectedChannels();
-            for (int i = 0; i < sct.length && sct != null; i++) visit(sct[i]);
+            for (int i = 0; sct != null && i < sct.length; i++) visit(sct[i]);
             end("ChannelSelection");
         }
 

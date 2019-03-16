@@ -73,7 +73,7 @@ public class GridGeometry2D extends GeneralGridGeometry {
     private static final long serialVersionUID = -3989363771504614419L;
 
     /** Helpers methods for 2D CRS creation. Will be constructed only when first needed. */
-    private static ReferencingFactoryContainer FACTORIES;
+    private static volatile ReferencingFactoryContainer FACTORIES;
 
     /**
      * The two-dimensional part of the coordinate reference system.
@@ -991,7 +991,7 @@ public class GridGeometry2D extends GeneralGridGeometry {
      * MathsTransform} provided by {@linkplain GridGeometry2D#getCRSToGrid2D(PixelOrientation)}
      * which is accessed via {@linkplain #getGridGeometry()}.
      *
-     * @param env The envelope in world coordinate system.
+     * @param envelope The envelope in world coordinate system.
      * @return The corresponding rectangle in the grid coordinate system as a new {@code
      *     GridEnvelope2D} object
      * @throws IllegalArgumentException if the coordinate reference system of the envelope is not

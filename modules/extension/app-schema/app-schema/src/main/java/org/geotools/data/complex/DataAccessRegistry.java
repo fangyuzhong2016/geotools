@@ -54,7 +54,7 @@ public class DataAccessRegistry implements Repository {
     private static final Logger LOGGER = Logging.getLogger(DataAccessRegistry.class);
 
     /** Singleton instance */
-    protected static DataAccessRegistry theRegistry = null;
+    protected static volatile DataAccessRegistry theRegistry = null;
 
     /** Properties for interpolation / configuration settings */
     protected InterpolationProperties properties = null;
@@ -276,7 +276,7 @@ public class DataAccessRegistry implements Repository {
      * mapping has mappingName, then it will be the key that is matched in the search. If it
      * doesn't, then it will match the targetElementName.
      *
-     * @param featureTypeName Feature type name
+     * @param name Feature type name
      * @return
      * @throws IOException
      */
@@ -294,7 +294,7 @@ public class DataAccessRegistry implements Repository {
      * the type mapping has mappingName, then it will be the key that is matched in the search. If
      * it doesn't, then it will match the targetElementName.
      *
-     * @param featureTypeName Feature type name
+     * @param name Feature type name
      * @return
      * @throws IOException
      */

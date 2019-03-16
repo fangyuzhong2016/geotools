@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import org.geotools.util.SuppressFBWarnings;
 
 /**
  * @author roehrig
@@ -43,7 +44,6 @@ public class AlgoPoint2D {
     /**
      * Compares coodinates of Direct Positions
      *
-     * @param Direct Position to compare with
      * @return TRUE, if coordinates accord, FALSE if they dont.
      */
     public static boolean equals(Point2D p0, Point2D p1, double tol) {
@@ -65,7 +65,6 @@ public class AlgoPoint2D {
     /**
      * Adds a DirectPosition to the position
      *
-     * @param DirectPosition to add
      * @return new Position
      */
     public static Point2D createAdd(Point2D p0, Point2D p1) {
@@ -79,7 +78,6 @@ public class AlgoPoint2D {
     /**
      * Subtracts a direct position from the position
      *
-     * @param DirectPosition to subtract
      * @return new Position
      */
     public static Point2D subtract(Point2D p0, Point2D p1) {
@@ -106,7 +104,6 @@ public class AlgoPoint2D {
     /**
      * Builds the scalar product
      *
-     * @param DirectPosition to multiply with
      * @return Scalar product
      */
     public static double scalar(Point2D p0, Point2D p1) {
@@ -248,6 +245,7 @@ public class AlgoPoint2D {
         return pointList;
     }
 
+    @SuppressFBWarnings("NP_BOOLEAN_RETURN_NULL")
     public static Boolean pointsOrientation(Collection points) {
         double result = 0.0;
         Iterator it = points.iterator();

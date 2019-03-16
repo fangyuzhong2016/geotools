@@ -155,8 +155,7 @@ final class Resampler2D extends GridCoverage2D {
      * @param image The image.
      * @param geometry The grid geometry (including the new CRS).
      * @param operation The operation used to resample the coverage
-     * @param wapr The warp configuration in case a warp is being used
-     * @param finalView The view for the target coverage.
+     * @param warp The warp configuration in case a warp is being used
      */
     private static GridCoverage2D create(
             final GridCoverage2D source,
@@ -305,7 +304,7 @@ final class Resampler2D extends GridCoverage2D {
             // we have been provided with interpolation, let's override hints
             hints.put(JAI.KEY_INTERPOLATION, interpolation);
         }
-        if (!hints.containsKey(JAI.KEY_BORDER_EXTENDER)) {
+        if (hints != null && !hints.containsKey(JAI.KEY_BORDER_EXTENDER)) {
             hints.put(
                     JAI.KEY_BORDER_EXTENDER,
                     BorderExtender.createInstance(BorderExtender.BORDER_COPY));

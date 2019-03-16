@@ -20,12 +20,14 @@ package org.geotools.data.complex.util;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
 import java.util.logging.Logger;
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 import org.geotools.feature.type.Types;
 import org.geotools.util.CheckedArrayList;
+import org.geotools.util.SuppressFBWarnings;
 import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.feature.type.Name;
 import org.opengis.util.Cloneable;
@@ -292,6 +294,7 @@ public class XPathUtil {
             return attributeName;
         }
 
+        @SuppressFBWarnings("ES_COMPARING_STRINGS_WITH_EQ")
         public String toString() {
             StringBuffer sb = new StringBuffer(isXmlAttribute ? "@" : "");
             if (XMLConstants.DEFAULT_NS_PREFIX != attributeName.getPrefix()) {
@@ -318,7 +321,7 @@ public class XPathUtil {
             return attributeName.equals(s.attributeName)
                     && index == s.index
                     && isXmlAttribute == s.isXmlAttribute
-                    && predicate == s.predicate;
+                    && Objects.equals(predicate, s.predicate);
         }
 
         public int hashCode() {
@@ -381,7 +384,8 @@ public class XPathUtil {
     /**
      * Returns the list of steps in an x-path expression that represents the root element.
      *
-     * @param root non null descriptor of the root attribute, generally the Feature descriptor.
+     * @param rootElement non null descriptor of the root attribute, generally the Feature
+     *     descriptor.
      * @param namespaces namespace support for generating qnames from namespaces.
      * @return A list of unique of steps in an xpath expression.
      * @throws IllegalArgumentException if <code>root</code> is undefined.

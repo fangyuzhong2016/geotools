@@ -584,7 +584,7 @@ public class ImageWorker {
      *
      * @param source Filename of the source image to read.
      * @param imageChoice Image index in multipage images.
-     * @param readMatadata If {@code true}, metadata will be read.
+     * @param readMetadata If {@code true}, metadata will be read.
      */
     public final void load(final String source, final int imageChoice, final boolean readMetadata) {
         final ParameterBlockJAI pbj = new ParameterBlockJAI("ImageRead");
@@ -2315,9 +2315,7 @@ public class ImageWorker {
     /**
      * Perform a BandMerge operation between the underlying image and the provided one.
      *
-     * @param image to merge with the underlying one.
-     * @param before <code>true</code> if we want to use first the provided image, <code>false
-     *     </code> otherwise.
+     * @param bands to merge with the underlying one.
      * @param addAlpha <code>true</code> if we want to set the last image as alpha, <code>false
      *     </code> otherwise.
      * @return this {@link ImageWorker}.
@@ -2329,9 +2327,7 @@ public class ImageWorker {
     /**
      * Perform a BandMerge operation between the underlying image and the provided one.
      *
-     * @param image to merge with the underlying one.
-     * @param before <code>true</code> if we want to use first the provided image, <code>false
-     *     </code> otherwise.
+     * @param bands images to merge with the underlying one.
      * @param addAlpha <code>true</code> if we want to set the last image as alpha, <code>false
      *     </code> otherwise.
      * @param transformationList List of AffineTransformation that can be applied to the input
@@ -3647,12 +3643,11 @@ public class ImageWorker {
      * @param compressionRate percentage of compression.
      * @param nativeAcc should we use native acceleration.
      * @param paletted should we write the png as 8 bits?
-     * @return this {@link ImageWorker}.
      * @throws IOException In case an error occurs during the search for an {@link
      *     ImageOutputStream} or during the eoncding process.
-     * @todo Current code doesn't check if the writer already accepts the provided destination. It
-     *     wraps it in a {@link ImageOutputStream} inconditionnaly.
      */
+    // Current code doesn't check if the writer already accepts the provided destination. It
+    // wraps it in a ImageOutputStream inconditionnaly.
     public final void writePNG(
             final Object destination,
             final String compression,
@@ -3902,7 +3897,6 @@ public class ImageWorker {
      * @param compression algorithm.
      * @param compressionRate percentage of compression.
      * @param nativeAcc should we use native acceleration.
-     * @return this {@link ImageWorker}.
      * @throws IOException In case an error occurs during the search for an {@link
      *     ImageOutputStream} or during the eoncding process.
      */
@@ -4030,10 +4024,8 @@ public class ImageWorker {
      * @param destination where to write the internal {@link #image} as a TIFF.
      * @param compression algorithm.
      * @param compressionRate percentage of compression.
-     * @param nativeAcc should we use native acceleration.
      * @param tileSizeX tile size x direction (or -1 if tiling is not desired)
      * @param tileSizeY tile size y direction (or -1 if tiling is not desired)
-     * @return this {@link ImageWorker}.
      * @throws IOException In case an error occurs during the search for an {@link
      *     ImageOutputStream} or during the eoncding process.
      */
@@ -4416,7 +4408,7 @@ public class ImageWorker {
                         try {
                             AffineTransform inverse = sTx.createInverse();
                             ROI newROI = this.roi != null ? this.roi.transform(inverse) : null;
-                            this.roi = newROI.intersect(r);
+                            this.roi = newROI != null ? newROI.intersect(r) : null;
                         } catch (NoninvertibleTransformException e) {
                             LOGGER.log(Level.SEVERE, e.getMessage(), e);
                         }
@@ -4845,14 +4837,13 @@ public class ImageWorker {
 
         if (background.length == 3) {
             return new Color((int) background[0], (int) background[1], (int) background[2]);
-        } else if (background.length == 4) {
+        } else {
+            // as per initial exit condition, here we can only have background.length == 4
             return new Color(
                     (int) background[0],
                     (int) background[1],
                     (int) background[2],
                     (int) background[3]);
-        } else {
-            return null;
         }
     }
 

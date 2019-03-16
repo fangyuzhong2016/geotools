@@ -217,8 +217,7 @@ public class Parser extends MathTransformParser {
     /**
      * Parses a coordinate reference system element.
      *
-     * @param parent The parent element.
-     * @return The next element as a {@link CoordinateReferenceSystem} object.
+     * @return element The next element as a {@link CoordinateReferenceSystem} object.
      * @throws ParseException if the next element can't be parsed.
      */
     private CoordinateReferenceSystem parseCoordinateReferenceSystem(final Element element)
@@ -1186,7 +1185,7 @@ public class Parser extends MathTransformParser {
         final Arguments arguments = new Arguments(args);
         final Integer indentation = arguments.getOptionalInteger(Formattable.INDENTATION);
         final String authority = arguments.getOptionalString("-authority");
-        args = arguments.getRemainingArguments(0);
+        arguments.getRemainingArguments(0);
         if (indentation != null) {
             Formattable.setIndentation(indentation.intValue());
         }

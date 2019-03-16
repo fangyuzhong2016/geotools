@@ -175,6 +175,8 @@ public class OracleDialect extends PreparedStatementSQLDialect {
                     put("NVARCHAR2", String.class);
                     put("DATE", java.sql.Date.class);
                     put("TIMESTAMP", java.sql.Timestamp.class);
+                    put("BINARY_DOUBLE", Double.class);
+                    put("BINARY_FLOAT", Float.class);
                 }
             };
 
@@ -642,6 +644,7 @@ public class OracleDialect extends PreparedStatementSQLDialect {
     }
 
     /** Obtains the native oracle connection object given a database connecetion. */
+    @SuppressWarnings("PMD.CloseResource")
     OracleConnection unwrapConnection(Connection cx) throws SQLException {
         if (cx == null) {
             return null;
@@ -1479,7 +1482,7 @@ public class OracleDialect extends PreparedStatementSQLDialect {
             }
         }
 
-        return geodetic;
+        return geodetic != null ? geodetic : false;
     }
 
     @Override

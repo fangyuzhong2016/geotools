@@ -157,128 +157,72 @@ public class FeatureSetDescription {
         return (String[]) l.toArray(new String[l.size()]);
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @return Returns the abstracT.
-     */
+    /** @return Returns the abstracT. */
     public String getAbstract() {
         return _abstract;
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param _abstract The abstracT to set.
-     */
+    /** @param _abstract The abstracT to set. */
     public void setAbstract(String _abstract) {
         this._abstract = _abstract;
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @return Returns the keywords.
-     */
+    /** @return Returns the keywords. */
     public List getKeywords() {
         return keywords;
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param keywords The keywords to set.
-     */
+    /** @param keywords The keywords to set. */
     public void setKeywords(List keywords) {
         this.keywords = keywords;
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @return Returns the latLongBoundingBox.
-     */
+    /** @return Returns the latLongBoundingBox. */
     public Envelope getLatLongBoundingBox() {
         return latLongBoundingBox;
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param latLongBoundingBox The latLongBoundingBox to set.
-     */
+    /** @param latLongBoundingBox The latLongBoundingBox to set. */
     public void setLatLongBoundingBox(Envelope latLongBoundingBox) {
         this.latLongBoundingBox = latLongBoundingBox;
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @return Returns the name.
-     */
+    /** @return Returns the name. */
     public String getName() {
         return name;
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param name The name to set.
-     */
+    /** @param name The name to set. */
     public void setName(String name) {
         this.name = name;
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @return Returns the operations.
-     */
+    /** @return Returns the operations. */
     public int getOperations() {
         return operations;
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param operations The operations to set.
-     */
+    /** @param operations The operations to set. */
     public void setOperations(int operations) {
         this.operations = operations;
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @return Returns the sRS.
-     */
+    /** @return Returns the sRS. */
     public String getSRS() {
         return SRS;
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param srs The sRS to set.
-     */
+    /** @param srs The sRS to set. */
     public void setSRS(String srs) {
         SRS = srs;
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @return Returns the title.
-     */
+    /** @return Returns the title. */
     public String getTitle() {
         return title;
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param title The title to set.
-     */
+    /** @param title The title to set. */
     public void setTitle(String title) {
         this.title = title;
     }

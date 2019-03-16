@@ -33,7 +33,8 @@ import org.opengis.style.StyleVisitor;
  * @author iant
  * @author Johann Sorel (Geomatys)
  */
-public class RasterSymbolizerImpl extends AbstractSymbolizer implements RasterSymbolizer {
+public class RasterSymbolizerImpl extends AbstractSymbolizer
+        implements RasterSymbolizer, Cloneable {
 
     private OverlapBehavior behavior;
 
@@ -329,7 +330,6 @@ public class RasterSymbolizerImpl extends AbstractSymbolizer implements RasterSy
      *
      * @param symbolizer the symbolizer to be used. If this is <B>not</B> a polygon or a line
      *     symbolizer an unexpected argument exception may be thrown by an implementing class.
-     * @throws IllegalArgumentException DOCUMENT ME!
      */
     public void setImageOutline(org.opengis.style.Symbolizer symbolizer) {
         if (symbolizer == null) {
@@ -413,7 +413,6 @@ public class RasterSymbolizerImpl extends AbstractSymbolizer implements RasterSy
      * Creates a deep copy clone. TODO: Need to complete the deep copy, currently only shallow copy.
      *
      * @return The deep copy clone.
-     * @throws RuntimeException DOCUMENT ME!
      */
     public Object clone() {
         Object clone;

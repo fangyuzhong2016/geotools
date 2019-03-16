@@ -2,7 +2,7 @@
  *    GeoTools - The Open Source Java GIS Toolkit
  *    http://geotools.org
  *
- *    (C) 2006 - 2016, Open Source Geospatial Foundation (OSGeo)5
+ *    (C) 2006 - 2016, Open Source Geospatial Foundation (OSGeo)
  *
  *    This library is free software; you can redistribute it and/or
  *    modify it under the terms of the GNU Lesser General Public
@@ -615,12 +615,14 @@ public class ImageMosaicReader extends AbstractGridCoverage2DReader
 
                 // Scan for MosaicConfigurationBeans from properties files
                 List<MosaicConfigurationBean> beans = new ArrayList<>();
-                for (File propFile : properties) {
-                    if (Utils.checkFileReadable(propFile)
-                            && Utils.loadMosaicProperties(URLs.fileToUrl(propFile)) != null) {
-                        configuration = Utils.loadMosaicProperties(URLs.fileToUrl(propFile));
-                        if (configuration != null) {
-                            beans.add(configuration);
+                if (properties != null) {
+                    for (File propFile : properties) {
+                        if (Utils.checkFileReadable(propFile)
+                                && Utils.loadMosaicProperties(URLs.fileToUrl(propFile)) != null) {
+                            configuration = Utils.loadMosaicProperties(URLs.fileToUrl(propFile));
+                            if (configuration != null) {
+                                beans.add(configuration);
+                            }
                         }
                     }
                 }
@@ -1391,8 +1393,10 @@ public class ImageMosaicReader extends AbstractGridCoverage2DReader
         if (deleteData) {
             // quick way: delete everything
             final File[] list = parentDirectory.listFiles();
-            for (File file : list) {
-                FileUtils.deleteQuietly(file);
+            if (list != null) {
+                for (File file : list) {
+                    FileUtils.deleteQuietly(file);
+                }
             }
         } else {
             finalizeCleanup();

@@ -104,7 +104,7 @@ import org.xml.sax.helpers.NamespaceSupport;
  * @since 2.4
  */
 public class AppSchemaDataAccessConfigurator {
-    /** DOCUMENT ME! */
+
     private static final Logger LOGGER =
             org.geotools.util.logging.Logging.getLogger(AppSchemaDataAccessConfigurator.class);
 
@@ -114,7 +114,6 @@ public class AppSchemaDataAccessConfigurator {
 
     public static final String PROPERTY_REPLACE_OR_UNION = "app-schema.orUnionReplace";
 
-    /** DOCUMENT ME! */
     private AppSchemaDataAccessDTO config;
 
     private AppSchemaFeatureTypeRegistry typeRegistry;
@@ -168,11 +167,7 @@ public class AppSchemaDataAccessConfigurator {
         return propValue == null || propValue.equalsIgnoreCase("true");
     }
 
-    /**
-     * Creates a new ComplexDataStoreConfigurator object.
-     *
-     * @param config DOCUMENT ME!
-     */
+    /** Creates a new ComplexDataStoreConfigurator object. */
     private AppSchemaDataAccessConfigurator(
             AppSchemaDataAccessDTO config, DataAccessMap dataStoreMap) {
         this.config = config;
@@ -194,7 +189,6 @@ public class AppSchemaDataAccessConfigurator {
      * connect to source datastores and build the mapping objects from source FeatureTypes to the
      * target ones.
      *
-     * @param config DOCUMENT ME!
      * @return a Set of {@link org.geotools.data.complex.FeatureTypeMapping} source to target
      *     FeatureType mapping definitions
      * @throws IOException if any error occurs while creating the mappings
@@ -229,7 +223,6 @@ public class AppSchemaDataAccessConfigurator {
      * mappings
      *
      * @return
-     * @throws IOException DOCUMENT ME!
      */
     private Set<FeatureTypeMapping> buildMappings() throws IOException {
         // -parse target xml schemas, let parsed types on <code>registry</code>
@@ -867,12 +860,9 @@ public class AppSchemaDataAccessConfigurator {
     }
 
     /**
-     * DOCUMENT ME!
-     *
      * @return a Map&lt;String,DataStore&gt; where the key is the id given to the datastore in the
      *     configuration.
      * @throws IOException
-     * @throws DataSourceException DOCUMENT ME!
      */
     private Map<String, DataAccess<FeatureType, Feature>> acquireSourceDatastores()
             throws IOException {
@@ -896,20 +886,23 @@ public class AppSchemaDataAccessConfigurator {
             AppSchemaDataAccessConfigurator.LOGGER.fine("looking for datastore " + id);
 
             DataAccess<FeatureType, Feature> dataStore = null;
-            if (dataStoreMap != null && dataStoreMap.containsKey(datastoreParams)) {
-                dataStore = dataStoreMap.get(datastoreParams);
-            } else {
-                // let's check if any data store provided a custom syntax for its configuration
-                List<CustomSourceDataStore> extensions = CustomSourceDataStore.loadExtensions();
-                dataStore = buildDataStore(extensions, dsconfig, config);
-                // if no custom data store handled this configuration let's fallback on the default
-                // constructor
-                dataStore =
-                        dataStore == null
-                                ? DataAccessFinder.getDataStore(datastoreParams)
-                                : dataStore;
-                // store the store in the data stores map
-                dataStoreMap.put(datastoreParams, dataStore);
+            if (dataStoreMap != null) {
+                if (dataStoreMap.containsKey(datastoreParams)) {
+                    dataStore = dataStoreMap.get(datastoreParams);
+                } else {
+                    // let's check if any data store provided a custom syntax for its configuration
+                    List<CustomSourceDataStore> extensions = CustomSourceDataStore.loadExtensions();
+                    dataStore = buildDataStore(extensions, dsconfig, config);
+                    // if no custom data store handled this configuration let's fallback on the
+                    // default
+                    // constructor
+                    dataStore =
+                            dataStore == null
+                                    ? DataAccessFinder.getDataStore(datastoreParams)
+                                    : dataStore;
+                    // store the store in the data stores map
+                    dataStoreMap.put(datastoreParams, dataStore);
+                }
             }
 
             if (dataStore == null) {
