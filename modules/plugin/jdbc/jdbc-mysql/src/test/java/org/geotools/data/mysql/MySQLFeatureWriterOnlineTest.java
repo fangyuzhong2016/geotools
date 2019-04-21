@@ -2,7 +2,7 @@
  *    GeoTools - The Open Source Java GIS Toolkit
  *    http://geotools.org
  *
- *    (C) 2002-2008, Open Source Geospatial Foundation (OSGeo)
+ *    (C) 2019, Open Source Geospatial Foundation (OSGeo)
  *
  *    This library is free software; you can redistribute it and/or
  *    modify it under the terms of the GNU Lesser General Public
@@ -14,15 +14,16 @@
  *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *    Lesser General Public License for more details.
  */
-package org.geotools.graph.util;
+package org.geotools.data.mysql;
 
-public interface Queue {
+import org.geotools.jdbc.JDBCFeatureWriterOnlineTest;
+import org.geotools.jdbc.JDBCTestSetup;
 
-    public void enq(Object object);
+/** @author Burkhard Strauss */
+public class MySQLFeatureWriterOnlineTest extends JDBCFeatureWriterOnlineTest {
 
-    public Object deq();
-
-    public boolean isEmpty();
-
-    public void clear();
+    @Override
+    protected JDBCTestSetup createTestSetup() {
+        return new MySQLTestSetup();
+    }
 }
