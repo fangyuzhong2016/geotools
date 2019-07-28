@@ -38,16 +38,6 @@
 	<profiles>
 
 		<!-- ================================================== -->
-		<!-- Modules not yet included in the build -->
-		<!-- ================================================== -->
-		<profile>
-			<id>pending</id>
-			<modules>
-				<module>excel</module>
-			</modules>
-		</profile>
-
-		<!-- ================================================== -->
 		<!-- Unsupported Modules -->
 		<!-- ================================================== -->
 		<!-- The following profiles can all be turned on by -->
@@ -113,17 +103,6 @@
 				<module>process-geometry</module>
 				<module>process-raster</module>
 				<module>process-feature</module>
-			</modules>
-		</profile>
-		<profile>
-			<id>app-schema</id>
-			<activation>
-				<property>
-					<name>all</name>
-				</property>
-			</activation>
-			<modules>
-				<module>app-schema</module>
 			</modules>
 		</profile>
 		<profile>
@@ -221,7 +200,6 @@
 			</activation>
 			<modules>
 				<module>csv</module>
-				<module>epsg-oracle</module>
 				<module>jdbc-ng</module>
 				<module>solr</module>
 				<module>css</module>
