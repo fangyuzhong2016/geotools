@@ -20,13 +20,13 @@ import org.opengis.util.GenericName;
 import org.opengis.util.InternationalString;
 
 /**
- * Base interface for all factories of {@linkplain IdentifiedObject identified objects}. Factories
- * build up complex objects from simpler objects or values. This factory allows applications to make
- * {@linkplain org.opengis.referencing.cs.CoordinateSystem coordinate systems}, {@linkplain
- * org.opengis.referencing.datum.Datum datum} or {@linkplain
- * org.opengis.referencing.crs.CoordinateReferenceSystem coordinate reference systems} that cannot
- * be created by an {@linkplain AuthorityFactory authority factory}. This factory is very flexible,
- * whereas the authority factory is easier to use.
+ * {@linkplain IdentifiedObject 标识对象}的所有工厂的基本接口。
+ * 工厂从更简单的对象或值构建复杂对象。
+ * 该工厂允许应用程序创建 {@linkplain org.opengis.referencing.cs.CoordinateSystem 坐标系}，
+ * {@linkplain  org.opengis.referencing.datum.Datum 基准面}
+ * {@linkplain org.opengis.referencing.crs.CoordinateReferenceSystem 坐标参考系统}，
+ * 这些对象不能由{@linkplain AuthorityFactory authority factory}创建。
+ *  这个工厂非常灵活，authority factory 工厂更容易使用。
  *
  * <p><b>Object properties</b><br>
  * Most factory methods expect a {@link Map} argument. The map can be a {@link Properties} instance.

@@ -26,7 +26,7 @@ import org.geotools.map.MapContent;
 import org.locationtech.jts.geom.Envelope;
 
 /**
- * GeoTools renderer for rendering spatial content into a Graphics2D. Typical usage:
+ * 用于将空间内容渲染为Graphics2D的GeoTools渲染器。典型用法：
  *
  * <pre>
  *          Rectangle paintArea = new Rectangle(width, height);
@@ -52,8 +52,7 @@ import org.locationtech.jts.geom.Envelope;
 public interface GTRenderer {
 
     /**
-     * If you call this method from another thread than the one that called <code>paint</code> or
-     * <code>render</code> the rendering will be forcefully stopped before termination.
+     * 如果从另一个调用<code>paint</code>或<code>render</code>的线程调用此方法，则在终止之前将强制停止渲染。
      */
     public void stopRendering();
 

@@ -23,8 +23,8 @@ import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 
 /**
- * Renderer draws a map on behalf on <code>MapPane</code>. It determines what features to draw,
- * bounding box, size, and style from the {@linkplain org.geotools.map.Context context}.
+ * 渲染器代表<code>MapPane</code>绘制地图。
+ * 它确定了{@linkplain org.geotools.map.Context context}中要绘制的要素，边界框，大小和样式。
  *
  * @author Cameron Shorter
  * @version $Id$
@@ -32,18 +32,17 @@ import java.awt.geom.AffineTransform;
  */
 public interface Renderer2D {
     /**
-     * Render features based on the {@link org.geotools.map.LayerList}, bounding box and {@link
-     * org.geotools.styling.Style} specified in the {@linkplain org.geotools.map.Context context}.
+     *基于{@link org.geotools.map.LayerList}，
+     * 边界框和{@linkplain org.geotools.map.Context context}中指定的{@link  org.geotools.styling.Style}呈现要素。
      *
-     * @param graphics The graphics handler to draw to.
-     * @param paintArea The bounds of the output area in output units (usually pixels). The upper
-     *     left corner is (0,0) in most cases. However, a different value is allowed if some widget
-     *     area must be preserved, for example a margin on the left and top size for painting a
-     *     graduation.
-     * @param transform A transform which converts "World coordinates" to output coordinates. This
-     *     transform will be concatenated to the <code>graphics</code> transform (as of <code>
-     *     graphics.{@link Graphics2D#transform(AffineTransform) transform}(transform)</code>)
-     *     before the rendering take place.
+     * @param graphics 要绘制的图形处理程序。
+     * @param paintArea 输出单元中输出区域的边界（通常是像素）
+     *                  在大多数情况下，左上角是（0,0）。
+     *                  但是，如果必须保留某个小部件区域，则允许使用不同的值，
+     *                  例如左侧的边距和用于绘制*分度的顶部大小。
+     * @param transform 将“世界坐标”转换为输出坐标的变换。
+     *                  此变换将连接到<code>graphics</code>变换
+     *                  （从<code>graphics.{@link Graphics2D＃transform（AffineTransform）transform}（变换）</code>）在渲染之前地点。
      */
     public void paint(Graphics2D graphics, Rectangle paintArea, AffineTransform transform);
 }

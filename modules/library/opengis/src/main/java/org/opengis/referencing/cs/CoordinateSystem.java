@@ -34,18 +34,17 @@ import org.opengis.referencing.IdentifiedObject;
 @UML(identifier = "CS_CoordinateSystem", specification = ISO_19111)
 public interface CoordinateSystem extends IdentifiedObject {
     /**
-     * Returns the dimension of the coordinate system.
+     * 返回坐标系的维度。
      *
-     * @return The dimension of the coordinate system.
+     * @return 坐标系的维度。
      */
     int getDimension();
 
     /**
-     * Returns the axis for this coordinate system at the specified dimension. Each coordinate
-     * system must have at least one axis.
+     * 返回指定尺寸的此坐标系的轴。每个坐标系统必须至少有一个轴。
      *
-     * @param dimension The zero based index of axis.
-     * @return The axis at the specified dimension.
+     * @param dimension 基于零的轴索引。
+     * @return 指定尺寸的轴。
      * @throws IndexOutOfBoundsException if {@code dimension} is out of bounds.
      */
     @UML(identifier = "usesAxis", obligation = MANDATORY, specification = ISO_19111)

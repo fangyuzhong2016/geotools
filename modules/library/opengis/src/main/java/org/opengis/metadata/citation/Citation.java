@@ -21,7 +21,7 @@ import org.opengis.metadata.Identifier;
 import org.opengis.util.InternationalString;
 
 /**
- * Standardized resource reference.
+ * 标准化资源参考。
  *
  * @version <A HREF="http://www.opengeospatial.org/standards/as#01-111">ISO 19115</A>
  * @author Martin Desruisseaux (IRD)

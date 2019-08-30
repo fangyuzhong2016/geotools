@@ -17,8 +17,7 @@ import org.opengis.annotation.UML;
 import org.opengis.referencing.IdentifiedObject;
 
 /**
- * Definition of a coordinate system axis. See <A HREF="package-summary.html#AxisNames">axis name
- * constraints</A>.
+ * 坐标系轴的定义。 See <A HREF="package-summary.html#AxisNames">轴名称约束</A>.
  *
  * @version <A HREF="http://portal.opengeospatial.org/files/?artifact_id=6716">Abstract
  *     specification 2.0</A>

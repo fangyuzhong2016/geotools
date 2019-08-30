@@ -10,16 +10,15 @@
 package org.opengis.referencing;
 
 /**
- * Thrown when an {@linkplain AuthorityFactory authority factory} can't find the requested authority
- * code.
- *
+ * 当{@linkplain AuthorityFactory authority factory}无法找到请求的权限代码时抛出。
+ *  
  * @author Martin Desruisseaux (IRD)
  * @since GeoAPI 1.0
  * @see org.opengis.referencing.datum.DatumAuthorityFactory
  * @see org.opengis.referencing.crs.CRSAuthorityFactory
  */
 public class NoSuchAuthorityCodeException extends FactoryException {
-    /** Serial number for interoperability with different versions. */
+    /**用于与不同版本互操作的序列号。 */
     private static final long serialVersionUID = -1573748311981746573L;
 
     /** The authority. */
@@ -29,10 +28,9 @@ public class NoSuchAuthorityCodeException extends FactoryException {
     private final String code;
 
     /**
-     * Constructs an exception with the specified detail message and authority code.
+     * 使用指定的详细消息和授权代码构造异常。
      *
-     * @param message The detail message. The detail message is saved for later retrieval by the
-     *     {@link #getMessage()} method.
+     * @param message 详细信息。保存详细消息以供以后通过{@link #getMessage()}方法检索。
      * @param authority The authority.
      * @param code The invalid authority code.
      */

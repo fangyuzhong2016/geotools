@@ -20,87 +20,82 @@ import org.opengis.util.GenericName;
 import org.opengis.util.InternationalString;
 
 /**
- * Supplementary identification and remarks information for a CRS or CRS-related object. When {@link
- * org.opengis.referencing.crs.CRSAuthorityFactory} is used to create an object, the {@linkplain
- * ReferenceIdentifier#getAuthority authority} and {@linkplain ReferenceIdentifier#getCode authority
- * code} values should be set to the authority name of the factory object, and the authority code
- * supplied by the client, respectively. The other values may or may not be set. If the authority is
- * EPSG, the implementer may consider using the corresponding metadata values in the EPSG tables.
+ * CRS或CRS相关对象的补充标识和备注信息。
+ * 使用{@link org.opengis.referencing.crs.CRSAuthorityFactory}创建对象时，
+ * 应将{@linkplain ReferenceIdentifier#getAuthority authority }和{@linkplain ReferenceIdentifier#getCode authority code}
+ * 值设置为权限工厂对象的名称和客户端提供的权限代码。
+ * 可以设置或不设置其他值。如果权限是EPSG，则实现者可以考虑使用EPSG表中的相应元数据值。
  *
- * @departure ISO 19111 defines also an {@code IdentifiedObjectBase} interface. The later is omitted
- *     in GeoAPI because the split between {@code IdentifiedObject} and {@code IdentifiedObjectBase}
- *     in OGC/ISO specification was mostly a workaround for introducing {@code IdentifiedObject} in
- *     ISO 19111 without changing the {@code ReferenceSystem} definition in ISO 19115.
- * @version <A HREF="http://portal.opengeospatial.org/files/?artifact_id=6716">Abstract
- *     specification 2.0</A>
+ * @departure ISO 19111还定义了{@code IdentifiedObjectBase}接口。
+ *            在GeoAPI中省略了后者，因为OGC/ISO规范中{@code IdentifiedObject}和{@code IdentifiedObjectBase}
+ *            之间的拆分主要是在ISO 19111中引入{@code IdentifiedObject}
+ *            而不更改{@code ReferenceSystem的解决方法ISO 19115中的定义。
+ * @version <A HREF="http://portal.opengeospatial.org/files/?artifact_id=6716">抽象规范2.0 </A>
  * @author Martin Desruisseaux (IRD)
  * @since GeoAPI 2.0
  */
 @UML(identifier = "IO_IdentifiedObject", specification = ISO_19111)
 public interface IdentifiedObject {
     /**
-     * Key for the <code>{@value}</code> property to be given to the {@linkplain ObjectFactory
-     * object factory} <code>createFoo(&hellip;)</code> methods. This is used for setting the value
-     * to be returned by {@link #getName}.
+     * 名称
+     * 将<code>{@value}</code>属性的键赋予{@linkplain ObjectFactory object factory}
+     * <code>createFoo(&hellip;)</code>方法。这用于设置{@link #getName}返回的值。
      *
      * @see #getName
      */
     String NAME_KEY = "name";
 
     /**
-     * Key for the <code>{@value}</code> property to be given to the {@linkplain ObjectFactory
-     * object factory} <code>createFoo(&hellip;)</code> methods. This is used for setting the value
-     * to be returned by {@link #getAlias}.
+     * 别名
+     * 将<code>{@value}</code>属性的键赋予{@linkplain ObjectFactory object factory}
+     * <code>createFoo(&hellip;)</code>方法。这用于设置{@link #getAlias}返回的值*。
      *
      * @see #getAlias
      */
     String ALIAS_KEY = "alias";
 
     /**
-     * Key for the <code>{@value}</code> property to be given to the {@linkplain ObjectFactory
-     * object factory} <code>createFoo(&hellip;)</code> methods. This is used for setting the value
-     * to be returned by {@link #getIdentifiers}.
+     * 将<code>{@value}</code>属性的键赋予{@linkplain ObjectFactory object factory}
+     * <code>createFoo(&hellip;)</code>方法。这用于设置{@link #getIdentifiers}返回的值*。
      *
      * @see #getIdentifiers
      */
     String IDENTIFIERS_KEY = "identifiers";
 
     /**
-     * Key for the <code>{@value}</code> property to be given to the {@linkplain ObjectFactory
-     * object factory} <code>createFoo(&hellip;)</code> methods. This is used for setting the value
-     * to be returned by {@link #getRemarks}.
+     *将<code>{@value}</code>属性的键赋予{@linkplain ObjectFactory object factory}
+     * <code>createFoo(＆hellip;)</code>方法。这用于设置{@link #getRemarks}返回的值*。
      *
      * @see #getRemarks
      */
     String REMARKS_KEY = "remarks";
 
     /**
-     * The primary name by which this object is identified.
+     * 标识此对象的主要名称。
      *
-     * @return The primary name.
+     * @return 主要名称。
      */
     @UML(identifier = "name", obligation = MANDATORY, specification = ISO_19111)
     ReferenceIdentifier getName();
 
     /**
-     * An alternative name by which this object is identified.
+     * 标识此对象的备用名称。
      *
-     * @return The aliases, or an empty collection if there is none.
+     * @return 别名，如果没有，则为空集合。
      */
     @UML(identifier = "alias", obligation = OPTIONAL, specification = ISO_19111)
     Collection<GenericName> getAlias();
 
     /**
-     * An identifier which references elsewhere the object's defining information. Alternatively an
-     * identifier by which this object can be referenced.
+     * 一个标识符，用于引用对象的定义信息。或者是一个标识符，它可以通过该标识符引用此对象。
      *
-     * @return This object identifiers, or an empty set if there is none.
+     * @return 此对象标识符，如果没有，则为空集。
      */
     @UML(identifier = "identifier", obligation = OPTIONAL, specification = ISO_19111)
     Set<ReferenceIdentifier> getIdentifiers();
 
     /**
-     * Comments on or information about this object, including data source information.
+     * 有关此对象的注释或信息，包括数据源信息。
      *
      * @return The remarks, or {@code null} if none.
      */
@@ -108,13 +103,12 @@ public interface IdentifiedObject {
     InternationalString getRemarks();
 
     /**
-     * Returns a <A HREF="doc-files/WKT.html"><cite>Well Known Text</cite> (WKT)</A> for this
-     * object. This operation may fails if an object is too complex for the WKT format capability
-     * (for example an {@linkplain org.opengis.referencing.crs.EngineeringCRS engineering CRS} with
-     * different unit for each axis).
+     * 返回 <A HREF="doc-files/WKT.html"><cite>坐标参考对象的WKT形式</cite> (WKT)</A>
+     * 如果对象对于WKT格式功能而言过于复杂，则此操作可能会失败
+     * （例如{@linkplain org.opengis.referencing.crs.EngineeringCRS engineering CRS}，每个轴具有不同的单位）。
      *
-     * @return The Well Know Text for this object.
-     * @throws UnsupportedOperationException If this object can't be formatted as WKT.
+     * @return 这个对象的Well Know Text。
+     * @throws UnsupportedOperationException 如果此对象无法格式化为WKT。
      */
     @Extension
     String toWKT() throws UnsupportedOperationException;

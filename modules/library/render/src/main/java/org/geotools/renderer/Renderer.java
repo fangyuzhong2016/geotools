@@ -25,8 +25,7 @@ import org.opengis.feature.Feature;
 import org.opengis.feature.type.FeatureType;
 
 /**
- * Base interface for renderer. This is very much work in progress. <strong>Note: this interface
- * will changes in future versions.</strong>
+ * 渲染器的基本接口。这是一项非常重要的工作。 <strong>注意：此界面*将在未来版本中更改。</ strong>
  *
  * @version $Id$
  * @author James Macgill
@@ -34,13 +33,12 @@ import org.opengis.feature.type.FeatureType;
 public interface Renderer {
 
     /**
-     * Renders the provided features using the specified style. The features should fill the
-     * viewport but may well extend beyond it. Features should be cropped (if appropriate) to the
-     * specified viewport.
+     * 对提供的要素按照指定的样式进行渲染
+     * 要素应该在视图区填充，但可能会超出视图区，因此如果显示到当前区域，应该将要素进行裁剪
      *
-     * @param fc The feature collection to render
-     * @param viewport The visible extent to be rendered
-     * @param style The style definition to apply to each feature
+     * @param fc 要呈现的要素集合
+     * @param viewport 要呈现的可见范围
+     * @param style 要应用于每个要素的样式定义
      */
     void render(
             FeatureCollection<? extends FeatureType, ? extends Feature> fc,
@@ -61,7 +59,7 @@ public interface Renderer {
      */
     void setInteractive(boolean interactive);
 
-    /** sets the output graphics for the renderer and the size of the graphic. */
+    /** 设置渲染器的输出图形和图形的大小。 */
     void setOutput(Graphics g, java.awt.Rectangle r);
 
     public Coordinate pixelToWorld(int x, int y, Envelope map);

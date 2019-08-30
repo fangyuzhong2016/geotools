@@ -18,10 +18,9 @@ import org.opengis.annotation.UML;
 import org.opengis.util.CodeList;
 
 /**
- * Specification of the way the image grid is associated with the image data attributes.
+ * 指定图像网格与图像数据属性相关联的方式。
  *
- * <p>This code list is similar to {@link org.opengis.metadata.spatial.PixelOrientation} except that
- * the later is more clearly restricted to the two-dimensional case.
+ * <p>此代码列表类似于{@link org.opengis.metadata.spatial.PixelOrientation}，但后者更明确地限于二维情况。
  *
  * @version <A HREF="http://portal.opengeospatial.org/files/?artifact_id=6716">Abstract
  *     specification 2.0</A>

@@ -32,9 +32,8 @@ import org.opengis.referencing.datum.Ellipsoid;
 import si.uom.SI;
 
 /**
- * Geometric figure that can be used to describe the approximate shape of the earth. In mathematical
- * terms, it is a surface formed by the rotation of an ellipse about its minor axis. An ellipsoid
- * requires two defining parameters:
+ * 几何图形，可用于描述地球的近似形状。 在数学上，它是由椭圆绕其短轴旋转形成的表面。
+ * 椭球需要两个定义参数：
  *
  * <ul>
  *   <li>{@linkplain #getSemiMajorAxis semi-major axis} and {@linkplain #getInverseFlattening
@@ -52,26 +51,25 @@ public class DefaultEllipsoid extends AbstractIdentifiedObject implements Ellips
     private static final long serialVersionUID = -1149451543954764081L;
 
     /**
-     * WGS 1984 ellipsoid with axis in {@linkplain SI#METER metres}. This ellipsoid is used in GPS
-     * systems and is the default for most {@code org.geotools} packages.
+     *WGS 1984椭球。 此椭圆体用于GPS系统，是大多数{@code org.geotools}包的默认值。
      */
     public static final DefaultEllipsoid WGS84 =
             createFlattenedSphere("WGS84", 6378137.0, 298.257223563, SI.METRE);
 
     /**
-     * GRS 80 ellipsoid with axis in {@linkplain SI#METER metres}.
+     * GRS 80椭球
      *
      * @since 2.2
      */
     public static final DefaultEllipsoid GRS80 =
             createFlattenedSphere("GRS80", 6378137.0, 298.257222101, SI.METRE);
 
-    /** International 1924 ellipsoid with axis in {@linkplain SI#METER metres}. */
+    /** 国际1924椭球。*/
     public static final DefaultEllipsoid INTERNATIONAL_1924 =
             createFlattenedSphere("International 1924", 6378388.0, 297.0, SI.METRE);
 
     /**
-     * Clarke 1866 ellipsoid with axis in {@linkplain SI#METER metres}.
+     * Clarke 1866椭球，轴在{@linkplain SI#METER}。
      *
      * @since 2.2
      */
@@ -79,22 +77,21 @@ public class DefaultEllipsoid extends AbstractIdentifiedObject implements Ellips
             createFlattenedSphere("Clarke 1866", 6378206.4, 294.9786982, SI.METRE);
 
     /**
-     * A sphere with a radius of 6371000 {@linkplain SI#METER metres}. Spheres use a simplier
-     * algorithm for {@linkplain #orthodromicDistance orthodromic distance computation}, which may
-     * be faster and more robust.
+     *半径为6371000的球体{@linkplain SI#METER}。
+     *  球体使用更简单的算法进行{@linkplain #orthodromicDistance 顺向距离计算}，这可能更快，更健壮。
      */
     public static final DefaultEllipsoid SPHERE =
             createEllipsoid("SPHERE", 6371000, 6371000, SI.METRE);
 
     /**
-     * The equatorial radius.
+     * 赤道半径。
      *
      * @see #getSemiMajorAxis
      */
     private final double semiMajorAxis;
 
     /**
-     * The polar radius.
+     * 极半径。
      *
      * @see #getSemiMinorAxis
      */

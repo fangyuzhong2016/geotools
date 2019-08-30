@@ -36,9 +36,9 @@ import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.style.FeatureTypeStyle;
 
 /**
- * A Layer to be rendered.
+ * 要渲染的图层。
  *
- * <p>Layers usually represent a single dataset; and arranged into a z-order by a Map for display.
+ * <p>图层通常代表单个数据集;并通过地图排列成z顺序以供显示。
  *
  * @since 2.7
  * @version 8.0
@@ -48,13 +48,13 @@ public abstract class Layer {
     /** The logger for the map module. */
     protected static final Logger LOGGER = Logging.getLogger(Layer.class);
 
-    /** Human readable title for the layer. */
+    /** 图层的人类可读标题。 */
     protected String title;
 
-    /** Flag to mark the layer as visible when being rendered */
+    /** 标记图层在渲染时可见的标记 */
     protected boolean visible;
 
-    /** Flag to mark the layer as selected (for general use by clients) */
+    /** 用于将图层标记为已选择的标记（供客户端一般使用） */
     protected boolean selected;
 
     /** Flag to record that {@linkplain #preDispose()} has been called. */

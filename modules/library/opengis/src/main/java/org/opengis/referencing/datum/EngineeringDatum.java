@@ -14,10 +14,9 @@ import static org.opengis.annotation.Specification.*;
 import org.opengis.annotation.UML;
 
 /**
- * Defines the origin of an engineering coordinate reference system. An engineering datum is used in
- * a region around that origin. This origin can be fixed with respect to the earth (such as a
- * defined point at a construction site), or be a defined point on a moving vehicle (such as on a
- * ship or satellite).
+ * 定义工程坐标参考系统的原点。
+ * 工程数据用于该原点周围的区域。
+ * 该原点可以相对于地球固定（例如施工现场的定义点），或者是移动车辆上的限定点（例如在船上或卫星上）。
  *
  * @version <A HREF="http://portal.opengeospatial.org/files/?artifact_id=6716">Abstract
  *     specification 2.0</A>

@@ -15,12 +15,10 @@ import static org.opengis.annotation.Specification.*;
 import org.opengis.annotation.UML;
 
 /**
- * A textual description and/or a set of parameters identifying a particular reference level surface
- * used as a zero-height surface. The description includes its position with respect to the Earth
- * for any of the height types recognized by this standard. There are several types of Vertical
- * Datums, and each may place constraints on the {@linkplain
- * org.opengis.referencing.cs.CoordinateSystemAxis Coordinate Axis} with which it is combined to
- * create a {@linkplain org.opengis.referencing.crs.VerticalCRS Vertical CRS}.
+ * 标识用作零高度表面的特定参考水平面的文本描述和/或一组参数。
+ * 对于本标准认可的任何高度类型，描述包括其相对于地球的位置。
+ * 有几种类型的垂直基准，每种类型都可以对{@linkplain org.opengis.referencing.cs.CoordinateSystemAxis Coordinate Axis}
+ * 进行约束，并将其与组合以创建{@linkplain org.opengis.referencing.crs.VerticalCRS Vertical CRS}。
  *
  * @version <A HREF="http://portal.opengeospatial.org/files/?artifact_id=6716">Abstract
  *     specification 2.0</A>
@@ -30,9 +28,9 @@ import org.opengis.annotation.UML;
 @UML(identifier = "CD_VerticalDatum", specification = ISO_19111)
 public interface VerticalDatum extends Datum {
     /**
-     * The type of this vertical datum. Default is "geoidal".
+     * 此垂直基准的类型。默认为“geoidal”。
      *
-     * @return The type of this vertical datum.
+     * @return 此垂直基准的类型。
      */
     @UML(identifier = "vertDatumType", obligation = MANDATORY, specification = ISO_19111)
     VerticalDatumType getVerticalDatumType();

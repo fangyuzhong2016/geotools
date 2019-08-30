@@ -18,9 +18,8 @@ import org.opengis.annotation.UML;
 import org.opengis.util.CodeList;
 
 /**
- * Meaning of the axis value range specified through {@linkplain
- * CoordinateSystemAxis#getMinimumValue minimum value} and {@linkplain
- * CoordinateSystemAxis#getMaximumValue maximum value}.
+ *通过{@linkplain CoordinateSystemAxis#getMinimumValue 最小值}
+ * 和{@linkplain CoordinateSystemAxis#getMaximumValue 最大值}指定的轴值范围的含义。
  *
  * @version <A HREF="http://portal.opengeospatial.org/files/?artifact_id=6716">Abstract
  *     specification 2.0</A>

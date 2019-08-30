@@ -18,9 +18,8 @@ import org.opengis.annotation.UML;
 import org.opengis.referencing.IdentifiedObject;
 
 /**
- * Geometric figure that can be used to describe the approximate shape of the earth. In mathematical
- * terms, it is a surface formed by the rotation of an ellipse about its minor axis. An ellipsoid
- * requires two defining parameters:
+ * 定义椭球体几何图形，可用于描述地球的近似形状。在数学上，
+ * 它是由椭圆绕其短轴旋转形成的表面。椭球需要两个定义参数：
  *
  * <p>
  *
@@ -31,16 +30,14 @@ import org.opengis.referencing.IdentifiedObject;
  *       axis}.
  * </ul>
  *
- * <p>There is not just one ellipsoid. An ellipsoid is a matter of choice, and therefore many
- * choices are possible. The size and shape of an ellipsoid was traditionally chosen such that the
- * surface of the geoid is matched as closely as possible locally, e.g. in a country. A number of
- * global best-fit ellipsoids are now available. An association of an ellipsoid with the earth is
- * made through the definition of the size and shape of the ellipsoid and the position and
- * orientation of this ellipsoid with respect to the earth. Collectively this choice is captured by
- * the concept of "{@linkplain GeodeticDatum geodetic datum}". A change of size, shape, position or
- * orientation of an ellipsoid will result in a change of geographic coordinates of a point and be
- * described as a different geodetic datum. Conversely geographic coordinates are unambiguous only
- * when associated with a geodetic datum.
+ * <p>不只有一个椭球体。椭球是一个选择问题，因此许多选择是可能的。
+ *  例如，在一个国家,传统上选择椭圆体的尺寸和形状，使得大地水准面的表面尽可能地局部匹配。现在有许多全球最佳拟合椭球体。
+ *  椭球体与地球的关联是通过椭球体的大小和形状以及该椭球体相对于地球的位置和方向的定义来实现的。
+ *  总的来说，这个选择被"{@linkplain GeodeticDatum geodetic datum}"的概念所捕获。
+ *  椭球体的大小，形状，位置或方向的改变将导致点的地理坐标的改变并且被描述为不同的大地测量数据。
+ *  相反，地理坐标仅在与大地测量数据相关联时才是明确的。
+ *
+ *
  *
  * @departure ISO 19111 defines {@link #getSemiMinorAxis semiMinorAxis}, {@link
  *     #getInverseFlattening inverseFlattening} and {@link #isIvfDefinitive isSphere} in a separated
@@ -57,29 +54,29 @@ import org.opengis.referencing.IdentifiedObject;
 @UML(identifier = "CD_Ellipsoid", specification = ISO_19111)
 public interface Ellipsoid extends IdentifiedObject {
     /**
-     * Returns the linear unit of the {@linkplain #getSemiMajorAxis semi-major} and {@linkplain
-     * #getSemiMinorAxis semi-minor} axis values.
+     * 返回{@linkplain #getSemiMajorAxis semi-major}和
+     * {@linkplain #getSemiMinorAxis semi-minor}轴值的线性单位。
      *
-     * @return The axis linear unit.
+     * @return 轴线性单元。
      */
     @UML(identifier = "getAxisUnit", specification = OGC_01009)
     Unit<Length> getAxisUnit();
 
     /**
-     * Length of the semi-major axis of the ellipsoid. This is the equatorial radius in {@linkplain
-     * #getAxisUnit axis linear unit}.
+     * 椭球体的长半轴的长度。
+     * 这是{@linkplain #getAxisUnit 轴线性单位}中的赤道半径。
      *
-     * @return Length of semi-major axis.
+     * @return 长半轴的长度
      * @unitof Length
      */
     @UML(identifier = "semiMajorAxis", obligation = MANDATORY, specification = ISO_19111)
     double getSemiMajorAxis();
 
     /**
-     * Length of the semi-minor axis of the ellipsoid. This is the polar radius in {@linkplain
-     * #getAxisUnit axis linear unit}.
+     * 椭球体的短半轴的长度。
+     * 这是{@linkplain #getAxisUnit 轴线性单位}中的极半径。
      *
-     * @return Length of semi-minor axis.
+     * @return 短半轴的长度
      * @unitof Length
      */
     @UML(
@@ -90,15 +87,16 @@ public interface Ellipsoid extends IdentifiedObject {
     double getSemiMinorAxis();
 
     /**
-     * Returns the value of the inverse of the flattening constant. The inverse flattening is
-     * related to the equatorial/polar radius by the formula
+     *返回椭球的扁率的倒数
+     * Returns the value of the inverse of the flattening constant.
+     * 椭球扁率计算公式与赤道/极半径相关
      *
      * <p><var>ivf</var>&nbsp;=&nbsp;<var>r</var><sub>e</sub>/(<var>r</var><sub>e</sub>-<var>r</var><sub>p</sub>).
      *
      * <p>For perfect spheres (i.e. if {@link #isSphere} returns {@code true}), the {@link
      * Double#POSITIVE_INFINITY POSITIVE_INFINITY} value is used.
      *
-     * @return The inverse flattening value.
+     * @return 椭球的扁率的倒数
      * @unitof Scale
      */
     @UML(
@@ -109,14 +107,12 @@ public interface Ellipsoid extends IdentifiedObject {
     double getInverseFlattening();
 
     /**
-     * Indicates if the {@linkplain #getInverseFlattening inverse flattening} is definitive for this
-     * ellipsoid. Some ellipsoids use the IVF as the defining value, and calculate the polar radius
-     * whenever asked. Other ellipsoids use the polar radius to calculate the IVF whenever asked.
-     * This distinction can be important to avoid floating-point rounding errors.
+     * 指示椭球体是否以{@linkplain #getInverseFlattening 扁率的倒数 }来确定的。
+     * 一些椭圆体使用IVF作为定义值，并在需要时计算极半径。
+     * 其他椭圆体使用极半径来计算IVF。
+     * 这种区别对于避免浮点舍入误差非常重要。
      *
-     * @return {@code true} if the {@linkplain #getInverseFlattening inverse flattening} is
-     *     definitive, or {@code false} if the {@linkplain #getSemiMinorAxis polar radius} is
-     *     definitive.
+     * @return 如果椭球体是以 {@linkplain  #getInverseFlattening 扁率的倒数 }来确定的，返回{@code true}，否则返回 {@code false}
      */
     @UML(
         identifier = "CS_Ellipsoid.isIvfDefinitive",
@@ -126,11 +122,10 @@ public interface Ellipsoid extends IdentifiedObject {
     boolean isIvfDefinitive();
 
     /**
-     * {@code true} if the ellipsoid is degenerate and is actually a sphere. The sphere is
-     * completely defined by the {@linkplain #getSemiMajorAxis semi-major axis}, which is the radius
-     * of the sphere.
+     * 如果椭圆体是退化的并且实际上是一个球体，则返回 {@code true}
+     * 这里的球体完全由{@linkplain #getSemiMajorAxis 半长轴}定义，它是球体的半径。
      *
-     * @return {@code true} if the ellipsoid is degenerate and is actually a sphere.
+     * @return {@code true} 如果椭圆体是退化的并且实际上是一个球体。
      */
     @UML(
         identifier = "secondDefiningParameter.isSphere",

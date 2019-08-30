@@ -15,9 +15,8 @@ import static org.opengis.annotation.Specification.*;
 import org.opengis.annotation.UML;
 
 /**
- * Defines the location and precise orientation in 3-dimensional space of a defined ellipsoid (or
- * sphere) that approximates the shape of the earth. Used also for Cartesian coordinate system
- * centered in this ellipsoid (or sphere).
+ * 定义近似于地球形状的参考椭球（或球体）的三维空间中的位置和精确方向。
+ * 也用于以椭圆体（或球体）为中心的笛卡尔坐标系。
  *
  * @version <A HREF="http://portal.opengeospatial.org/files/?artifact_id=6716">Abstract
  *     specification 2.0</A>
@@ -29,17 +28,17 @@ import org.opengis.annotation.UML;
 @UML(identifier = "CD_GeodeticDatum", specification = ISO_19111)
 public interface GeodeticDatum extends Datum {
     /**
-     * Returns the ellipsoid.
+     * 返回椭球体。
      *
-     * @return The ellipsoid.
+     * @return 椭球体。
      */
     @UML(identifier = "usesEllipsoid", obligation = MANDATORY, specification = ISO_19111)
     Ellipsoid getEllipsoid();
 
     /**
-     * Returns the prime meridian.
+     * 返回本初子午线。
      *
-     * @return The prime meridian.
+     * @return 本初子午线。
      */
     @UML(identifier = "usesPrimeMeridian", obligation = MANDATORY, specification = ISO_19111)
     PrimeMeridian getPrimeMeridian();

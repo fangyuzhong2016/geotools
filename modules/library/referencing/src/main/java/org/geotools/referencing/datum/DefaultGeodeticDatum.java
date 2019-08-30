@@ -39,9 +39,9 @@ import org.opengis.referencing.datum.PrimeMeridian;
 import org.opengis.referencing.operation.Matrix;
 
 /**
- * Defines the location and precise orientation in 3-dimensional space of a defined ellipsoid (or
- * sphere) that approximates the shape of the earth. Used also for Cartesian coordinate system
- * centered in this ellipsoid (or sphere).
+ * 基准面的默认实现类。
+ * 定义近似于地球形状的定义椭球（或球体）的三维空间中的位置和精确方向。
+ * 也用于以椭圆体（或球体）为中心的笛卡尔坐标系。
  *
  * @since 2.1
  * @version $Id$
@@ -53,7 +53,7 @@ public class DefaultGeodeticDatum extends AbstractDatum implements GeodeticDatum
     /** Serial number for interoperability with different versions. */
     private static final long serialVersionUID = 8832100095648302943L;
 
-    /** The default WGS 1984 datum. */
+    /** 默认的WGS 1984的基准面。 */
     public static final DefaultGeodeticDatum WGS84;
 
     static {
@@ -80,13 +80,13 @@ public class DefaultGeodeticDatum extends AbstractDatum implements GeodeticDatum
      */
     public static final String BURSA_WOLF_KEY = "bursaWolf";
 
-    /** The ellipsoid. */
+    /** 椭圆体。 */
     private final Ellipsoid ellipsoid;
 
-    /** The prime meridian. */
+    /** 本初子午线。 */
     private final PrimeMeridian primeMeridian;
 
-    /** Bursa Wolf parameters for datum shifts, or {@code null} if none. */
+    /**Bursa Wolf参数用于基准移位，如果没有，则为{@code null}。*/
     private final BursaWolfParameters[] bursaWolf;
 
     /**

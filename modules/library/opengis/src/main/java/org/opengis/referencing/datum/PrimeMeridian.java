@@ -18,9 +18,8 @@ import org.opengis.annotation.UML;
 import org.opengis.referencing.IdentifiedObject;
 
 /**
- * A prime meridian defines the origin from which longitude values are determined. The {@link
- * #getName name} initial value is "Greenwich", and that value shall be used when the {@linkplain
- * #getGreenwichLongitude greenwich longitude} value is zero.
+ * 本初子午线定义了确定经度值的原点。
+ * {@link #getName name}初始值为“Greenwich”，当{@linkplain #getGreenwichLongitude greenwich longitude}值为零时，应使用该值。
  *
  * @version <A HREF="http://portal.opengeospatial.org/files/?artifact_id=6716">Abstract
  *     specification 2.0</A>
@@ -30,17 +29,16 @@ import org.opengis.referencing.IdentifiedObject;
 @UML(identifier = "CD_PrimeMeridian", specification = ISO_19111)
 public interface PrimeMeridian extends IdentifiedObject {
     /**
-     * Longitude of the prime meridian measured from the Greenwich meridian, positive eastward. The
-     * {@code greenwichLongitude} initial value is zero, and that value shall be used when the
-     * {@linkplain #getName meridian name} value is "Greenwich".
+     * 从格林威治子午线测量的本初子午线的经度，正向东。
+     * {@code greenwichLongitude}初始值为零，当{@linkplain #getName 子午线名称}值为“Greenwich”时，应使用该值。
      *
-     * @return The prime meridian Greenwich longitude, in {@linkplain #getAngularUnit angular unit}.
+     * @return 经络格林威治经度，位于{@linkplain #getAngularUnit angular unit}。
      */
     @UML(identifier = "greenwichLongitude", obligation = CONDITIONAL, specification = ISO_19111)
     double getGreenwichLongitude();
 
     /**
-     * Returns the angular unit of the {@linkplain #getGreenwichLongitude Greenwich longitude}.
+     * 返回{@linkplain #getGreenwichLongitude Greenwich 经度 }的角度单位。
      *
      * @return The angular unit of greenwich longitude.
      */

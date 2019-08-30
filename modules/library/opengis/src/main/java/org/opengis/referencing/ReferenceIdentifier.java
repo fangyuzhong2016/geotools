@@ -16,7 +16,7 @@ import org.opengis.annotation.UML;
 import org.opengis.metadata.Identifier;
 
 /**
- * Identifier used for reference systems.
+ * 用于参考系统的标识符。
  *
  * @version <A HREF="http://www.opengeospatial.org/standards/as#01-111">ISO 19115</A>
  * @author Ely Conn (Leica Geosystems Geospatial Imaging, LLC)

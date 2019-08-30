@@ -21,7 +21,7 @@ package org.geotools.map;
 import java.util.EventObject;
 
 /**
- * Event fired when some Layer property changes.
+ * 某些Layer属性更改时触发事件。
  *
  * @author Andrea Aime
  * @author Ian Turton

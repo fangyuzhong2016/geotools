@@ -15,9 +15,8 @@ import static org.opengis.annotation.Specification.*;
 import org.opengis.annotation.UML;
 
 /**
- * Defines the origin of an image coordinate reference system. An image datum is used in a local
- * context only. For an image datum, the anchor point is usually either the centre of the image or
- * the corner of the image.
+ * 定义图像坐标参考系的原点。图像数据仅用于本地上下文。
+ * 对于图像数据，锚点通常是图像的中心或图像的角。
  *
  * @version <A HREF="http://portal.opengeospatial.org/files/?artifact_id=6716">Abstract
  *     specification 2.0</A>
@@ -27,9 +26,9 @@ import org.opengis.annotation.UML;
 @UML(identifier = "CD_ImageDatum", specification = ISO_19111)
 public interface ImageDatum extends Datum {
     /**
-     * Specification of the way the image grid is associated with the image data attributes.
+     * 指定图像网格与图像数据属性相关联的方式。
      *
-     * @return The way image grid is associated with image data attributes.
+     * @return 图像网格与图像数据属性相关联的方式。
      */
     @UML(identifier = "pixelInCell", obligation = MANDATORY, specification = ISO_19111)
     PixelInCell getPixelInCell();

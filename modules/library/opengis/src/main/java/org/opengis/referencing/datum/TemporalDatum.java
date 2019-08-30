@@ -17,7 +17,7 @@ import org.opengis.annotation.UML;
 import org.opengis.util.InternationalString;
 
 /**
- * A temporal datum defines the origin of a temporal coordinate reference system.
+ * 时间数据定义时间坐标参考系统的原点。
  *
  * @version <A HREF="http://portal.opengeospatial.org/files/?artifact_id=6716">Abstract
  *     specification 2.0</A>
@@ -27,16 +27,15 @@ import org.opengis.util.InternationalString;
 @UML(identifier = "CD_TemporalDatum", specification = ISO_19111)
 public interface TemporalDatum extends Datum {
     /**
-     * The date and time origin of this temporal datum.
+     * 此时态数据的日期和时间原点。
      *
-     * @return The date and time origin of this temporal datum.
+     * @return 此时态数据的日期和时间原点。
      */
     @UML(identifier = "origin", obligation = MANDATORY, specification = ISO_19111)
     Date getOrigin();
 
     /**
-     * This attribute is defined in the {@link Datum} parent interface, but is not used by a
-     * temporal datum.
+     * 此属性在{@link Datum}父接口中定义，但不被 temporal数据使用。
      *
      * @return Always {@code null}.
      */
@@ -44,8 +43,7 @@ public interface TemporalDatum extends Datum {
     InternationalString getAnchorPoint();
 
     /**
-     * This attribute is defined in the {@link Datum} parent interface, but is not used by a
-     * temporal datum.
+     * 此属性在{@link Datum}父接口中定义，但不被temporal数据使用。
      *
      * @return Always {@code null}.
      */

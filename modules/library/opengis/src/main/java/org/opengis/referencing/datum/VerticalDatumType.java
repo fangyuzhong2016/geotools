@@ -18,7 +18,7 @@ import org.opengis.annotation.UML;
 import org.opengis.util.CodeList;
 
 /**
- * Type of a vertical datum.
+ * 垂直基准的类型。
  *
  * @version <A HREF="http://portal.opengeospatial.org/files/?artifact_id=6716">Abstract
  *     specification 2.0</A>

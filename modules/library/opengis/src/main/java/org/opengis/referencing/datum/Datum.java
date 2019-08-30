@@ -19,11 +19,11 @@ import org.opengis.referencing.IdentifiedObject;
 import org.opengis.util.InternationalString;
 
 /**
- * Specifies the relationship of a coordinate system to the earth, thus creating a {@linkplain
- * org.opengis.referencing.crs.CoordinateReferenceSystem coordinate reference system}. A datum uses
- * a parameter or set of parameters that determine the location of the origin of the coordinate
- * reference system. Each datum subtype can be associated with only specific types of {@linkplain
- * org.opengis.referencing.cs.CoordinateSystem coordinate systems}.
+ * 定义基准面，
+ * 指定坐标系与地球的关系，
+ * 从而创建{@linkplain org.opengis.referencing.crs.CoordinateReferenceSystem 坐标参考系统}。
+ * 基准使用一个参数或一组参数来确定坐标参考系统原点的位置。
+ * 每个基准子类型只能与特定类型的{@linkplain org.opengis.referencing.cs.CoordinateSystem 坐标系}相关联。
  *
  * @version <A HREF="http://portal.opengeospatial.org/files/?artifact_id=6716">Abstract
  *     specification 2.0</A>
@@ -35,18 +35,16 @@ import org.opengis.util.InternationalString;
 @UML(identifier = "CD_Datum", specification = ISO_19111)
 public interface Datum extends IdentifiedObject {
     /**
-     * Key for the <code>{@value}</code> property to be given to the {@linkplain DatumFactory datum
-     * factory} <code>createFoo(&hellip;)</code> methods. This is used for setting the value to be
-     * returned by {@link #getAnchorPoint}.
+     * 将<code>{@value}</code>属性的键赋予{@linkplain DatumFactory datum factory} <code>createFoo(&hellip;)</code>方法。
+     * 这用于设置{@link #getAnchorPoint}返回的值。
      *
      * @see #getAnchorPoint
      */
     String ANCHOR_POINT_KEY = "anchorPoint";
 
     /**
-     * Key for the <code>{@value}</code> property to be given to the {@linkplain DatumFactory datum
-     * factory} <code>createFoo(&hellip;)</code> methods. This is used for setting the value to be
-     * returned by {@link #getRealizationEpoch}.
+     * 将<code>{@value}</code>属性的键赋予{@linkplain DatumFactory datum factory} <code>createFoo(&hellip;)</code>方法。
+     * 这用于设置{@link #getRealizationEpoch}返回的值。
      *
      * @see #getRealizationEpoch
      */
@@ -110,7 +108,7 @@ public interface Datum extends IdentifiedObject {
     Date getRealizationEpoch();
 
     /**
-     * Area or region or timeframe in which this datum is valid.
+     * 此数据有效的区域或区域或时间范围。
      *
      * @return The datum valid domain, or {@code null} if not available.
      * @since GeoAPI 2.1
@@ -119,8 +117,7 @@ public interface Datum extends IdentifiedObject {
     Extent getDomainOfValidity();
 
     /**
-     * Description of domain of usage, or limitations of usage, for which this datum object is
-     * valid.
+     *此基准对象有效的使用领域或使用限制的说明。
      *
      * @return A description of domain of usage, or {@code null} if none.
      */

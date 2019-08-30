@@ -27,6 +27,7 @@ import org.opengis.feature.simple.SimpleFeature;
 public interface RenderListener {
 
     /**
+     * 监控指定的要素渲染过程
      * Reports that a specific feature has been rendered. The same feature might be reported
      * multiple times, if
      *
@@ -35,8 +36,8 @@ public interface RenderListener {
     public void featureRenderer(SimpleFeature feature);
 
     /**
-     * Reports a rendering error. The rendering is not normally stopped on it, a listener that wants
-     * to stop it can call {@link GTRenderer#stopRendering()}
+     * 监控一个渲染错误。
+     * 渲染通常不会停止在它上面，一个想要停止它的监听器可以调用{@link GTRenderer #stopRendering（）}
      *
      * @param e
      */
