@@ -97,7 +97,7 @@
     <src.output>${basedir}/target</src.output>
     <imageio.ext.version>1.3.2</imageio.ext.version>
     <jts.version>1.16.1</jts.version>
-    <jaiext.version>1.1.11</jaiext.version>
+    <jaiext.version>1.1.12</jaiext.version>
     <netcdf.version>4.6.11</netcdf.version>
     <jt.version>1.5.0</jt.version>
     <jaxb.api.version>2.4.0-b180830.0359</jaxb.api.version>
@@ -129,7 +129,7 @@
     <pmd.version>6.11.0</pmd.version>
     <checkstyle.skip>false</checkstyle.skip>
     <qa>false</qa>
-    <jackson2.version>2.9.9</jackson2.version>
+    <jackson2.version>2.9.10</jackson2.version>
     <lint>deprecation</lint>
   </properties>
 
@@ -462,7 +462,7 @@
   <groupId>org.geotools</groupId>
   <artifactId>geotools</artifactId>
   <packaging>pom</packaging>
-  <version>22-SNAPSHOT</version>
+  <version>23-SNAPSHOT</version>
   <name>GeoTools</name>
 
   <scm>

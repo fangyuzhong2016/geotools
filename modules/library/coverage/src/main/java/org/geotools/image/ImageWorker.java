@@ -4165,12 +4165,11 @@ public class ImageWorker {
             // check if we can do a warp-affine reduction
             final ParameterBlock sourceParamBlock = op.getParameterBlock();
 
-            RenderingHints hints = getRenderingHints();
             boolean preserveChainedAffines = false;
-            if (hints != null && hints.containsKey(PRESERVE_CHAINED_AFFINES)) {
-                preserveChainedAffines = (boolean) hints.get(PRESERVE_CHAINED_AFFINES);
+            Object preserveHints = getRenderingHint(PRESERVE_CHAINED_AFFINES);
+            if (preserveHints != null && preserveHints instanceof Boolean) {
+                preserveChainedAffines = (Boolean) preserveHints;
             }
-
             if (WARP_REDUCTION_ENABLED
                     && "Warp".equals(opName)
                     && mtProperty instanceof MathTransform2D
@@ -4197,6 +4196,13 @@ public class ImageWorker {
                     }
                     if (tolerance == null) {
                         tolerance = 0.333;
+                    }
+
+                    // in case of oversampling, reduce the tolerance by the oversampling factor
+                    // as the oversampling magnifies errors that would not be otherwise visible
+                    if (tx.getScaleX() > 1 || tx.getScaleY() > 1) {
+                        double factor = Math.max(tx.getScaleX(), tx.getScaleY());
+                        tolerance = tolerance / factor;
                     }
 
                     // setup a warp builder that is not gong to use too much memory
@@ -4235,12 +4241,16 @@ public class ImageWorker {
                     }
                     Warp warp = wb.buildWarp(chained, mappingBB);
 
-                    // do the switch only if we get a warp that is as fast as the original one
+                    // do the switch only if we get a warp that is as fast as the original one,
+                    // of if we are upsampling, in which case the merge is required to preserve
+                    // good image quality (warp on NN produces pixels that are aligned to the axis
+                    // and then scaled, while the pixels should appear rotated instead)
                     Warp sourceWarp = (Warp) sourceParamBlock.getObjectParameter(0);
                     if (warp instanceof WarpGrid
                             || warp instanceof WarpAffine
-                            || !(sourceWarp instanceof WarpGrid
-                                    || sourceWarp instanceof WarpAffine)) {
+                            || !(sourceWarp instanceof WarpGrid || sourceWarp instanceof WarpAffine)
+                            || tx.getScaleX() > 1
+                            || tx.getScaleY() > 1) {
                         // and then the JAI Operation
                         PlanarImage sourceImage = op.getSourceImage(0);
                         final ParameterBlock paramBlk = new ParameterBlock().addSource(sourceImage);
@@ -5244,6 +5254,10 @@ public class ImageWorker {
         if (isNoDataNeeded()) {
             if (background != null && background.length > 0) {
                 pb.set(background[0], 5); // destination No Data value
+            } else if (nodata != null) {
+                // preserve nodata to avoid the destination nodata fall
+                // in the range of valid values
+                pb.set(nodata.getMin(), 5);
             }
         }
 
