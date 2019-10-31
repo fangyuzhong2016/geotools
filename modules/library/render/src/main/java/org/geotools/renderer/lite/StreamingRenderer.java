@@ -118,6 +118,7 @@ import org.geotools.styling.PointSymbolizer;
 import org.geotools.styling.RasterSymbolizer;
 import org.geotools.styling.Rule;
 import org.geotools.styling.RuleImpl;
+import org.geotools.styling.StyleFactory;
 import org.geotools.styling.Symbolizer;
 import org.geotools.styling.TextSymbolizer;
 import org.geotools.styling.visitor.DpiRescaleStyleVisitor;
@@ -220,6 +221,8 @@ public class StreamingRenderer implements GTRenderer {
     /** Filter factory for creating bounding box filters */
     protected static final FilterFactory2 filterFactory =
             CommonFactoryFinder.getFilterFactory2(null);
+
+    protected static final StyleFactory STYLE_FACTORY = CommonFactoryFinder.getStyleFactory();
 
     private static final PropertyName gridPropertyName = filterFactory.property("grid");
 
@@ -834,6 +837,7 @@ public class StreamingRenderer implements GTRenderer {
                             graphics, paintArea, zGroupedMapContent);
 
             int layerCounter = 0;
+
             for (CompositingGroup compositingGroup : compositingGroups) {
                 MapContent currentMapContent = compositingGroup.mapContent;
                 Graphics2D compositingGraphic = compositingGroup.graphics;
@@ -844,6 +848,7 @@ public class StreamingRenderer implements GTRenderer {
                 // styles
                 //
                 // ////////////////////////////////////////////////////////////////////
+
                 labelCache.start();
                 if (labelCache instanceof LabelCacheImpl) {
                     ((LabelCacheImpl) labelCache)
@@ -852,6 +857,11 @@ public class StreamingRenderer implements GTRenderer {
                 }
 
                 for (Layer layer : currentMapContent.layers()) {
+                    try {
+                        renderListeners.forEach(l -> l.layerStart(layer));
+                    } catch (Exception e) {
+                        fireErrorEvent(e);
+                    }
                     layerCounter++;
                     String layerId = String.valueOf(layerCounter);
                     if (!layer.isVisible()) {
@@ -891,6 +901,11 @@ public class StreamingRenderer implements GTRenderer {
                     }
 
                     labelCache.endLayer(layerId, graphics, screenSize);
+                    try {
+                        requests.put(new RenderTimeStatisticsRequest(renderListeners, layer));
+                    } catch (InterruptedException ex) {
+                        fireErrorEvent(ex);
+                    }
                 }
 
                 // have we been painting on a back buffer? If so, merge on the main graphic
@@ -934,7 +949,9 @@ public class StreamingRenderer implements GTRenderer {
         }
 
         if (!renderingStopRequested) {
+            renderListeners.forEach(l -> l.labellingStart());
             labelCache.end(graphics, paintArea);
+            renderListeners.forEach(l -> l.labellingEnd());
         } else {
             labelCache.clear();
         }
@@ -2148,17 +2165,42 @@ public class StreamingRenderer implements GTRenderer {
         List<List<LiteFeatureTypeStyle>> txClassified = classifyByFeatureProduction(lfts);
 
         // render groups by uniform transformation
-        for (List<LiteFeatureTypeStyle> uniform : txClassified) {
-            FeatureCollection features = getFeatures(layer, schema, uniform);
+        for (List<LiteFeatureTypeStyle> uniformLfts : txClassified) {
+            FeatureCollection features = getFeatures(layer, schema, uniformLfts);
             if (features == null) {
                 continue;
             }
 
+            // optimize filters for in memory sequential execution
+            // step one, collect duplicated filters and expressions
+            RepeatedFilterVisitor repeatedVisitor = new RepeatedFilterVisitor();
+            uniformLfts
+                    .stream()
+                    .flatMap(fts -> Arrays.stream(fts.ruleList))
+                    .filter(r -> !r.isElseFilter() && r.getFilter() != null)
+                    .forEach(r -> r.getFilter().accept(repeatedVisitor, null));
+            Set<Object> repeatedObjects = repeatedVisitor.getRepeatedObjects();
+            // step two, memoize the repeated ones and convert simple features access to indexed
+            if (schema instanceof SimpleFeatureType || !repeatedObjects.isEmpty()) {
+                MemoryFilterOptimizer filterOptimizer =
+                        new MemoryFilterOptimizer(features.getSchema(), repeatedObjects);
+                for (LiteFeatureTypeStyle fts : uniformLfts) {
+                    for (int i = 0; i < fts.ruleList.length; i++) {
+                        Rule rule = fts.ruleList[i];
+                        DuplicatingStyleVisitor optimizingStyleVisitor =
+                                new DuplicatingStyleVisitor(
+                                        STYLE_FACTORY, filterFactory, filterOptimizer);
+                        rule.accept(optimizingStyleVisitor);
+                        fts.ruleList[i] = (Rule) optimizingStyleVisitor.getCopy();
+                    }
+                }
+            }
+
             // finally, perform rendering
             if (isOptimizedFTSRenderingEnabled() && lfts.size() > 1) {
-                drawOptimized(graphics, layerId, features, uniform);
+                drawOptimized(graphics, layerId, features, uniformLfts);
             } else {
-                drawPlain(graphics, layerId, features, uniform);
+                drawPlain(graphics, layerId, features, uniformLfts);
             }
         }
     }
@@ -3828,6 +3870,23 @@ public class StreamingRenderer implements GTRenderer {
                 LOGGER.log(Level.WARNING, e.getLocalizedMessage(), e);
                 fireErrorEvent(e);
             }
+        }
+    }
+
+    public class RenderTimeStatisticsRequest extends RenderingRequest {
+
+        private List<RenderListener> listeners;
+
+        private Layer currentLayer;
+
+        public RenderTimeStatisticsRequest(List<RenderListener> listeners, Layer currentLayer) {
+            this.listeners = listeners;
+            this.currentLayer = currentLayer;
+        }
+
+        @Override
+        void execute() {
+            listeners.forEach(l -> l.layerEnd(currentLayer));
         }
     }
 
