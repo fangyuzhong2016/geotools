@@ -16,15 +16,13 @@ import org.opengis.annotation.UML;
 import org.opengis.referencing.cs.EllipsoidalCS;
 
 /**
- * A coordinate reference system based on an ellipsoidal approximation of the geoid; this provides
- * an accurate representation of the geometry of geographic features for a large portion of the
- * earth's surface.
+ * 定义经纬度坐标参考系统。
+ * 基于大地水准面的椭圆近似的坐标参考系;
+ * 这为地球表面的大部分提供了地理要素几何的精确表示。
  *
- * <p>A Geographic CRS is not suitable for mapmaking on a planar surface, because it describes
- * geometry on a curved surface. It is impossible to represent such geometry in a Euclidean plane
- * without introducing distortions. The need to control these distortions has given rise to the
- * development of the science of {@linkplain org.opengis.referencing.operation.Projection map
- * projections}.
+ * <p>地理CRS不适用于平面上的地图制作，因为它描述了曲面上的几何。
+ * 在不引入失真的情况下，不可能在欧几里得平面中表示这种几何形状。
+ * 控制这些扭曲的必要性促成了{@linkplain org.opengis.referencing.operation.Projection map projections}的科学发展。
  *
  * <TABLE CELLPADDING='6' BORDER='1'>
  * <TR BGCOLOR="#EEEEFF"><TH NOWRAP>Used with CS type(s)</TH></TR>
@@ -39,7 +37,7 @@ import org.opengis.referencing.cs.EllipsoidalCS;
  */
 @UML(identifier = "SC_GeographicCRS", specification = ISO_19111)
 public interface GeographicCRS extends GeodeticCRS {
-    /** Returns the coordinate system, which must be ellipsoidal. */
+    /** 返回坐标系，该坐标系必须是椭圆体。 */
     @UML(identifier = "usesCS", obligation = MANDATORY, specification = ISO_19111)
     EllipsoidalCS getCoordinateSystem();
 }

@@ -16,7 +16,8 @@ import org.opengis.annotation.UML;
 import org.opengis.referencing.datum.GeodeticDatum;
 
 /**
- * A coordinate reference system associated with a geodetic datum.
+ *
+ * 与大地测量数据相关联的坐标参考系。
  *
  * <TABLE CELLPADDING='6' BORDER='1'>
  * <TR BGCOLOR="#EEEEFF"><TH NOWRAP>Used with CS type(s)</TH></TR>

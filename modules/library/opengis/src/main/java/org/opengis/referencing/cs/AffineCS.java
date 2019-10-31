@@ -14,8 +14,8 @@ import static org.opengis.annotation.Specification.*;
 import org.opengis.annotation.UML;
 
 /**
- * A two- or three-dimensional coordinate system with straight axes that are not necessarily
- * orthogonal. An {@code AffineCS} shall have two or three {@linkplain #getAxis axis associations}.
+ * 具有直轴的二维或三维坐标系，其不一定是正交的。
+ * {@code AffineCS}应具有两个或三个{@linkplain #getAxis 轴关联}。
  *
  * <TABLE CELLPADDING='6' BORDER='1'>
  * <TR BGCOLOR="#EEEEFF"><TH NOWRAP>Used with CRS type(s)</TH></TR>

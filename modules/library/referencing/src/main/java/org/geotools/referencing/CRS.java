@@ -104,29 +104,27 @@ import org.opengis.referencing.operation.Projection;
 import org.opengis.referencing.operation.TransformException;
 
 /**
- * Simple utility class for making use of the {@linkplain CoordinateReferenceSystem coordinate
- * reference system} and associated {@linkplain org.opengis.referencing.Factory} implementations.
- * This utility class is made up of static final functions. This class is not a factory or a
- * builder. It makes use of the GeoAPI factory interfaces provided by {@link
- * ReferencingFactoryFinder}.
+ * 简单实用程序类，用于使用{@linkplain CoordinateReferenceSystem 坐标参考系统}和相关的{@linkplain org.opengis.referencing.Factory}实现。
+ * 该实用程序类由静态最终函数组成。
+ * 此类不是工厂或构建器。
+ * 它利用{@link ReferencingFactoryFinder}提供的GeoAPI工厂接口。
  *
- * <p>The following methods may be added in a future version:
+ * <p>在将来的版本中可能会添加以下方法：
  *
  * <ul>
  *   <li>{@code CoordinateReferenceSystem parseXML(String)}
  * </ul>
  *
- * <p>When using {@link CoordinateReferenceSystem} matching methods of this class ({@link
- * #equalsIgnoreMetadata(Object, Object)},{@link #lookupIdentifier(IdentifiedObject, boolean)},
- * {@link #lookupEpsgCode(CoordinateReferenceSystem, boolean)}, {@link
- * #lookupIdentifier(IdentifiedObject, boolean)}, {@link #lookupIdentifier(Citation,
- * CoordinateReferenceSystem, boolean)}) against objects derived from a database other than the
- * official EPSG one it may be advisable to set a non zero comparison tolerance with {@link
- * Hints#putSystemDefault(java.awt.RenderingHints.Key, Object)} using the {@link
- * Hints#COMPARISON_TOLERANCE} key. A value of 10e-9 has proved to give satisfactory results with
- * definitions commonly found in .prj files accompaining shapefiles and georeferenced images.<br>
- * <b>Warning</b>: the tolerance value is used in all internal comparison, this will also change the
- * way math transforms are setup. Use with care.
+ * <p> 使用此类的{@link CoordinateReferenceSystem}匹配方法时（{@link #equalsIgnoreMetadata(Object,Object)}，
+ * {@link #lookupIdentifier(IdentifiedObject,boolean)}，
+ * {@link #lookupEpsgCode（CoordinateReferenceSystem，boolean）} ，
+ * {@link #lookupEpsgCode(CoordinateReferenceSystem, boolean)},
+ * {@link #lookupIdentifier(IdentifiedObject, boolean)},
+ * {@link #lookupIdentifier(Citation,CoordinateReferenceSystem, boolean)})
+ * 对于从官方EPSG以外的数据库派生的对象，建议设置非使用 {@link Hints#COMPARISON_TOLERANCE} 键
+ * 与 {@link Hints#putSystemDefault(java.awt.RenderingHints.Key, Object)}进行零比较容差。
+ * 事实证明，10e-9的值可以得到满意的结果，* .prj文件中常见的*定义包含shapefile和地理参考图像。<br>
+ * <b>Warning</b>: 容差值用于所有内部比较，这也将改变数学变换方式的设置。小心使用。
  *
  * @since 2.1
  * @author Jody Garnett (Refractions Research)
@@ -139,7 +137,7 @@ public final class CRS {
 
     static volatile AtomicBoolean FORCED_LON_LAT = null;
 
-    /** Enumeration describing axis order for geographic coordinate reference systems. */
+    /** 枚举描述地理坐标参考系的轴顺序。 */
     public static enum AxisOrder {
         /**
          * Ordering in which longitude comes before latitude, commonly referred to as x/y ordering.
@@ -393,8 +391,7 @@ public final class CRS {
     }
 
     /**
-     * Return a Coordinate Reference System for the specified code. Note that the code needs to
-     * mention the authority. Examples:
+     * 返回指定代码的坐标参照系。请注意，代码需要提及权限。例子：
      *
      * <blockquote>
      *

@@ -18,10 +18,10 @@ import org.opengis.referencing.datum.GeodeticDatum;
 import org.opengis.referencing.operation.Projection;
 
 /**
- * A 2D coordinate reference system used to approximate the shape of the earth on a planar surface.
- * It is done in such a way that the distortion that is inherent to the approximation is carefully
- * controlled and known. Distortion correction is commonly applied to calculated bearings and
- * distances to produce values that are a close match to actual field values.
+ * 定义平面投影坐标参考系统
+ * 用于近似平面上的地球形状的2D坐标参考系。
+ * 它以这样的方式完成，即近似的固有的失真被仔细控制和已知。
+ * 失真校正通常应用于计算的轴承和距离，以产生与实际场值紧密匹配的值。
  *
  * <TABLE CELLPADDING='6' BORDER='1'>
  * <TR BGCOLOR="#EEEEFF"><TH NOWRAP>Used with CS type(s)</TH></TR>
@@ -36,16 +36,19 @@ import org.opengis.referencing.operation.Projection;
  */
 @UML(identifier = "SC_ProjectedCRS", specification = ISO_19111)
 public interface ProjectedCRS extends GeneralDerivedCRS {
-    /** Returns the base coordinate reference system, which must be geographic. */
+    /** 返回基本坐标参照系，该系统必须是地理坐标系。 */
     GeographicCRS getBaseCRS();
 
-    /** Returns the map projection from the {@linkplain #getBaseCRS base CRS} to this CRS. */
+    /** 返回从{@linkplain #getBaseCRS base CRS} 到此CRS的映射投影。*/
     Projection getConversionFromBase();
 
-    /** Returns the coordinate system, which must be cartesian. */
+    /** 返回坐标系，该坐标系必须是笛卡儿坐标系。 */
     @UML(identifier = "usesCS", obligation = MANDATORY, specification = ISO_19111)
     CartesianCS getCoordinateSystem();
 
-    /** Returns the datum. */
+    /**
+     * 获取投影坐标参考的地理坐标的基准面
+     * @return
+     */
     GeodeticDatum getDatum();
 }

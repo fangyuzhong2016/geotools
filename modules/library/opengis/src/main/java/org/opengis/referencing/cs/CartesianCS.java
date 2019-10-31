@@ -14,11 +14,11 @@ import static org.opengis.annotation.Specification.*;
 import org.opengis.annotation.UML;
 
 /**
- * A 1-, 2-, or 3-dimensional coordinate system. Gives the position of points relative to orthogonal
- * straight axes in the 2- and 3-dimensional cases. In the 1-dimensional case, it contains a single
- * straight coordinate axis. In the multi-dimensional case, all axes shall have the same length unit
- * of measure. A {@code CartesianCS} shall have one, two, or three {@linkplain #getAxis axis
- * associations}.
+ *1维，2维或3维坐标系。
+ * 在2维和3维情况下给出相对于正交直轴的点的位置。
+ * 在一维情况下，它包含一个直的坐标轴。
+ *在多维情况下，所有轴应具有相同的长度测量单位。
+ * {@code CartesianCS}应具有一个，两个或三个{@linkplain #getAxis 轴关联}。
  *
  * <TABLE CELLPADDING='6' BORDER='1'>
  * <TR BGCOLOR="#EEEEFF"><TH NOWRAP>Used with CRS type(s)</TH></TR>

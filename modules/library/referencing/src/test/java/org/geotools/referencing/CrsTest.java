@@ -392,6 +392,12 @@ public final class CrsTest {
     }
 
     @Test
+    public void parseSID() throws Exception {
+       CoordinateReferenceSystem coordinateReferenceSystem = CRS.decode("EPSG:4326");
+      System.out.println(coordinateReferenceSystem);
+    }
+
+    @Test
     public void parseEsriWebMercator() throws Exception {
         String wkt =
                 "PROJCS[\"WGS_1984_Web_Mercator_Auxiliary_Sphere\","

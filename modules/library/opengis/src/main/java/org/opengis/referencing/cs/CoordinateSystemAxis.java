@@ -29,16 +29,16 @@ import org.opengis.referencing.IdentifiedObject;
 @UML(identifier = "CS_CoordinateSystemAxis", specification = ISO_19111)
 public interface CoordinateSystemAxis extends IdentifiedObject {
     /**
-     * The abbreviation used for this coordinate system axes. This abbreviation is also used to
-     * identify the ordinates in coordinate tuple. Examples are "<var>X</var>" and "<var>Y</var>".
+     *用于此坐标系轴的缩写。该缩写还用于标识坐标元组中的纵坐标。
+     *  例如 "<var>X</var>" and "<var>Y</var>".
      *
-     * @return The coordinate system axis abbreviation.
+     * @return 坐标系轴的缩写。
      */
     @UML(identifier = "axisAbbrev", obligation = MANDATORY, specification = ISO_19111)
     String getAbbreviation();
 
     /**
-     * Direction of this coordinate system axis. In the case of Cartesian projected coordinates,
+     * 此坐标系轴的方向。 In the case of Cartesian projected coordinates,
      * this is the direction of this coordinate system axis locally. Examples: {@linkplain
      * AxisDirection#NORTH north} or {@linkplain AxisDirection#SOUTH south}, {@linkplain
      * AxisDirection#EAST east} or {@linkplain AxisDirection#WEST west}, {@linkplain

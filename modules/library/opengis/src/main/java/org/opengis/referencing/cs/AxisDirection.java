@@ -19,10 +19,10 @@ import org.opengis.annotation.UML;
 import org.opengis.util.CodeList;
 
 /**
- * The direction of positive increments in the coordinate value for a coordinate system axis. This
- * direction is exact in some cases, and is approximate in other cases.
+ * 坐标系轴的坐标值中的正增量方向。
+ * 在某些情况下，此方向是精确的，并且在其他情况下是近似的。
  *
- * <p>Some coordinate systems use non-standard orientations. For example, the first axis in South
+ * <p>一些坐标系使用非标准方向。 For example, the first axis in South
  * African grids usually points West, instead of East. This information is obviously relevant for
  * algorithms converting South African grid coordinates into Lat/Long.
  *

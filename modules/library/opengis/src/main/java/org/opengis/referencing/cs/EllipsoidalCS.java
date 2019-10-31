@@ -14,9 +14,8 @@ import static org.opengis.annotation.Specification.*;
 import org.opengis.annotation.UML;
 
 /**
- * A two- or three-dimensional coordinate system in which position is specified by geodetic
- * latitude, geodetic longitude, and (in the three-dimensional case) ellipsoidal height. An {@code
- * EllipsoidalCS} shall have two or three {@linkplain #getAxis axis associations}.
+ * 二维或三维坐标系，其中位置由大地测量纬度，大地经度和（在三维情况下）椭球高度指定。
+ * {@code  EllipsoidalCS} 应有两个或三个{@linkplain #getAxis 轴关联}。
  *
  * <TABLE CELLPADDING='6' BORDER='1'>
  * <TR BGCOLOR="#EEEEFF"><TH NOWRAP>Used with CRS type(s)</TH></TR>

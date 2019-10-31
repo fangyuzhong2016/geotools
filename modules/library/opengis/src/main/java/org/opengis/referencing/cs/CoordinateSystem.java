@@ -16,11 +16,9 @@ import org.opengis.annotation.UML;
 import org.opengis.referencing.IdentifiedObject;
 
 /**
- * The set of coordinate system axes that spans a given coordinate space. A coordinate system (CS)
- * is derived from a set of (mathematical) rules for specifying how coordinates in a given space are
- * to be assigned to points. The coordinate values in a coordinate tuple shall be recorded in the
- * order in which the coordinate system axes associations are recorded, whenever those coordinates
- * use a coordinate reference system that uses this coordinate system.
+ * 定义一个坐标系统的接口。
+ * 坐标系（CS）从一组（数学）规则导出，用于指定如何将给定空间中的坐标分配点。
+ * 坐标元组中的坐标值应按照记录坐标系轴关联的顺序记录，只要这些坐标使用该坐标系的坐标参考系统。
  *
  * @version <A HREF="http://portal.opengeospatial.org/files/?artifact_id=6716">Abstract
  *     specification 2.0</A>
