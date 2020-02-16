@@ -208,12 +208,30 @@ XML:
      :start-after: // markTestSLD start
      :end-before: // markTestSLD end
 
+As an extension GeoTools supports defining a Style ``Background`` object that will be used
+to fill the canvas before the style rendering directives are applied to features and coverages.
+
+Here is how to setup a style with background: 
+
+  .. literalinclude:: /../src/main/java/org/geotools/render/StyleExamples.java
+     :language: java
+     :start-after: // styleBackground start
+     :end-before: // styleBackground end
+
+and a similar setup :download:`as a SLD </../../modules/library/xml/src/test/resources/org/geotools/xml/styling/test-data/backgroundSolid.sld>`:
+
+  .. literalinclude:: /../../modules/library/xml/src/test/resources/org/geotools/xml/styling/test-data/backgroundSolid.sld
+
+
 Symbology Encoding
 ^^^^^^^^^^^^^^^^^^
 
 The feature type style data model captures the symbology encoding information describing how a feature should be drawn on the screen and will represent the bulk of our examples.
 
 .. image:: /images/se.PNG
+
+
+
 
 FeatureTypeStyle
 ''''''''''''''''
@@ -420,6 +438,7 @@ Examples:
 Point symbolizers support ``VendorOptions``:
 
 * ``labelObstacle(true/false)``\ : No labels should overlap this feature, used to ensure point graphics are clearly visible and not obscured by text.
+* ``fallbackOnDefaultMark(true/false)``\ : If the graphics used in the symbolizer cannot be found, fallback on a default gray square (``true``, default value) or skip the symbolizer without painting anything (``false``).
 
 LineSymbolizer
 ''''''''''''''
@@ -520,7 +539,7 @@ Considerable vendor options are provided for working with ``TextSymbolizers``:
   
 * ``forceLeftToRight(true)``\ : When true forces labels to a readable orientation, when false they make follow the line orientation even if that means the label will look upside down (useful when using TTF symbol fonts to add direction markers along a line)
 
-* ``goodnessOfFit(90)``\ : Sets the percentage of the label that must sit inside the geometry to allow drawing the label. Works only on polygons.
+* ``goodnessOfFit(0.5)``\ : Sets the ratio of the label that must sit inside the geometry to allow drawing the label. Works only on polygons. Provided values should span from 0 .. 1
 
 * ``graphic-margin(10)``\ : Pixels between the stretched graphic and the text, applies when graphic stretching is in use
   
@@ -556,6 +575,10 @@ Considerable vendor options are provided for working with ``TextSymbolizers``:
 
 * ``displacementMode``\ : Comma separated list of label displacement directions for point/polygon labels (used along with ``maxDisplacement``). The indicated directions will be tried in turn.
                     Valid values are cardinal directions abbreviations, in particular, N, W, E, S, NW, NE, SW, SE.
+
+* ``fontShrinkSizeMin(0)``\ : lower font size limit that could be used when rendering the label. When set (to a positive value) the rendering process will be applied iteratively by decreasing the initial font size by 1 unit until an acceptable placement location is found or the specified value is reached. Should be set to a value greater than 0 and lower than the symbolizer's font size otherwise it is ignored.
+
+* ``graphicPlacement(label)``: placement of the graphic found in the text symbolizer, compared to the associated label. If using ``label`` (default value) the graphic is centered with the label. If using ``independet`` the graphic is placed relative to label point instead, and the graphic anchor/offset are used to position it, while the label retains its own anchor/offset related to the label point.   
 
 Raster Symbolizer
 '''''''''''''''''
