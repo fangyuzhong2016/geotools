@@ -52,20 +52,20 @@ DataStore plugins:
 .. toctree::
    :maxdepth: 1
    
-   arcsde
    shape
    ogr
    pregeneralized
    property
    geopackage
    mongodb
+   csv
 
 Unsupported plugins:
 
 .. toctree::
    :maxdepth: 1
    
-   csv
+   arcsde
    dxf
    georest
    kml

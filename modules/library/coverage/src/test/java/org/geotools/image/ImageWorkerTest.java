@@ -146,7 +146,8 @@ public final class ImageWorkerTest extends GridProcessingTestBase {
             smallWorld,
             gray,
             grayAlpha,
-            imageWithNodata;
+            imageWithNodata,
+            imageWithNodata2;
 
     /** {@code true} if the image should be visualized. */
     private static final boolean SHOW = TestData.isInteractiveTest();
@@ -383,6 +384,12 @@ public final class ImageWorkerTest extends GridProcessingTestBase {
         if (imageWithNodata == null) {
             final InputStream input = org.geotools.test.TestData.openStream(this, "nodataD.tiff");
             imageWithNodata = ImageIO.read(input);
+            input.close();
+        }
+
+        if (imageWithNodata2 == null) {
+            final InputStream input = org.geotools.test.TestData.openStream(this, "nodata.tiff");
+            imageWithNodata2 = ImageIO.read(input);
             input.close();
         }
     }
@@ -1610,25 +1617,17 @@ public final class ImageWorkerTest extends GridProcessingTestBase {
 
     @Test
     public void testRescaleNoData() {
-        // Getting input gray scale image
-        ImageWorker w = new ImageWorker(gray);
-        // Removing optional Alpha band
-        w.retainFirstBand();
-        // Formatting to int (avoid to convert values greater to 127 into negative values during
-        // rescaling)
-        w.format(DataBuffer.TYPE_INT);
+        ImageWorker w = new ImageWorker(imageWithNodata2);
         // Setting NoData
-        Range noData = RangeFactory.create(0, 0);
+        Range noData = RangeFactory.create(-10000, -10000);
         w.setNoData(noData);
-        // Setting background to 10
-        w.setBackground(new double[] {10d});
-        // Rescaling data
-        w.rescale(new double[] {2}, new double[] {2});
+        w.setBackground(new double[] {0});
+        w.rescale(new double[] {0.002}, new double[] {2});
 
-        // Getting Minimum value, It cannot be equal or lower than the offset value (2)
+        // Getting Minimum value, It cannot be equal or lower than the offset value
         double minimum = w.getMinimums()[0];
         assertTrue(minimum > 2);
-        assertNoData(w.getRenderedImage(), noData);
+        assertNoData(w.getRenderedImage(), RangeFactory.create((byte) 0, (byte) 0));
     }
 
     @Test
@@ -1711,6 +1710,31 @@ public final class ImageWorkerTest extends GridProcessingTestBase {
         RenderedImage image = iw.bandMerge(4).getRenderedImage();
         assertEquals(4, image.getTile(0, 0).getSampleModel().getNumBands());
         assertNoData(image, null);
+    }
+
+    @Test
+    public void testBandMergeWithNodata() throws FileNotFoundException, IOException {
+        double noDataValue = -10000d;
+        Range nodata = RangeFactory.create(noDataValue, noDataValue);
+        double[] background = new double[] {noDataValue};
+
+        RenderedImage twoBands = null;
+        PlanarImage pi = PlanarImage.wrapRenderedImage(imageWithNodata2);
+        pi.setProperty("GC_NODATA", new NoDataContainer(nodata));
+
+        ImageWorker worker = new ImageWorker(pi).setNoData(nodata).setBackground(background);
+
+        twoBands = worker.addBand(worker.getRenderedImage(), false).getRenderedImage();
+        RenderedImage oneBand = new ImageWorker(twoBands).retainBands(1).getRenderedImage();
+        RenderedImage threeBands =
+                new ImageWorker(twoBands).addBand(oneBand, false).getRenderedImage();
+
+        // Check that the noData holes are still noData after bandMerge
+        double[] threeSamples = new double[3];
+        threeBands.getData().getPixel(18, 18, threeSamples);
+        for (double sample : threeSamples) {
+            assertEquals(noDataValue, sample, 1E-6);
+        }
     }
 
     static void assertNoData(ImageWorker worker, Range nodata) {

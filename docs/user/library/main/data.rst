@@ -120,11 +120,20 @@ The following methods traverse this data structure for you building up a summary
   0      if ``schema1`` and ``schema2`` are the same
   -1     if ``schema1`` and ``schema2`` are not related
   ====== ==========================================================
+  
+* ``compareNames(schema1, schema2)``
+  Similar to ``compare(schema1, schema2)`` but considers only schemas attribute descriptors during comparison
 
 * ``isMatch(AttributeDescriptor, AttributeDescriptor)``
   
   Used to check if values from the two attribute descriptors have a hope of matching.
   Both the name and the binding to a Java class are checked.
+
+* ``isMatch(AttributeDescriptor, AttributeDescriptor, boolean)``  
+  Used to check if values from the two attribute descriptors have a hope of matching.
+  Boolean argument determines whether equality is determined by descriptor name only (false) or java class binding will also be considered (true)
+  Internally used by  ``compareNames`` 
+
 
 Feature
 ^^^^^^^
@@ -366,10 +375,10 @@ perform the task you have in mind.
 
 We have a number of methods to list required attributes for a ``Filter`` or ``Expression``:
 
-* ``DataUtilities.atttributeNames( Filter )``
-* ``DataUtilities.atttributeNames( Filter, FeatureType )``
-* ``DataUtilities.attributenNames( Expression )``
-* ``DataUtilities.attributenNames( Expression, FeatureType )``
+* ``DataUtilities.attributeNames( Filter )``
+* ``DataUtilities.attributeNames( Filter, FeatureType )``
+* ``DataUtilities.attributeNames( Expression )``
+* ``DataUtilities.attributeNames( Expression, FeatureType )``
   
   The optional ``FeatureType`` is used as a reference point and can resolve any ambiguities
   between the simple XPath expressions, and the names used in the ``FeatureType``.

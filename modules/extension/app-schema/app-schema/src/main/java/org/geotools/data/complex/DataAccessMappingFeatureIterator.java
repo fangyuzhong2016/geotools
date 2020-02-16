@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -99,6 +100,7 @@ import org.xml.sax.Attributes;
  * @since 2.4
  */
 public class DataAccessMappingFeatureIterator extends AbstractMappingFeatureIterator {
+
     /** Hold on to iterator to allow features to be streamed. */
     private FeatureIterator<? extends Feature> sourceFeatureIterator;
 
@@ -859,7 +861,7 @@ public class DataAccessMappingFeatureIterator extends AbstractMappingFeatureIter
                         .stream()
                         .allMatch(e -> e.getKey() instanceof ComplexNameImpl);
         if (!multiValues.isEmpty() && !clientPropsMappings.isEmpty() && allComplexNames) {
-            parentAttribute.getUserData().put("multi_value_type", "unbounded-multi-value");
+            parentAttribute.getUserData().put(MULTI_VALUE_TYPE, UNBOUNDED_MULTI_VALUE);
         }
         // generate every child attributes
         for (MultiValueContainer mv : multiValues) {
@@ -983,33 +985,37 @@ public class DataAccessMappingFeatureIterator extends AbstractMappingFeatureIter
             }
             JoiningJDBCFeatureSource jdbcDataSource = (JoiningJDBCFeatureSource) mappedSource;
             // query the multiple values
-            FeatureReader<SimpleFeatureType, SimpleFeature> featuresReader =
+            try (FeatureReader<SimpleFeatureType, SimpleFeature> featuresReader =
                     jdbcDataSource.getJoiningReaderInternal(
-                            jdbcMultipleValue, (JoiningQuery) this.query);
-            // read and cache the multiple values obtained
-            while (featuresReader.hasNext()) {
-                SimpleFeature readFeature = featuresReader.next();
-                // get the read feature foreign key associated value
-                Object targetColumnValue =
-                        readFeature.getProperty(jdbcMultipleValue.getTargetColumn()).getValue();
-                List<MultiValueContainer> candidatesValues = candidates.get(targetColumnValue);
-                if (candidatesValues == null) {
-                    // no values yet for the current foreign key value
-                    candidatesValues = new ArrayList<>();
-                    candidates.put(targetColumnValue, candidatesValues);
+                            jdbcMultipleValue, (JoiningQuery) this.query)) {
+                // read and cache the multiple values obtained
+                while (featuresReader.hasNext()) {
+                    SimpleFeature readFeature = featuresReader.next();
+                    // get the read feature foreign key associated value
+                    Object targetColumnValue =
+                            readFeature.getProperty(jdbcMultipleValue.getTargetColumn()).getValue();
+                    List<MultiValueContainer> candidatesValues = candidates.get(targetColumnValue);
+                    if (candidatesValues == null) {
+                        // no values yet for the current foreign key value
+                        candidatesValues = new ArrayList<>();
+                        candidates.put(targetColumnValue, candidatesValues);
+                    }
+                    Object targetValue =
+                            jdbcMultipleValue.getTargetValue() != null
+                                    ? jdbcMultipleValue.getTargetValue().evaluate(readFeature)
+                                    : null;
+                    candidatesValues.add(new MultiValueContainer(readFeature, targetValue));
                 }
-                Object targetValue =
-                        jdbcMultipleValue.getTargetValue() != null
-                                ? jdbcMultipleValue.getTargetValue().evaluate(readFeature)
-                                : null;
-                candidatesValues.add(new MultiValueContainer(readFeature, targetValue));
             }
             jdbcMultiValues.put(jdbcMultipleValue, candidates);
         }
         // get the multiple values for the current jdbc multiple values attribute
         Object sourceColumnValue =
                 sourceFeature.getProperty(jdbcMultipleValue.getSourceColumn()).getValue();
-        return candidates.get(sourceColumnValue);
+
+        List<MultiValueContainer> list = candidates.get(sourceColumnValue);
+        // make sure we never return null, instead return an empty list
+        return list != null ? list : Collections.emptyList();
     }
 
     /**

@@ -54,6 +54,7 @@ import org.geotools.styling.Displacement;
 import org.geotools.styling.ExponentialContrastMethodStrategy;
 import org.geotools.styling.ExternalGraphic;
 import org.geotools.styling.FeatureTypeStyle;
+import org.geotools.styling.Fill;
 import org.geotools.styling.Font;
 import org.geotools.styling.Graphic;
 import org.geotools.styling.GraphicImpl;
@@ -2188,6 +2189,75 @@ public class SLDTransformerTest {
         assertXpathNotExists("//sld:WellKnownName", doc);
     }
 
+    @Test
+    public void testWKTMarkAlongLine() throws Exception {
+
+        String xml =
+                "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>"
+                        + "<StyledLayerDescriptor version=\"1.0.0\""
+                        + "                       xsi:schemaLocation=\"http://www.opengis.net/sld http://schemas.opengis.net/sld/1.0.0/StyledLayerDescriptor.xsd\""
+                        + "                       xmlns=\"http://www.opengis.net/sld\" xmlns:ogc=\"http://www.opengis.net/ogc\""
+                        + "                       xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">"
+                        + "  <NamedLayer>"
+                        + "    <Name>hel-zigzag</Name>"
+                        + "    <UserStyle>"
+                        + "      <Title>A sin wave line</Title>"
+                        + "      <FeatureTypeStyle>"
+                        + "        <Rule>"
+                        + "          <Name>Sine Wave</Name>"
+                        + "          <LineSymbolizer>"
+                        + "            <Stroke>"
+                        + "              <GraphicStroke>"
+                        + "                <Graphic>"
+                        + "                  <Mark>"
+                        + "                    <WellKnownName>wkt://COMPOUNDCURVE(CIRCULARSTRING(0 0, 0.25 0.25, 0.5 0), CIRCULARSTRING(0.5 0, 0.75 -0.25, 1 0))</WellKnownName>"
+                        + "                    <Stroke>"
+                        + "                      <CssParameter name=\"stroke\">0x0000AA</CssParameter>"
+                        + "                      <CssParameter name=\"stroke-width\">3</CssParameter>"
+                        + "                      <CssParameter name=\"stroke-linecap\">round</CssParameter>"
+                        + "                    </Stroke>"
+                        + "                  </Mark>"
+                        + "                  <Size>20</Size>"
+                        + "                </Graphic>"
+                        + "              </GraphicStroke>"
+                        + "            </Stroke>"
+                        + "            <VendorOption name=\"markAlongLine\">true</VendorOption>"
+                        + "            <VendorOption name=\"markAlongLineScaleLimit\">0.9</VendorOption>"
+                        + "            <VendorOption name=\"markAlongLineSimplify\">0.4</VendorOption>"
+                        + "          </LineSymbolizer>"
+                        + "        </Rule>"
+                        + "      </FeatureTypeStyle>"
+                        + "    </UserStyle>"
+                        + "  </NamedLayer>"
+                        + "</StyledLayerDescriptor>";
+
+        StringReader reader = new StringReader(xml);
+        SLDParser sldParser = new SLDParser(sf, reader);
+
+        Style[] styles = sldParser.readXML();
+
+        Style style = styles[0];
+
+        Rule rule = style.featureTypeStyles().get(0).rules().get(0);
+
+        List<? extends Symbolizer> symbolizers = rule.symbolizers();
+
+        LineSymbolizer lineSymbolizer = (LineSymbolizer) symbolizers.get(0);
+        assertNotNull(lineSymbolizer);
+
+        SLDTransformer st = new SLDTransformer();
+        st.setExportDefaultValues(true);
+        st.setIndentation(2);
+        String lineSymbolizerXML = st.transform(rule);
+
+        Document doc = buildTestDocument(lineSymbolizerXML);
+        assertXpathExists("//sld:LineSymbolizer/sld:VendorOption[@name='markAlongLine']", doc);
+        assertXpathExists(
+                "//sld:LineSymbolizer/sld:VendorOption[@name='markAlongLineScaleLimit']", doc);
+        assertXpathExists(
+                "//sld:LineSymbolizer/sld:VendorOption[@name='markAlongLineSimplify']", doc);
+    }
+
     private StyledLayerDescriptor buildSLDAroundSymbolizer(
             org.geotools.styling.Symbolizer symbolizer) {
         StyleBuilder sb = new StyleBuilder();
@@ -2200,5 +2270,55 @@ public class SLDTransformerTest {
         layer.addStyle(s);
         sld.addStyledLayer(layer);
         return sld;
+    }
+
+    @Test
+    public void testEncodeBackgroundSolid()
+            throws IOException, SAXException, TransformerException, XpathException {
+        StyleBuilder sb = new StyleBuilder();
+        Style style = sb.createStyle(sb.createLineSymbolizer());
+        style.setBackground(sb.createFill(Color.RED));
+
+        SLDTransformer st = new SLDTransformer();
+        st.setExportDefaultValues(true);
+        st.setIndentation(2);
+        String styleXML = st.transform(style);
+
+        Document doc = buildTestDocument(styleXML);
+        assertXpathEvaluatesTo(
+                "#FF0000", "//sld:UserStyle/sld:Background/sld:CssParameter[@name='fill']", doc);
+        assertXpathEvaluatesTo(
+                "1.0",
+                "//sld:UserStyle/sld:Background/sld:CssParameter[@name='fill-opacity']",
+                doc);
+    }
+
+    @Test
+    public void testEncodeBackgroundGraphicFill()
+            throws IOException, SAXException, TransformerException, XpathException {
+        StyleBuilder sb = new StyleBuilder();
+        Style style = sb.createStyle(sb.createLineSymbolizer());
+        Fill fill = sb.createFill();
+        fill.setColor(null);
+        fill.setOpacity(null);
+        fill.setGraphicFill(sb.createGraphic(null, sb.createMark("square"), null));
+        style.setBackground(fill);
+
+        SLDTransformer st = new SLDTransformer();
+        st.setExportDefaultValues(true);
+        st.setIndentation(2);
+        String styleXML = st.transform(style);
+
+        Document doc = buildTestDocument(styleXML);
+        assertXpathEvaluatesTo(
+                "square",
+                "//sld:UserStyle/sld:Background/sld:GraphicFill/sld:Graphic/sld:Mark/sld:WellKnownName",
+                doc);
+        assertXpathExists(
+                "//sld:UserStyle/sld:Background/sld:GraphicFill/sld:Graphic/sld:Mark/sld:Fill",
+                doc);
+        assertXpathExists(
+                "//sld:UserStyle/sld:Background/sld:GraphicFill/sld:Graphic/sld:Mark/sld:Stroke",
+                doc);
     }
 }
